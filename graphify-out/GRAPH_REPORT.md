@@ -1,16 +1,16 @@
 # Graph Report - git-branch-hygiene-skill  (2026-09-12)
 
 ## Corpus Check
-- 32 files · ~30,162 words
+- 32 files · ~30,593 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 146 nodes · 235 edges · 17 communities (13 shown, 4 thin omitted)
+- 147 nodes · 238 edges · 17 communities (13 shown, 4 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `969d2c0b`
+- Built from commit: `50a862b4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -34,9 +34,9 @@
 - Agent Operations Guide
 
 ## God Nodes (most connected - your core abstractions)
-1. `pr.sh script` - 13 edges
-2. `issue.sh script` - 10 edges
-3. `log()` - 10 edges
+1. `pr.sh script` - 14 edges
+2. `log()` - 11 edges
+3. `issue.sh script` - 10 edges
 4. `create_required_path()` - 10 edges
 5. `repo-standard.sh script` - 9 edges
 6. `Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill` - 8 edges
@@ -70,8 +70,8 @@
 ## Communities (17 total, 4 thin omitted)
 
 ### Community 0 - "pr.sh"
-Cohesion: 0.24
-Nodes (21): _bot_secret(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push(), cmd_reply() (+13 more)
+Cohesion: 0.23
+Nodes (22): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+14 more)
 
 ### Community 1 - "Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill"
 Cohesion: 0.21
@@ -130,9 +130,9 @@ Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation E
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Centralized worktree-root strategy (not sibling of main checkout)` connect `pr.sh` to `issue.sh`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Why does `Sanctioned 'create' subcommand with bot-identity enforcement` connect `issue.sh` to `pr.sh`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **What connects `audit.sh script`, `SAFE`, `NEEDS_DECISION` to the rest of the system?**
   _38 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `graphify as a standard dev-process artifact: `.gitignore` requirement design` be split into smaller, more focused modules?**

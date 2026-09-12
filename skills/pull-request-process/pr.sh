@@ -18,6 +18,11 @@
 #                          the review itself, not on a line — these have no thread and can't be
 #                          replied to with `reply`). Pulls out each bot's "Prompt for AI Agent(s)"
 #                          block when present, since that's the actionable part.
+#   checks <pr>            list CI check results (name, pass/fail/pending bucket, workflow,
+#                          description, link) — this is how SonarQube/SonarCloud and any other
+#                          third-party analyzer surface here: they post a check with a link to
+#                          their own web UI rather than GitHub review comments, so `threads`/
+#                          `reviews` alone would miss them entirely.
 #   comment <pr> <body>   post a general/top-level PR comment, not tied to any review thread
 #                         (body = inline string or path to a markdown file); use this to
 #                         respond to PR-level reviews (from `reviews`) that have no thread.
@@ -350,6 +355,31 @@ cmd_reviews() {
   echo "[pr]   Your response here.'"
 }
 
+cmd_checks() {
+  local pr="${1:?usage: pr.sh checks <pr-number>}"
+  # `gh pr checks` exits non-zero for non-passing states (8 = pending,
+  # nonzero on fail too) even though the JSON it printed is exactly what we
+  # want — capture output and status separately so `set -e` doesn't kill
+  # the script on a merely-informative "some checks failed/pending".
+  local json rc
+  json="$(gh pr checks "$pr" --json name,bucket,description,link,workflow 2>&1)"; rc=$?
+  if [ "$rc" -ne 0 ] && [ "$rc" -ne 8 ]; then
+    echo "$json"
+    return "$rc"
+  fi
+  local count
+  count="$(jq 'length' <<<"$json" 2>/dev/null || echo 0)"
+  if [ "$count" = "0" ]; then
+    log "no CI checks reported for PR $pr."
+    return 0
+  fi
+  # SonarQube/SonarCloud (and most third-party analyzers) post their
+  # findings on their own web UI, not as GitHub review comments — this
+  # surfaces the check's own link (and any inline description GitHub does
+  # have) instead of leaving those checks invisible to the review loop.
+  jq -r '.[] | "── \(.name) [\(.bucket)] \(.workflow)\n   \(if (.description // "") != "" then .description else "(no inline description — see link)" end)\n   \(.link)\n"' <<<"$json"
+}
+
 cmd_cleanup() {
   git rev-parse --git-dir >/dev/null 2>&1 || die "not a git repo"
   # git status ignores gitignored build artifacts, so a non-empty result is real
@@ -426,10 +456,11 @@ case "${1:-}" in
   open)    shift; cmd_open "$@" ;;
   threads) shift; cmd_threads "$@" ;;
   reviews) shift; cmd_reviews "$@" ;;
+  checks)  shift; cmd_checks "$@" ;;
   comment) shift; cmd_comment "$@" ;;
   close)   shift; cmd_close "$@" ;;
   comment-delete) shift; cmd_comment_delete "$@" ;;
   reply)   shift; cmd_reply "$@" ;;
   cleanup) shift; cmd_cleanup "$@" ;;
-  *) die "usage: pr.sh {start|push|open|threads|reviews|comment|close|comment-delete|reply|cleanup} ...  (BASE=$BASE)" ;;
+  *) die "usage: pr.sh {start|push|open|threads|reviews|checks|comment|close|comment-delete|reply|cleanup} ...  (BASE=$BASE)" ;;
 esac

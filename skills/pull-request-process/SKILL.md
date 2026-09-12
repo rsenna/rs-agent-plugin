@@ -40,7 +40,7 @@ feel too small to bother with `pr.sh`. A direct `gh` call rides whatever
 locally), silently reintroducing the exact leak this identity enforcement exists to
 prevent. Every PR interaction has a `pr.sh` subcommand: opening (`open`), a
 general/top-level comment (`comment`), correcting one (`comment-delete`), a
-threaded reply (`reply`), reading review state (`threads`, `reviews`). If a
+threaded reply (`reply`), reading review state (`threads`, `reviews`, `checks`). If a
 PR action you need has no subcommand yet, that's a gap in `pr.sh` to fix —
 add the subcommand rather than reaching for raw `gh`.
 
@@ -140,8 +140,18 @@ If the project has no documented gate, run its tests + formatter/linter and say 
    review comments (a bot's "Overall Comments" on the review itself, not on a
    line — these have no thread and can't be replied to with `reply`; the
    command pulls out each bot's "Prompt for AI Agent(s)" block when present).
+   `pr.sh checks <pr>` lists CI check results (name, pass/fail/pending, link)
+   — **check this too, not just `threads`/`reviews`**: a third-party analyzer
+   like SonarQube/SonarCloud posts its findings as its own check with a link
+   to its own web UI, not as GitHub review comments, so a PR can have zero
+   unresolved threads and still be carrying real findings that `threads`
+   alone would never surface. A `pass` bucket doesn't mean zero findings
+   either — a non-blocking quality gate can pass while individual issues
+   remain open; open the check's link (or query the analyzer's own API, e.g.
+   SonarCloud's public `api/issues/search?pullRequest=<pr>&componentKeys=<key>`)
+   to see the actual list before deciding there's nothing to do.
 
-   **For each unresolved thread:** make the fix if warranted, run the project
+   **For each unresolved thread (and each CI-check finding worth fixing):** make the fix if warranted, run the project
    quality gate, commit the fix, then repeat step 3's
    `requesting-code-review` loop with the same `BASE_BRANCH` and a fresh
    `HEAD_SHA`. Re-push only after that loop is clean (step 4):
@@ -204,6 +214,7 @@ BASE=main DRAFT=1 "$P" open "wip: experiment"      # open as draft (bots typical
 BASE=main DRY_RUN=1 "$P" open "feat: foo"          # preview the gh command without creating
 "$P" threads 17                            # list unresolved review threads on PR #17
 "$P" reviews 17                            # list PR-level review comments + their AI-agent prompts
+"$P" checks 17                             # list CI check results (SonarQube/SonarCloud etc. included)
 "$P" comment 17 "Status update: ..."               # general/top-level PR comment (inline)
 "$P" comment 17 /tmp/comment.md                    # general/top-level PR comment (file)
 "$P" comment-delete 5148799955                     # delete a prior comment (id from its URL)
@@ -261,6 +272,6 @@ it concerns.
 - Never push without running a `requesting-code-review` pass first and
   addressing what it flags (enforced by `pr.sh push` requiring `REVIEWED=1`).
 - Never call `gh` directly for a PR interaction — always through `pr.sh`
-  (`open`/`comment`/`comment-delete`/`reply`/`threads`/`reviews`), so the
+  (`open`/`comment`/`comment-delete`/`reply`/`threads`/`reviews`/`checks`), so the
   agent identity enforcement can never be silently bypassed.
 - One concern per PR.

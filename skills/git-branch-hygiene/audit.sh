@@ -19,7 +19,7 @@ set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 BASE="${1:-}"
-if [ -z "$BASE" ]; then
+if [[ -z "$BASE" ]]; then
   BASE=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's#refs/remotes/origin/##') || true
   BASE="${BASE:-main}"
 fi
@@ -51,20 +51,20 @@ if command -v gh >/dev/null 2>&1; then
   # owner has no login account of its own, so that never matches) until one
   # can actually list PRs on this repo.
   while IFS= read -r acct; do
-    [ -z "$acct" ] && continue
+    [[ -z "$acct" ]] && continue
     t=$(gh auth token -h github.com -u "$acct" 2>/dev/null || true)
-    if [ -n "$t" ] && GH_TOKEN="$t" gh pr list --state all --limit 1 >/dev/null 2>&1; then
+    if [[ -n "$t" ]] && GH_TOKEN="$t" gh pr list --state all --limit 1 >/dev/null 2>&1; then
       RESOLVED_TOKEN="$t"
       break
     fi
   done < <(gh auth status -h github.com 2>&1 | sed -n 's/^[[:space:]]*.*[Ll]ogged in to github\.com account \([^[:space:]]*\).*/\1/p')
-  if [ -z "$RESOLVED_TOKEN" ]; then
+  if [[ -z "$RESOLVED_TOKEN" ]]; then
     t=$(gh auth token 2>/dev/null || true)
-    if [ -n "$t" ] && GH_TOKEN="$t" gh pr list --state all --limit 1 >/dev/null 2>&1; then
+    if [[ -n "$t" ]] && GH_TOKEN="$t" gh pr list --state all --limit 1 >/dev/null 2>&1; then
       RESOLVED_TOKEN="$t"
     fi
   fi
-  if [ -n "$RESOLVED_TOKEN" ]; then
+  if [[ -n "$RESOLVED_TOKEN" ]]; then
     export GH_TOKEN="$RESOLVED_TOKEN"
     if gh pr list --state all --limit 1 >/dev/null 2>&1; then
       HAS_GH=1
@@ -90,16 +90,16 @@ while IFS= read -r line; do
     worktree\ *) current_path="${line#worktree }" ;;
     branch\ refs/heads/*)
       branch="${line#branch refs/heads/}"
-      [ -n "$current_path" ] && WORKTREE_OF["$branch"]="$current_path"
+      [[ -n "$current_path" ]] && WORKTREE_OF["$branch"]="$current_path"
       ;;
     "") current_path="" ;;
   esac
 done < <(git worktree list --porcelain)
 
 while IFS= read -r b; do
-  [ "$b" = "$BASE" ] && continue
+  [[ "$b" = "$BASE" ]] && continue
 
-  if [ "$b" = "$CURRENT" ]; then
+  if [[ "$b" = "$CURRENT" ]]; then
     # Still surface dirty state for the branch we're running from — silently
     # skipping it entirely would let a dirty feature worktree look clean in
     # the report. --ignored so ignored-but-important files (.env, generated,
@@ -109,14 +109,14 @@ while IFS= read -r b; do
     # failure here must not silently read as "clean".
     if ! dirty=$(git status --porcelain --ignored -uall 2>&1); then
       DIRTY+=("$b|$(pwd)")
-    elif [ -n "$dirty" ]; then
+    elif [[ -n "$dirty" ]]; then
       DIRTY+=("$b|$(pwd)")
     fi
     continue
   fi
 
   wt="${WORKTREE_OF[$b]:-}"
-  if [ -n "$wt" ]; then
+  if [[ -n "$wt" ]]; then
     # If `git status` itself fails (corrupted worktree, missing directory,
     # permissions, ...) `2>/dev/null || true` would silently produce an
     # empty string indistinguishable from "clean" — treat any failure as
@@ -126,7 +126,7 @@ while IFS= read -r b; do
       DIRTY+=("$b|$wt")
       continue
     fi
-    if [ -n "$dirty" ]; then
+    if [[ -n "$dirty" ]]; then
       DIRTY+=("$b|$wt")
       continue
     fi
@@ -134,7 +134,7 @@ while IFS= read -r b; do
 
   pr_state=""
   pr_lookup_failed=0
-  if [ "$HAS_GH" = "1" ]; then
+  if [[ "$HAS_GH" = "1" ]]; then
     # A branch can have more than one PR record (e.g. an old one merged, a
     # new one open on the same branch name after re-push). Prefer OPEN over
     # MERGED over CLOSED so active work is never misclassified as safe.
@@ -156,7 +156,7 @@ while IFS= read -r b; do
   is_ancestor=0
   git merge-base --is-ancestor "$b" "origin/$BASE" 2>/dev/null && is_ancestor=1
 
-  if [ "$pr_lookup_failed" = "1" ]; then
+  if [[ "$pr_lookup_failed" = "1" ]]; then
     NEEDS_DECISION+=("$b|gh PR lookup failed for this branch (network/API error, not \"no PR\") — classify manually")
   else
     case "$pr_state" in
@@ -166,7 +166,7 @@ while IFS= read -r b; do
         # new work under the same name), its current tip may no longer be
         # in $BASE at all — corroborate with the ancestry check before
         # trusting the PR record.
-        if [ "$is_ancestor" = "1" ]; then
+        if [[ "$is_ancestor" = "1" ]]; then
           SAFE+=("$b|merged PR")
         else
           NEEDS_DECISION+=("$b|PR merged, but current tip is not an ancestor of $BASE — branch likely reused/advanced since the merge, ask before deleting")
@@ -179,7 +179,7 @@ while IFS= read -r b; do
         NEEDS_DECISION+=("$b|PR closed WITHOUT merging — possibly abandoned, ask before deleting")
         ;;
       *)
-        if [ "$is_ancestor" = "1" ]; then
+        if [[ "$is_ancestor" = "1" ]]; then
           SAFE+=("$b|no PR record, but ancestor of origin/$BASE")
         else
           NEEDS_DECISION+=("$b|no PR, unmerged — real content not in $BASE, ask before deleting")
@@ -194,7 +194,7 @@ echo "=== SAFE TO DELETE (${#SAFE[@]}) — merged or ancestor-of-$BASE ==="
 for e in "${SAFE[@]+"${SAFE[@]}"}"; do
   IFS='|' read -r b reason <<<"$e"
   wt="${WORKTREE_OF[$b]:-}"
-  if [ -n "$wt" ]; then
+  if [[ -n "$wt" ]]; then
     printf '  %-55s %-30s [worktree: %s]\n' "$b" "$reason" "$wt"
   else
     printf '  %-55s %s\n' "$b" "$reason"
@@ -228,10 +228,10 @@ for e in "${DIRTY[@]+"${DIRTY[@]}"}"; do
 done
 
 echo "=== STALE REMOTE BRANCHES (merged PR, remote ref never auto-deleted) ==="
-if [ "$HAS_GH" = "1" ]; then
+if [[ "$HAS_GH" = "1" ]]; then
   git for-each-ref --format='%(refname:short)' 'refs/remotes/origin' | sed -e '/\/HEAD$/d' -e 's#^origin/##' | while read -r rb; do
-    [ -z "$rb" ] && continue
-    [ "$rb" = "$BASE" ] && continue
+    [[ -z "$rb" ]] && continue
+    [[ "$rb" = "$BASE" ]] && continue
     # Query all states, not just merged: a remote branch can have both an
     # old merged PR and a newer open one — that's active work, not stale.
     #
@@ -244,7 +244,7 @@ if [ "$HAS_GH" = "1" ]; then
             elif any(.[]; .state=="MERGED") then "MERGED"
             elif length>0 then .[0].state
             else "" end' 2>/dev/null || true)
-    if [ "$state" = "MERGED" ]; then
+    if [[ "$state" = "MERGED" ]]; then
       # Same reused/advanced-branch corroboration as the local MERGED case:
       # a merged PR only vouches for the commits it contained. If the
       # remote branch was reused/force-pushed since, its current tip may
