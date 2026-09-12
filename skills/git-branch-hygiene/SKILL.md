@@ -70,10 +70,13 @@ For each one, actually look before asking:
 - **Closed-without-merging PR**: check the PR itself (`gh pr view <n>`) —
   was it closed as superseded/rejected, or just gone stale? Diff it against
   current `main` to see if it still adds anything real.
-- **No PR, unmerged**: diff against `origin/<base>` (`git diff origin/main..<branch> --stat`).
-  If the diff is dominated by deletions of files `main` later added (the
-  branch is just old and behind, not adding anything new), it's likely
-  safe. If it adds real, unique content, it needs the user's call.
+- **No PR, unmerged**: diff against the same base you passed to `audit.sh`
+  (`git diff origin/<base>..<branch> --stat` — e.g. `origin/main..<branch>`
+  only if the base is `main`; use whatever base the audit actually ran
+  against, or the diff is comparing against the wrong ref). If the diff is
+  dominated by deletions of files the base later added (the branch is just
+  old and behind, not adding anything new), it's likely safe. If it adds
+  real, unique content, it needs the user's call.
 - **Dirty worktree**: read every uncommitted/untracked file's content. If
   it's substantive (a script, systemd unit, doc rewrite, anything that
   represents actual unshipped effort), the right move is usually to commit
@@ -93,8 +96,12 @@ anything; deleting branches is a destructive action per the standard
 safety rules even when confirmed-merged. Then:
 
 ```bash
-# For each SAFE branch WITH a worktree, remove the worktree first:
-git worktree remove --force "<worktree-path>"   # safe: already confirmed non-dirty by the audit
+# For each SAFE branch WITH a worktree, remove the worktree first. Do NOT
+# use --force: the audit's clean/dirty read is a snapshot from Step 1, and
+# Step 2's investigation takes time — a file can land in the worktree in
+# between. Plain `git worktree remove` re-checks and refuses (rather than
+# destroying anything) if the worktree became dirty since the audit ran:
+git worktree remove "<worktree-path>"
 
 # Then delete the branch (force flag is fine — merge state was verified
 # via PR/ancestry, not git's own --merged check, which can't see squash

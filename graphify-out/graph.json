@@ -1348,7 +1348,7 @@
       "node_kind": "heading",
       "norm_label": "common rationalizations",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L115"
+      "source_location": "L122"
     },
     {
       "id": "skills_git_branch_hygiene_skill_core_principle",
@@ -1408,7 +1408,7 @@
       "node_kind": "heading",
       "norm_label": "step 3: execute",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L88"
+      "source_location": "L91"
     },
     {
       "id": "skills_git_branch_hygiene_audit",
@@ -1438,7 +1438,7 @@
       },
       "norm_label": "dirty",
       "source_file": "skills/git-branch-hygiene/audit.sh",
-      "source_location": "L66"
+      "source_location": "L81"
     },
     {
       "id": "skills_git_branch_hygiene_audit_needs_decision",
@@ -1453,7 +1453,7 @@
       },
       "norm_label": "needs_decision",
       "source_file": "skills/git-branch-hygiene/audit.sh",
-      "source_location": "L65"
+      "source_location": "L80"
     },
     {
       "id": "skills_git_branch_hygiene_audit_safe",
@@ -1468,7 +1468,7 @@
       },
       "norm_label": "safe",
       "source_file": "skills/git-branch-hygiene/audit.sh",
-      "source_location": "L64"
+      "source_location": "L79"
     },
     {
       "id": "skills_git_branch_hygiene_audit_sh__entry",
@@ -3560,7 +3560,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L115",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -3604,7 +3604,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L88",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -3692,7 +3692,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/audit.sh",
-      "source_location": "L64",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -3703,7 +3703,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/audit.sh",
-      "source_location": "L65",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -3714,7 +3714,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/audit.sh",
-      "source_location": "L66",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -4946,5 +4946,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "c8bf467bbcd8cc58392315e6c9262fa049ef0ec4"
+  "built_at_commit": "742d53ebc589eb35db6b6168e6415a21ea937352"
 }
