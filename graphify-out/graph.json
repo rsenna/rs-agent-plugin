@@ -1348,7 +1348,7 @@
       "node_kind": "heading",
       "norm_label": "common rationalizations",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L137"
+      "source_location": "L138"
     },
     {
       "id": "skills_git_branch_hygiene_skill_core_principle",
@@ -3560,7 +3560,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L137",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -4946,5 +4946,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "3547765a82abf44e8677d651785926a53c07ea8a"
+  "built_at_commit": "969d2c0b292251ab4f6c0fe7ce36156db4294f02"
 }

@@ -105,8 +105,13 @@ while IFS= read -r b; do
     # the report. --ignored so ignored-but-important files (.env, generated,
     # backups) count as dirty too, since Step 3 would otherwise be allowed
     # to remove a worktree that "looks" clean but isn't.
-    dirty=$(git status --porcelain --ignored -uall 2>/dev/null || true)
-    [ -n "$dirty" ] && DIRTY+=("$b|$(pwd)")
+    # Same fail-safe as the linked-worktree check below: a `git status`
+    # failure here must not silently read as "clean".
+    if ! dirty=$(git status --porcelain --ignored -uall 2>&1); then
+      DIRTY+=("$b|$(pwd)")
+    elif [ -n "$dirty" ]; then
+      DIRTY+=("$b|$(pwd)")
+    fi
     continue
   fi
 
@@ -214,7 +219,11 @@ for e in "${DIRTY[@]+"${DIRTY[@]}"}"; do
   # --short` would print nothing for exactly that case, leaving nothing to
   # investigate. 2>&1 surfaces a status failure (see classification) as text
   # instead of a bare empty block.
-  git -C "$wt" status --short --ignored 2>&1 | sed 's/^/    /'
+  # || true: under `set -o pipefail` a failing `git status` here (the same
+  # failure that may have routed this worktree into DIRTY in the first
+  # place) would otherwise abort the whole script mid-report via `set -e`,
+  # silently truncating everything after it — print what we got instead.
+  git -C "$wt" status --short --ignored 2>&1 | sed 's/^/    /' || true
   echo
 done
 
@@ -225,6 +234,13 @@ if [ "$HAS_GH" = "1" ]; then
     [ "$rb" = "$BASE" ] && continue
     # Query all states, not just merged: a remote branch can have both an
     # old merged PR and a newer open one — that's active work, not stale.
+    #
+    # Unlike the per-branch lookup above, a failed call here is deliberately
+    # left as "|| true" (folded into empty/no-match) rather than surfaced as
+    # its own bucket: this list is purely additive (STALE REMOTE is never
+    # consulted to gate a deletion elsewhere), so a lookup failure just
+    # omits that ref from the list — fail-safe in this direction, unlike
+    # the per-branch SAFE/NEEDS_DECISION classification.
     state=$(gh pr list --state all --head "$rb" --json state \
       --jq 'if any(.[]; .state=="OPEN") then "OPEN"
             elif any(.[]; .state=="MERGED") then "MERGED"

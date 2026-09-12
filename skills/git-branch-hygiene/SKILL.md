@@ -129,6 +129,7 @@ reach for `--force` as a shortcut past this:
 
 ```bash
 git -C "<worktree-path>" restore --staged --worktree .   # discard tracked changes
+git -C "<worktree-path>" clean -ndx                      # dry run first — review what -fdx would delete
 git -C "<worktree-path>" clean -fdx                      # discard untracked + ignored files
 git worktree remove "<worktree-path>"                    # now clean; removes without --force
 git branch -D "<branch>"
