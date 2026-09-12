@@ -53,12 +53,15 @@ and its worktree (if any) into four buckets:
 - **NEEDS A DECISION** — open PR (active, never touch), closed-without-
   merging PR (possibly abandoned), or no PR + unmerged (real content not
   in the base branch — could be forgotten work).
-- **DIRTY WORKTREES** — uncommitted or untracked files sitting in a
-  worktree. Never force-remove these. Read what's actually there
-  (`git -C <path> diff`, `git -C <path> status --short`, open the files) —
-  don't just count lines. It might be nothing (a stray regenerated file
-  safe to discard) or it might be real unshipped work (a script, a doc, a
-  fix) that deserves its own commit and PR before the worktree goes away.
+- **DIRTY WORKTREES** — uncommitted, untracked, **or ignored** files
+  sitting in a worktree (the audit deliberately counts ignored files too —
+  a `.env`, a generated artifact, a backup — so a worktree isn't force-
+  removable just because it's "just" ignored content). Never force-remove
+  these. Read what's actually there (`git -C <path> diff`,
+  `git -C <path> status --short --ignored`, open the files) — don't just
+  count lines. It might be nothing (a stray regenerated file safe to
+  discard) or it might be real unshipped work (a script, a doc, a fix)
+  that deserves its own commit and PR before the worktree goes away.
 - **STALE REMOTE BRANCHES** — remote refs whose PR already merged but
   were never auto-deleted (repo's auto-delete-branch-on-merge setting is
   off, or the merge happened before it was enabled).
@@ -118,6 +121,18 @@ git push origin --delete "<branch>"
 **Recovered work from a dirty worktree** — follow `pull-request-process`
 end to end (rebase onto current base if the worktree was stale, commit,
 self-review, push, open PR) before removing that worktree.
+
+**User confirmed "delete" for a dirty worktree** (Step 2 determined the
+uncommitted/untracked/ignored content is genuinely disposable — nothing
+worth recovering) — discard the content explicitly, then remove; never
+reach for `--force` as a shortcut past this:
+
+```bash
+git -C "<worktree-path>" restore --staged --worktree .   # discard tracked changes
+git -C "<worktree-path>" clean -fdx                      # discard untracked + ignored files
+git worktree remove "<worktree-path>"                    # now clean; removes without --force
+git branch -D "<branch>"
+```
 
 ## Common rationalizations
 

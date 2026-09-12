@@ -112,7 +112,15 @@ while IFS= read -r b; do
 
   wt="${WORKTREE_OF[$b]:-}"
   if [ -n "$wt" ]; then
-    dirty=$(git -C "$wt" status --porcelain --ignored -uall 2>/dev/null || true)
+    # If `git status` itself fails (corrupted worktree, missing directory,
+    # permissions, ...) `2>/dev/null || true` would silently produce an
+    # empty string indistinguishable from "clean" — treat any failure as
+    # dirty/unsafe rather than let an unreadable worktree slip through as
+    # safe to delete.
+    if ! dirty=$(git -C "$wt" status --porcelain --ignored -uall 2>&1); then
+      DIRTY+=("$b|$wt")
+      continue
+    fi
     if [ -n "$dirty" ]; then
       DIRTY+=("$b|$wt")
       continue
@@ -120,38 +128,60 @@ while IFS= read -r b; do
   fi
 
   pr_state=""
+  pr_lookup_failed=0
   if [ "$HAS_GH" = "1" ]; then
     # A branch can have more than one PR record (e.g. an old one merged, a
     # new one open on the same branch name after re-push). Prefer OPEN over
     # MERGED over CLOSED so active work is never misclassified as safe.
-    pr_state=$(gh pr list --state all --head "$b" --json state \
+    #
+    # Distinguish "gh call failed" (network/API hiccup) from "no PR found"
+    # (legitimately empty result): `2>/dev/null || true` alone would make
+    # both look identical, and the *-branch falls back to an ancestor-only
+    # check — silently reclassifying a branch whose real PR state just
+    # couldn't be fetched.
+    if ! pr_state=$(gh pr list --state all --head "$b" --json state \
       --jq 'if any(.[]; .state=="OPEN") then "OPEN"
             elif any(.[]; .state=="MERGED") then "MERGED"
             elif length>0 then .[0].state
-            else "" end' 2>/dev/null || true)
+            else "" end' 2>/dev/null); then
+      pr_lookup_failed=1
+    fi
   fi
 
   is_ancestor=0
   git merge-base --is-ancestor "$b" "origin/$BASE" 2>/dev/null && is_ancestor=1
 
-  case "$pr_state" in
-    MERGED)
-      SAFE+=("$b|merged PR")
-      ;;
-    OPEN)
-      NEEDS_DECISION+=("$b|open PR — active work, do not delete")
-      ;;
-    CLOSED)
-      NEEDS_DECISION+=("$b|PR closed WITHOUT merging — possibly abandoned, ask before deleting")
-      ;;
-    *)
-      if [ "$is_ancestor" = "1" ]; then
-        SAFE+=("$b|no PR record, but ancestor of origin/$BASE")
-      else
-        NEEDS_DECISION+=("$b|no PR, unmerged — real content not in $BASE, ask before deleting")
-      fi
-      ;;
-  esac
+  if [ "$pr_lookup_failed" = "1" ]; then
+    NEEDS_DECISION+=("$b|gh PR lookup failed for this branch (network/API error, not \"no PR\") — classify manually")
+  else
+    case "$pr_state" in
+      MERGED)
+        # A merged PR only vouches for the commits it actually contained.
+        # If the branch was reused/advanced afterward (force-pushed with
+        # new work under the same name), its current tip may no longer be
+        # in $BASE at all — corroborate with the ancestry check before
+        # trusting the PR record.
+        if [ "$is_ancestor" = "1" ]; then
+          SAFE+=("$b|merged PR")
+        else
+          NEEDS_DECISION+=("$b|PR merged, but current tip is not an ancestor of $BASE — branch likely reused/advanced since the merge, ask before deleting")
+        fi
+        ;;
+      OPEN)
+        NEEDS_DECISION+=("$b|open PR — active work, do not delete")
+        ;;
+      CLOSED)
+        NEEDS_DECISION+=("$b|PR closed WITHOUT merging — possibly abandoned, ask before deleting")
+        ;;
+      *)
+        if [ "$is_ancestor" = "1" ]; then
+          SAFE+=("$b|no PR record, but ancestor of origin/$BASE")
+        else
+          NEEDS_DECISION+=("$b|no PR, unmerged — real content not in $BASE, ask before deleting")
+        fi
+        ;;
+    esac
+  fi
 done < <(git branch --format='%(refname:short)')
 
 echo
@@ -179,7 +209,12 @@ for e in "${DIRTY[@]+"${DIRTY[@]}"}"; do
   IFS='|' read -r b wt <<<"$e"
   echo "  branch: $b"
   echo "  worktree: $wt"
-  git -C "$wt" status --short | sed 's/^/    /'
+  # --ignored: a worktree can be classified dirty solely because of ignored
+  # files (see the classification above) — without --ignored here, `status
+  # --short` would print nothing for exactly that case, leaving nothing to
+  # investigate. 2>&1 surfaces a status failure (see classification) as text
+  # instead of a bare empty block.
+  git -C "$wt" status --short --ignored 2>&1 | sed 's/^/    /'
   echo
 done
 

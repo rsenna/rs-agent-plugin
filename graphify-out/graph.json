@@ -1348,7 +1348,7 @@
       "node_kind": "heading",
       "norm_label": "common rationalizations",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L122"
+      "source_location": "L137"
     },
     {
       "id": "skills_git_branch_hygiene_skill_core_principle",
@@ -1396,7 +1396,7 @@
       "node_kind": "heading",
       "norm_label": "step 2: resolve every needs a decision and dirty worktree item first",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L66"
+      "source_location": "L69"
     },
     {
       "id": "skills_git_branch_hygiene_skill_step_3_execute",
@@ -1408,7 +1408,7 @@
       "node_kind": "heading",
       "norm_label": "step 3: execute",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L91"
+      "source_location": "L94"
     },
     {
       "id": "skills_git_branch_hygiene_audit",
@@ -3560,7 +3560,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L122",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -3593,7 +3593,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L66",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -3604,7 +3604,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/git-branch-hygiene/SKILL.md",
-      "source_location": "L91",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -4946,5 +4946,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "742d53ebc589eb35db6b6168e6415a21ea937352"
+  "built_at_commit": "3547765a82abf44e8677d651785926a53c07ea8a"
 }
