@@ -1323,6 +1323,214 @@
       "source_location": "L1"
     },
     {
+      "id": "skills_git_branch_hygiene_skill",
+      "label": "SKILL.md",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "git-branch-hygiene",
+        "description": "Audit and clean up accumulated local git branches and worktrees (from past pr.sh/pull-request-process sessions that never ran cleanup). Use when the user says branches/worktrees feel cluttered, asks for a branch cleanup or &quot;git hygiene&quot; pass, or periodically after a run of merged PRs \u2014 never automatically deletes anything without a review pass and explicit confirmation."
+      },
+      "node_kind": "page",
+      "norm_label": "skill.md",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "skills_git_branch_hygiene_skill_common_rationalizations",
+      "label": "Common rationalizations",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "common rationalizations",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L115"
+    },
+    {
+      "id": "skills_git_branch_hygiene_skill_core_principle",
+      "label": "Core principle",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "core principle",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L17"
+    },
+    {
+      "id": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "label": "Git Branch Hygiene",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "git branch hygiene",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L6"
+    },
+    {
+      "id": "skills_git_branch_hygiene_skill_step_1_run_the_audit",
+      "label": "Step 1: Run the audit",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "step 1: run the audit",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L34"
+    },
+    {
+      "id": "skills_git_branch_hygiene_skill_step_2_resolve_every_needs_a_decision_and_dirty_worktree_item_first",
+      "label": "Step 2: Resolve every NEEDS A DECISION and DIRTY WORKTREE item first",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "step 2: resolve every needs a decision and dirty worktree item first",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L66"
+    },
+    {
+      "id": "skills_git_branch_hygiene_skill_step_3_execute",
+      "label": "Step 3: Execute",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Git Branch Hygiene",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "step 3: execute",
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L88"
+    },
+    {
+      "id": "skills_git_branch_hygiene_audit",
+      "label": "audit.sh",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "audit.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "audit.sh",
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "skills_git_branch_hygiene_audit_dirty",
+      "label": "DIRTY",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "audit.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "code"
+      },
+      "norm_label": "dirty",
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L66"
+    },
+    {
+      "id": "skills_git_branch_hygiene_audit_needs_decision",
+      "label": "NEEDS_DECISION",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "audit.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "code"
+      },
+      "norm_label": "needs_decision",
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L65"
+    },
+    {
+      "id": "skills_git_branch_hygiene_audit_safe",
+      "label": "SAFE",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "audit.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "code"
+      },
+      "norm_label": "safe",
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L64"
+    },
+    {
+      "id": "skills_git_branch_hygiene_audit_sh__entry",
+      "label": "audit.sh script",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "audit.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "audit.sh script",
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "skills_pull_request_process_skill_md_doc",
+      "label": "skills/pull-request-process/SKILL.md",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "pr.sh",
+      "contributor": null,
+      "file_type": "document",
+      "norm_label": "skills/pull-request-process/skill.md",
+      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "tasks_issue_14_pr_sh_worktrees_should_not_live_alongside_issue",
+      "label": "Issue #14 - pr.sh worktrees should not live alongside personal repos under ~/REPO/ME",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "pr.sh",
+      "contributor": null,
+      "file_type": "document",
+      "norm_label": "issue #14 - pr.sh worktrees should not live alongside personal repos under ~/repo/me",
+      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "tasks_issue_14_pr_sh_worktrees_should_not_live_alongside_centralized_worktree_root",
+      "label": "Centralized worktree-root strategy (not sibling of main checkout)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "pr.sh",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "centralized worktree-root strategy (not sibling of main checkout)",
+      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_guiltty",
       "label": "guiltty (external repo)",
       "_origin": "semantic",
@@ -1623,6 +1831,51 @@
       "source_url": null
     },
     {
+      "id": "skills_map_issue_to_tasks_skill_md_doc",
+      "label": "skills/map-issue-to-tasks/SKILL.md",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 2,
+      "community_name": "issue.sh",
+      "contributor": null,
+      "file_type": "document",
+      "norm_label": "skills/map-issue-to-tasks/skill.md",
+      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "tasks_issue_10_issue_sh_pr_sh_no_sanctioned_way_to_create_a_new_issue",
+      "label": "Issue #10 - issue.sh/pr.sh: no sanctioned way to create a new issue under the bot identity",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 2,
+      "community_name": "issue.sh",
+      "contributor": null,
+      "file_type": "document",
+      "norm_label": "issue #10 - issue.sh/pr.sh: no sanctioned way to create a new issue under the bot identity",
+      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "tasks_issue_10_issue_sh_pr_sh_no_sanctioned_way_to_create_a_new_create_subcommand",
+      "label": "Sanctioned 'create' subcommand with bot-identity enforcement",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 2,
+      "community_name": "issue.sh",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "sanctioned 'create' subcommand with bot-identity enforcement",
+      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "readme_document",
       "label": "rs-agent-plugin README",
       "_origin": "semantic",
@@ -1859,126 +2112,6 @@
       "file_type": "rationale",
       "norm_label": "patch_all is a real immediate live-host action (rationale)",
       "source_file": "skills/patchmon-admin/SKILL.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "skills_map_issue_to_tasks_issue_sh_script",
-      "label": "skills/map-issue-to-tasks/issue.sh",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "skills/map-issue-to-tasks/issue.sh",
-      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "skills_pull_request_process_pr_sh_script",
-      "label": "skills/pull-request-process/pr.sh",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "skills/pull-request-process/pr.sh",
-      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "skills_map_issue_to_tasks_skill_md_doc",
-      "label": "skills/map-issue-to-tasks/SKILL.md",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "document",
-      "norm_label": "skills/map-issue-to-tasks/skill.md",
-      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "skills_pull_request_process_skill_md_doc",
-      "label": "skills/pull-request-process/SKILL.md",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "document",
-      "norm_label": "skills/pull-request-process/skill.md",
-      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "tasks_issue_10_issue_sh_pr_sh_no_sanctioned_way_to_create_a_new_issue",
-      "label": "Issue #10 - issue.sh/pr.sh: no sanctioned way to create a new issue under the bot identity",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "document",
-      "norm_label": "issue #10 - issue.sh/pr.sh: no sanctioned way to create a new issue under the bot identity",
-      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "tasks_issue_14_pr_sh_worktrees_should_not_live_alongside_issue",
-      "label": "Issue #14 - pr.sh worktrees should not live alongside personal repos under ~/REPO/ME",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "document",
-      "norm_label": "issue #14 - pr.sh worktrees should not live alongside personal repos under ~/repo/me",
-      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "tasks_issue_10_issue_sh_pr_sh_no_sanctioned_way_to_create_a_new_create_subcommand",
-      "label": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "sanctioned 'create' subcommand with bot-identity enforcement",
-      "source_file": "tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "tasks_issue_14_pr_sh_worktrees_should_not_live_alongside_centralized_worktree_root",
-      "label": "Centralized worktree-root strategy (not sibling of main checkout)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Sanctioned 'create' subcommand with bot-identity enforcement",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "centralized worktree-root strategy (not sibling of main checkout)",
-      "source_file": "tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md",
       "source_location": null,
       "source_url": null
     },
@@ -3398,6 +3531,83 @@
       "weight": 1.0
     },
     {
+      "source": "skills_git_branch_hygiene_audit",
+      "target": "skills_git_branch_hygiene_audit_sh__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_skill",
+      "target": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "target": "skills_git_branch_hygiene_skill_common_rationalizations",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "target": "skills_git_branch_hygiene_skill_core_principle",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "target": "skills_git_branch_hygiene_skill_step_1_run_the_audit",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "target": "skills_git_branch_hygiene_skill_step_2_resolve_every_needs_a_decision_and_dirty_worktree_item_first",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_skill_git_branch_hygiene",
+      "target": "skills_git_branch_hygiene_skill_step_3_execute",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/SKILL.md",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
       "source": "skills_map_issue_to_tasks_check_caveman_compress",
       "target": "skills_map_issue_to_tasks_check_caveman_compress_sh__entry",
       "relation": "contains",
@@ -3472,6 +3682,39 @@
       "confidence_score": 1.0,
       "source_file": "skills/repo-standard/test-repo-standard.sh",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_audit",
+      "target": "skills_git_branch_hygiene_audit_safe",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_audit",
+      "target": "skills_git_branch_hygiene_audit_needs_decision",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_git_branch_hygiene_audit",
+      "target": "skills_git_branch_hygiene_audit_dirty",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/git-branch-hygiene/audit.sh",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -4202,7 +4445,7 @@
     },
     {
       "source": "tasks_issue_10_issue_sh_pr_sh_no_sanctioned_way_to_create_a_new_create_subcommand",
-      "target": "skills_map_issue_to_tasks_issue_sh_script",
+      "target": "skills_map_issue_to_tasks_issue",
       "relation": "rationale_for",
       "_origin": "semantic",
       "confidence": "EXTRACTED",
@@ -4224,7 +4467,7 @@
     },
     {
       "source": "tasks_issue_14_pr_sh_worktrees_should_not_live_alongside_centralized_worktree_root",
-      "target": "skills_pull_request_process_pr_sh_script",
+      "target": "skills_pull_request_process_pr",
       "relation": "rationale_for",
       "_origin": "semantic",
       "confidence": "EXTRACTED",
@@ -4433,7 +4676,7 @@
     },
     {
       "source": "tasks_issue_10_issue_sh_pr_sh_no_sanctioned_way_to_create_a_new_issue",
-      "target": "skills_map_issue_to_tasks_issue_sh_script",
+      "target": "skills_map_issue_to_tasks_issue",
       "relation": "references",
       "_origin": "semantic",
       "confidence": "EXTRACTED",
@@ -4455,7 +4698,7 @@
     },
     {
       "source": "tasks_issue_14_pr_sh_worktrees_should_not_live_alongside_issue",
-      "target": "skills_pull_request_process_pr_sh_script",
+      "target": "skills_pull_request_process_pr",
       "relation": "references",
       "_origin": "semantic",
       "confidence": "EXTRACTED",
@@ -4703,5 +4946,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "48e01cb34b9d3f77b54e907f78526b7116918912"
+  "built_at_commit": "c8bf467bbcd8cc58392315e6c9262fa049ef0ec4"
 }
