@@ -151,7 +151,8 @@ If the project has no documented gate, run its tests + formatter/linter and say 
    SonarCloud's public `api/issues/search?pullRequest=<pr>&componentKeys=<key>`)
    to see the actual list before deciding there's nothing to do.
 
-   **For each unresolved thread (and each CI-check finding worth fixing):** make the fix if warranted, run the project
+   **For each unresolved thread, PR-level review comment, or CI-check
+   finding worth fixing:** make the fix if warranted, run the project
    quality gate, commit the fix, then repeat step 3's
    `requesting-code-review` loop with the same `BASE_BRANCH` and a fresh
    `HEAD_SHA`. Re-push only after that loop is clean (step 4):
@@ -160,7 +161,9 @@ If the project has no documented gate, run its tests + formatter/linter and say 
    BASE="$BASE_BRANCH" REVIEWED=1 "$P" push <branch>
    ```
 
-   Then **reply on that thread** with your conclusion:
+   Then **reply on that thread** with your conclusion — but only for a
+   `threads` finding, which is the only one of the three with a numeric
+   comment ID to reply to:
 
    ```bash
    # Reply with an inline message:
@@ -170,7 +173,7 @@ If the project has no documented gate, run its tests + formatter/linter and say 
    pr.sh reply 27 3623709612 /tmp/reply.md
    ```
 
-   For a general/top-level PR comment that isn't tied to a review thread
+   For a general/top-level PR comment that isn't tied to any thread
    (e.g. flagging something found while reviewing a *different* PR, a
    follow-up note, a status update): `pr.sh comment 27 "<body>"` (or a file
    path, same convention as `reply`). To correct a prior comment,
@@ -187,6 +190,12 @@ If the project has no documented gate, run its tests + formatter/linter and say 
    "$P" comment 27 "> The \`die\` message is quite long...
    Acknowledged — shortened the message and moved the rationale to SKILL.md."
    ```
+
+   **For a `checks` (CI-check) finding**: same as `reviews` — there's no
+   comment ID, only the check's own analyzer link, so it can't be replied
+   to with `reply` either. Post a general PR comment via `pr.sh comment`
+   naming the check and what you did (e.g. "Fixed the SonarCloud
+   shelldre:S7688 findings in abc1234.").
 
    **Never resolve threads yourself and never merge** — the maintainer does both.
 7. **Cleanup.** Once — and only once — the task is fully done (PR **merged**,

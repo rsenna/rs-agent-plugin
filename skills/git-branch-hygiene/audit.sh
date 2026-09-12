@@ -133,23 +133,29 @@ while IFS= read -r b; do
   fi
 
   pr_state=""
+  pr_head_sha=""
   pr_lookup_failed=0
   if [[ "$HAS_GH" = "1" ]]; then
     # A branch can have more than one PR record (e.g. an old one merged, a
     # new one open on the same branch name after re-push). Prefer OPEN over
     # MERGED over CLOSED so active work is never misclassified as safe.
+    # Also carry headRefOid (the commit GitHub actually recorded as this
+    # PR's head) alongside state — see the MERGED case below for why.
     #
     # Distinguish "gh call failed" (network/API hiccup) from "no PR found"
     # (legitimately empty result): `2>/dev/null || true` alone would make
     # both look identical, and the *-branch falls back to an ancestor-only
     # check — silently reclassifying a branch whose real PR state just
     # couldn't be fetched.
-    if ! pr_state=$(gh pr list --state all --head "$b" --json state \
-      --jq 'if any(.[]; .state=="OPEN") then "OPEN"
-            elif any(.[]; .state=="MERGED") then "MERGED"
-            elif length>0 then .[0].state
-            else "" end' 2>/dev/null); then
+    if ! pr_info=$(gh pr list --state all --head "$b" --json state,headRefOid \
+      --jq 'if any(.[]; .state=="OPEN") then (first(.[] | select(.state=="OPEN")) | .state + "\t" + .headRefOid)
+            elif any(.[]; .state=="MERGED") then (first(.[] | select(.state=="MERGED")) | .state + "\t" + .headRefOid)
+            elif length>0 then (.[0].state + "\t" + (.[0].headRefOid // ""))
+            else "\t" end' 2>/dev/null); then
       pr_lookup_failed=1
+    else
+      pr_state="${pr_info%%$'\t'*}"
+      pr_head_sha="${pr_info#*$'\t'}"
     fi
   fi
 
@@ -161,15 +167,21 @@ while IFS= read -r b; do
   else
     case "$pr_state" in
       MERGED)
-        # A merged PR only vouches for the commits it actually contained.
-        # If the branch was reused/advanced afterward (force-pushed with
-        # new work under the same name), its current tip may no longer be
-        # in $BASE at all — corroborate with the ancestry check before
-        # trusting the PR record.
-        if [[ "$is_ancestor" = "1" ]]; then
+        # A merged PR only vouches for the exact commit it recorded as its
+        # head (headRefOid) — NOT for "is the branch an ancestor of $BASE".
+        # A squash or true merge is never an ancestor of $BASE even when
+        # correctly and fully merged (see this skill's own core-principle
+        # note on that), so gating on ancestry here would misclassify every
+        # squash-merged branch as unsafe. Comparing against headRefOid gets
+        # this right either way: unchanged since the merge (local tip ==
+        # headRefOid) is safe regardless of merge strategy; a branch reused
+        # or advanced afterward (new commits past headRefOid, under the
+        # same branch name) no longer matches and is NOT safe.
+        local_sha=$(git rev-parse "$b" 2>/dev/null || true)
+        if [[ -n "$pr_head_sha" ]] && [[ "$local_sha" = "$pr_head_sha" ]]; then
           SAFE+=("$b|merged PR")
         else
-          NEEDS_DECISION+=("$b|PR merged, but current tip is not an ancestor of $BASE — branch likely reused/advanced since the merge, ask before deleting")
+          NEEDS_DECISION+=("$b|PR merged, but branch tip no longer matches the merged PR's head commit — branch likely reused/advanced since the merge, ask before deleting")
         fi
         ;;
       OPEN)
@@ -234,24 +246,31 @@ if [[ "$HAS_GH" = "1" ]]; then
     [[ "$rb" = "$BASE" ]] && continue
     # Query all states, not just merged: a remote branch can have both an
     # old merged PR and a newer open one — that's active work, not stale.
+    # Also carry headRefOid — see the per-branch MERGED case for why an
+    # ancestry check is the wrong corroboration for a merged PR.
     #
     # A failed call here is left as "|| true" (folded into empty/no-match)
     # rather than surfaced as its own bucket: unlike the per-branch lookup
     # above, the failure mode here is safe — a lookup failure just omits
     # that ref from the list instead of recommending it be deleted.
-    state=$(gh pr list --state all --head "$rb" --json state \
-      --jq 'if any(.[]; .state=="OPEN") then "OPEN"
-            elif any(.[]; .state=="MERGED") then "MERGED"
-            elif length>0 then .[0].state
-            else "" end' 2>/dev/null || true)
+    pr_info=$(gh pr list --state all --head "$rb" --json state,headRefOid \
+      --jq 'if any(.[]; .state=="OPEN") then (first(.[] | select(.state=="OPEN")) | .state + "\t" + .headRefOid)
+            elif any(.[]; .state=="MERGED") then (first(.[] | select(.state=="MERGED")) | .state + "\t" + .headRefOid)
+            elif length>0 then (.[0].state + "\t" + (.[0].headRefOid // ""))
+            else "\t" end' 2>/dev/null || true)
+    state="${pr_info%%$'\t'*}"
+    pr_head_sha="${pr_info#*$'\t'}"
     if [[ "$state" = "MERGED" ]]; then
-      # Same reused/advanced-branch corroboration as the local MERGED case:
-      # a merged PR only vouches for the commits it contained. If the
-      # remote branch was reused/force-pushed since, its current tip may
-      # no longer be in $BASE at all — SKILL.md's Step 3 recommends
-      # `git push origin --delete` for anything listed here, so this list
-      # is deletion-gating and must not report an unmerged tip as stale.
-      if git merge-base --is-ancestor "origin/$rb" "origin/$BASE" 2>/dev/null; then
+      # Same headRefOid corroboration as the local MERGED case: a merged
+      # PR only vouches for the exact commit it recorded as its head, not
+      # for ancestry (a squash/true merge is never an ancestor of $BASE
+      # even when correctly merged). If the remote branch was reused or
+      # force-pushed since, its current tip no longer matches headRefOid —
+      # SKILL.md's Step 3 recommends `git push origin --delete` for
+      # anything listed here, so this list is deletion-gating and must not
+      # report an advanced/reused tip as stale.
+      remote_sha=$(git rev-parse "origin/$rb" 2>/dev/null || true)
+      if [[ -n "$pr_head_sha" ]] && [[ "$remote_sha" = "$pr_head_sha" ]]; then
         echo "  origin/$rb"
       fi
     fi

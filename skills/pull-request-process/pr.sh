@@ -369,11 +369,18 @@ cmd_checks() {
   # real error's text can't corrupt what should be pure JSON.
   local json err_file rc
   err_file="$(mktemp)"
-  # `; rc=$?` here would be the exact bug called out in _bot_secret's own
-  # comment: under set -e, a failing command substitution in a plain
-  # assignment kills the script right there, before `rc=$?` ever runs.
-  # `&&`/`||` keeps this assignment in a context set -e doesn't fire on.
-  json="$(gh pr checks "$pr" --json name,bucket,description,link,workflow 2>"$err_file")" && rc=0 || rc=$?
+  # `json=$(...); rc=$?` here would be the exact bug called out in
+  # _bot_secret's own comment: under set -e, a failing command substitution
+  # in a plain assignment kills the script right there, before `rc=$?`
+  # ever runs. An `if`/`else` (rather than `cmd && a || b`, which ShellCheck
+  # flags as SC2015 since the `||` branch would also fire if `a` itself
+  # failed) keeps the assignment in a context set -e doesn't fire on, and
+  # captures the real exit code in each branch explicitly.
+  if json="$(gh pr checks "$pr" --json name,bucket,description,link,workflow 2>"$err_file")"; then
+    rc=0
+  else
+    rc=$?
+  fi
   if ! jq -e 'type == "array"' <<<"$json" >/dev/null 2>&1; then
     warn "gh pr checks $pr failed (exit $rc):"
     cat "$err_file" >&2
