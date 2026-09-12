@@ -45,7 +45,7 @@ A=<this-skill's-own-directory>/audit.sh
 "$A" [base-branch]
 ```
 
-Read-only — fetches + prunes `origin`, then classifies every local branch
+Read-only — fetches `origin` (no `--prune`, so it never deletes remote-tracking refs), then classifies every local branch
 and its worktree (if any) into four buckets:
 
 - **SAFE TO DELETE** — merged PR, or (no PR record) verified ancestor of
