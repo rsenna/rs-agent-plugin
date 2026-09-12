@@ -235,19 +235,25 @@ if [ "$HAS_GH" = "1" ]; then
     # Query all states, not just merged: a remote branch can have both an
     # old merged PR and a newer open one — that's active work, not stale.
     #
-    # Unlike the per-branch lookup above, a failed call here is deliberately
-    # left as "|| true" (folded into empty/no-match) rather than surfaced as
-    # its own bucket: this list is purely additive (STALE REMOTE is never
-    # consulted to gate a deletion elsewhere), so a lookup failure just
-    # omits that ref from the list — fail-safe in this direction, unlike
-    # the per-branch SAFE/NEEDS_DECISION classification.
+    # A failed call here is left as "|| true" (folded into empty/no-match)
+    # rather than surfaced as its own bucket: unlike the per-branch lookup
+    # above, the failure mode here is safe — a lookup failure just omits
+    # that ref from the list instead of recommending it be deleted.
     state=$(gh pr list --state all --head "$rb" --json state \
       --jq 'if any(.[]; .state=="OPEN") then "OPEN"
             elif any(.[]; .state=="MERGED") then "MERGED"
             elif length>0 then .[0].state
             else "" end' 2>/dev/null || true)
     if [ "$state" = "MERGED" ]; then
-      echo "  origin/$rb"
+      # Same reused/advanced-branch corroboration as the local MERGED case:
+      # a merged PR only vouches for the commits it contained. If the
+      # remote branch was reused/force-pushed since, its current tip may
+      # no longer be in $BASE at all — SKILL.md's Step 3 recommends
+      # `git push origin --delete` for anything listed here, so this list
+      # is deletion-gating and must not report an unmerged tip as stale.
+      if git merge-base --is-ancestor "origin/$rb" "origin/$BASE" 2>/dev/null; then
+        echo "  origin/$rb"
+      fi
     fi
   done
 else
