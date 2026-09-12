@@ -1,16 +1,16 @@
 # Graph Report - git-branch-hygiene-skill  (2026-09-12)
 
 ## Corpus Check
-- 32 files · ~30,593 words
+- 32 files · ~30,740 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 147 nodes · 238 edges · 17 communities (13 shown, 4 thin omitted)
+- 147 nodes · 239 edges · 17 communities (13 shown, 4 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `50a862b4`
+- Built from commit: `459e7dd1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -70,7 +70,7 @@
 ## Communities (17 total, 4 thin omitted)
 
 ### Community 0 - "pr.sh"
-Cohesion: 0.23
+Cohesion: 0.24
 Nodes (22): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+14 more)
 
 ### Community 1 - "Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill"

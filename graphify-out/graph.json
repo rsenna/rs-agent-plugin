@@ -135,7 +135,7 @@
       },
       "norm_label": "cmd_cleanup()",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L383"
+      "source_location": "L398"
     },
     {
       "id": "skills_pull_request_process_pr_cmd_close",
@@ -2449,31 +2449,19 @@
     },
     {
       "source": "skills_pull_request_process_pr_cmd_checks",
-      "target": "skills_pull_request_process_pr_log",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L373",
-      "weight": 1.0
-    },
-    {
-      "source": "skills_pull_request_process_pr_cmd_cleanup",
-      "target": "skills_pull_request_process_pr_die",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L384",
-      "weight": 1.0
-    },
-    {
-      "source": "skills_pull_request_process_pr_cmd_cleanup",
       "target": "skills_pull_request_process_pr_warn",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "skills/pull-request-process/pr.sh",
+      "source_location": "L378",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_pull_request_process_pr_cmd_checks",
+      "target": "skills_pull_request_process_pr_log",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -2485,6 +2473,30 @@
     },
     {
       "source": "skills_pull_request_process_pr_cmd_cleanup",
+      "target": "skills_pull_request_process_pr_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "skills/pull-request-process/pr.sh",
+      "source_location": "L399",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_pull_request_process_pr_cmd_cleanup",
+      "target": "skills_pull_request_process_pr_warn",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "skills/pull-request-process/pr.sh",
+      "source_location": "L403",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_pull_request_process_pr_cmd_cleanup",
       "target": "skills_pull_request_process_pr_log",
       "relation": "calls",
       "_origin": "ast",
@@ -2492,7 +2504,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L393",
+      "source_location": "L408",
       "weight": 1.0
     },
     {
@@ -2504,7 +2516,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L396",
+      "source_location": "L411",
       "weight": 1.0
     },
     {
@@ -2516,7 +2528,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L399",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -2720,7 +2732,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L454",
+      "source_location": "L469",
       "weight": 1.0
     },
     {
@@ -2732,7 +2744,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L455",
+      "source_location": "L470",
       "weight": 1.0
     },
     {
@@ -2744,7 +2756,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L456",
+      "source_location": "L471",
       "weight": 1.0
     },
     {
@@ -2756,7 +2768,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L457",
+      "source_location": "L472",
       "weight": 1.0
     },
     {
@@ -2768,7 +2780,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L458",
+      "source_location": "L473",
       "weight": 1.0
     },
     {
@@ -2780,7 +2792,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L459",
+      "source_location": "L474",
       "weight": 1.0
     },
     {
@@ -2792,7 +2804,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L460",
+      "source_location": "L475",
       "weight": 1.0
     },
     {
@@ -2804,7 +2816,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L461",
+      "source_location": "L476",
       "weight": 1.0
     },
     {
@@ -2816,7 +2828,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L462",
+      "source_location": "L477",
       "weight": 1.0
     },
     {
@@ -2828,7 +2840,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L463",
+      "source_location": "L478",
       "weight": 1.0
     },
     {
@@ -2840,7 +2852,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L464",
+      "source_location": "L479",
       "weight": 1.0
     },
     {
@@ -4061,7 +4073,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L383",
+      "source_location": "L398",
       "weight": 1.0
     },
     {
@@ -4996,5 +5008,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "50a862b4fab109e08cc0b976460ae6d7e7f4d1cf"
+  "built_at_commit": "459e7dd1b05fe963e3e8c8dc19c68a2ca8cc3cae"
 }

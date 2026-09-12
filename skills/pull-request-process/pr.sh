@@ -357,19 +357,34 @@ cmd_reviews() {
 
 cmd_checks() {
   local pr="${1:?usage: pr.sh checks <pr-number>}"
-  # `gh pr checks` exits non-zero for non-passing states (8 = pending,
-  # nonzero on fail too) even though the JSON it printed is exactly what we
-  # want — capture output and status separately so `set -e` doesn't kill
-  # the script on a merely-informative "some checks failed/pending".
-  local json rc
-  json="$(gh pr checks "$pr" --json name,bucket,description,link,workflow 2>&1)"; rc=$?
-  if [ "$rc" -ne 0 ] && [ "$rc" -ne 8 ]; then
-    echo "$json"
-    return "$rc"
+  # `gh pr checks` exits non-zero for non-passing states — 8 for pending,
+  # and (undocumented but observed) nonzero for a fail bucket too — even
+  # though it still printed the exact JSON we want. Gating on a specific
+  # set of "acceptable" exit codes previously misrouted the fail-bucket
+  # case (the one this subcommand exists to surface) into the error path
+  # instead of the formatted listing. Gate on whether stdout actually
+  # parses as the expected JSON array instead: that's true for pass, fail,
+  # and pending alike, and false for a genuine gh/API failure (bad auth,
+  # network error, nonexistent PR) — keep stdout and stderr separate so a
+  # real error's text can't corrupt what should be pure JSON.
+  local json err_file rc
+  err_file="$(mktemp)"
+  # `; rc=$?` here would be the exact bug called out in _bot_secret's own
+  # comment: under set -e, a failing command substitution in a plain
+  # assignment kills the script right there, before `rc=$?` ever runs.
+  # `&&`/`||` keeps this assignment in a context set -e doesn't fire on.
+  json="$(gh pr checks "$pr" --json name,bucket,description,link,workflow 2>"$err_file")" && rc=0 || rc=$?
+  if ! jq -e 'type == "array"' <<<"$json" >/dev/null 2>&1; then
+    warn "gh pr checks $pr failed (exit $rc):"
+    cat "$err_file" >&2
+    [[ -n "$json" ]] && echo "$json" >&2
+    rm -f "$err_file"
+    return 1
   fi
+  rm -f "$err_file"
   local count
-  count="$(jq 'length' <<<"$json" 2>/dev/null || echo 0)"
-  if [ "$count" = "0" ]; then
+  count="$(jq 'length' <<<"$json")"
+  if [[ "$count" = "0" ]]; then
     log "no CI checks reported for PR $pr."
     return 0
   fi
