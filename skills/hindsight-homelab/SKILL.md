@@ -31,8 +31,15 @@ profile") and is a purely local write to
 there's no cost to just always (re)creating it:
 
 ```bash
-hindsight profile create homelab --api-url http://docker.iceking.entrement.es:8888
+hindsight profile create homelab --api-url http://docker.iceking.entrement.es:8888 \
+  || { echo "hindsight profile create failed — CLI missing, or ~/.hindsight not writable. Fix that before continuing; a stale/missing profile would silently misdirect every later -p homelab command." >&2; exit 1; }
 ```
+
+Abort on failure here, don't let it fall through — the next step
+(reachability probe) hits the network, not the profile, so it can
+still succeed even when the profile write itself failed, leaving a
+stale or nonexistent `homelab` profile in place for every later
+`-p homelab` command to silently misuse.
 
 Then confirm reachability before doing anything else, so a session
 away from the homelab LAN/VPN gets a clear reason instead of a
@@ -74,24 +81,39 @@ shape as the failure-journal example below minus
 
 **Procedure ("how we do things here")** — a Hindsight **directive**,
 so it's enforced, not just recallable. `directive create` also has no
-`--tags` option, so tagged directives go through curl:
+`--tags` option, so tagged directives go through curl. **Build the
+JSON body with `jq`, never by interpolating raw content into a
+hand-written string** — a real directive/fact/failure report will
+routinely contain quotes, backslashes, or newlines (a shell command
+someone ran, an error message, a code snippet), any of which breaks a
+naively-interpolated JSON literal or, worse, lets attacker-controlled
+content escape the string and alter the request:
 ```bash
+body=$(jq -n \
+  --arg name "<name>" \
+  --arg content "<content>" \
+  --argjson tags '["repo:...", "tool:..."]' \
+  '{name: $name, content: $content, priority: 0, tags: $tags}')
 curl -sf -X POST http://docker.iceking.entrement.es:8888/v1/default/banks/homelab-agents/directives \
   -H "Content-Type: application/json" \
-  -d '{"name": "<name>", "content": "<content>", "priority": 0, "tags": ["repo:...", "tool:..."]}'
+  --data-binary "$body"
 ```
 
 **Failure journal entry** — `retain` with `context="tooling failure"`
 and tags, so Hindsight's own observation consolidation merges
 recurring issues under the same tag scope instead of piling up
-duplicates:
+duplicates. Same `jq`-built-body discipline as above:
 ```bash
+body=$(jq -n \
+  --arg content "<content>" \
+  --argjson tags '["tool:...", "host:..."]' \
+  '{items: [{content: $content, context: "tooling failure", tags: $tags}]}')
 curl -sf -X POST http://docker.iceking.entrement.es:8888/v1/default/banks/homelab-agents/memories \
   -H "Content-Type: application/json" \
-  -d '{"items": [{"content": "<content>", "context": "tooling failure", "tags": ["tool:...", "host:..."]}]}'
+  --data-binary "$body"
 ```
 (Same endpoint/shape, minus `"context": "tooling failure"`, for a
-tagged semantic fact.)
+tagged semantic fact — drop that key from the `jq` filter above.)
 
 ## 4. Read-before-write, always
 
@@ -100,8 +122,17 @@ known on the same tags:
 
 ```bash
 hindsight -p homelab directive list homelab-agents -o json   # filter client-side by tag, CLI has no --tags on this subcommand
-hindsight -p homelab memory recall homelab-agents "<query>" --tags <tags> --tags-match any --max-tokens 5000
+hindsight -p homelab memory recall homelab-agents "<query>" --tags <tags> --tags-match all_strict --max-tokens 5000
 ```
+
+Use `all_strict` here, not `any` (confirmed against Hindsight's own
+tag-matching semantics) — this check exists to answer "does something
+already exist for this *exact* identity scope," e.g. `repo:X,tool:Y`.
+`any` matches a record carrying *any one* of the requested tags, so a
+record scoped only to `repo:X` (about a different tool entirely) would
+count as "already exists" and wrongly suppress a legitimately new
+write for `repo:X,tool:Y`. `all_strict` requires every specified tag
+to be present, which is what "same tag scope" actually means here.
 
 `--tags` takes a single comma-separated string for multiple tags
 (e.g. `--tags repo:entrement.es,tool:gh`), not a repeated flag —

@@ -240,12 +240,17 @@ out anywhere. The two should stay consistent (same bank, same tag
 schema, same CLI-gap caveat); if the CLI gap gets fixed, both should be
 updated in the same pass.
 
-## Why this is a design doc, not the skill
+## Why this was a design doc, not the skill (historical — see Status above)
 
-Explicit instruction from Roger for this round: propose the approach and
-implementation details here, but do not write `skills/hindsight-homelab-
-agents/SKILL.md` itself in this PR. A follow-up (this same doc, revised
-if review changes the shape) implements it once approved.
+This section describes the state of *this original proposal PR* (#27),
+before implementation. Explicit instruction from Roger for that round:
+propose the approach and implementation details here, but do not write
+`skills/hindsight-homelab-agents/SKILL.md` itself in that PR. A
+follow-up PR (#28) implemented it once approved, as `skills/hindsight-
+homelab/SKILL.md` (shorter name — see "Open questions for review"
+below). Kept as-is rather than deleted so the historical record of
+what was and wasn't decided in #27 stays intact; read `skills/
+hindsight-homelab/SKILL.md` for the current, authoritative content.
 
 ## Open questions for review
 
