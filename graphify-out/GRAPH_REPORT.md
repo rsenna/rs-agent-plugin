@@ -1,16 +1,16 @@
-# Graph Report - vercel-skills-compat  (2026-08-31)
+# Graph Report - hindsight-homelab-agents-skill-proposal  (2026-09-14)
 
 ## Corpus Check
-- 30 files · ~27,392 words
+- 31 files · ~28,688 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 136 nodes · 225 edges · 16 communities (12 shown, 4 thin omitted)
+- 146 nodes · 236 edges · 16 communities (12 shown, 4 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `48e01cb3`
+- Built from commit: `c8bf467b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -18,9 +18,9 @@
 - pr.sh
 - Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill
 - issue.sh
+- `hindsight-homelab-agents` skill: design proposal (not yet implemented)
 - pull-request-process SKILL.md
 - doppler-secrets SKILL.md
-- Sanctioned 'create' subcommand with bot-identity enforcement
 - obsidian-official-cli skill-card (top-level)
 - Obsidian Bases Functions Reference
 - opn-api.sh
@@ -47,14 +47,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `repo-standard SKILL.md` --references--> `Cross-repo documentation/folder standard design doc`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
+- `Sanctioned 'create' subcommand with bot-identity enforcement` --semantically_similar_to--> `Centralized worktree-root strategy (not sibling of main checkout)`  [INFERRED] [semantically similar]
+  tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md → tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md
 - `repo-standard audit mode (read-only compliance check)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
 - `repo-standard scaffold mode (non-destructive creation)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
 - `rs-agent-plugin README` --references--> `fix-mapped-issue SKILL.md`  [EXTRACTED]
   README.md → skills/fix-mapped-issue/SKILL.md
-- `rs-agent-plugin README` --references--> `map-issue-to-tasks SKILL.md`  [EXTRACTED]
-  README.md → skills/map-issue-to-tasks/SKILL.md
 
 ## Import Cycles
 - None detected.
@@ -69,16 +69,20 @@
 ## Communities (16 total, 4 thin omitted)
 
 ### Community 0 - "pr.sh"
-Cohesion: 0.30
-Nodes (18): _bot_secret(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push(), cmd_reply() (+10 more)
+Cohesion: 0.24
+Nodes (21): _bot_secret(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push(), cmd_reply() (+13 more)
 
 ### Community 1 - "Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill"
 Cohesion: 0.21
 Nodes (12): docs/superpowers/specs/2026-08-01-repo-standard-design.md, skills/repo-standard/SKILL.md, guiltty (external repo), iklo (external repo, in-progress tier), Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill, obsidian-hivemind (external repo), roset.sh (external repo, prototype tier), repo.toml stage field + per-stage doc/folder tier table (+4 more)
 
 ### Community 2 - "issue.sh"
-Cohesion: 0.41
-Nodes (11): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+3 more)
+Cohesion: 0.30
+Nodes (14): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+6 more)
+
+### Community 3 - "`hindsight-homelab-agents` skill: design proposal (not yet implemented)"
+Cohesion: 0.17
+Nodes (11): Body outline, Context, Frontmatter (proposed), `hindsight-homelab-agents` skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal, Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/` (+3 more)
 
 ### Community 4 - "pull-request-process SKILL.md"
 Cohesion: 0.36
@@ -87,10 +91,6 @@ Nodes (8): rs-agent-plugin README, fix-mapped-issue SKILL.md, map-issue-to-tasks
 ### Community 5 - "doppler-secrets SKILL.md"
 Cohesion: 0.29
 Nodes (8): doppler-secrets SKILL.md, Doppler service-token least-privilege scoping rationale, OPNsense API lessons learned, Always pull config backup before nontrivial change (rationale), opnsense-admin SKILL.md, PatchMon API lessons learned, patchmon-admin SKILL.md, patch_all is a real immediate live-host action (rationale)
-
-### Community 6 - "Sanctioned 'create' subcommand with bot-identity enforcement"
-Cohesion: 0.32
-Nodes (8): skills/map-issue-to-tasks/issue.sh, skills/map-issue-to-tasks/SKILL.md, skills/pull-request-process/pr.sh, skills/pull-request-process/SKILL.md, Sanctioned 'create' subcommand with bot-identity enforcement, Issue #10 - issue.sh/pr.sh: no sanctioned way to create a new issue under the bot identity, Centralized worktree-root strategy (not sibling of main checkout), Issue #14 - pr.sh worktrees should not live alongside personal repos under ~/REPO/ME
 
 ### Community 9 - "Obsidian Bases Functions Reference"
 Cohesion: 1.00
@@ -117,14 +117,18 @@ Cohesion: 0.25
 Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, Quality Gate, Repo Notes
 
 ## Knowledge Gaps
-- **29 isolated node(s):** `opn-api.sh script`, `patchmon-api.sh script`, `Branch`, `Quality Gate`, `Identity & Secrets` (+24 more)
-  These have ≤1 connection - possible missing edges or undocumented components.
+- **37 isolated node(s):** `opn-api.sh script`, `patchmon-api.sh script`, `Branch`, `Quality Gate`, `Identity & Secrets` (+32 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 48 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `Centralized worktree-root strategy (not sibling of main checkout)` connect `pr.sh` to `issue.sh`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `Sanctioned 'create' subcommand with bot-identity enforcement` connect `issue.sh` to `pr.sh`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **What connects `opn-api.sh script`, `patchmon-api.sh script`, `Branch` to the rest of the system?**
-  _29 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _37 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `graphify as a standard dev-process artifact: `.gitignore` requirement design` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
