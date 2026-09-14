@@ -18,6 +18,11 @@
 #                          the review itself, not on a line — these have no thread and can't be
 #                          replied to with `reply`). Pulls out each bot's "Prompt for AI Agent(s)"
 #                          block when present, since that's the actionable part.
+#   checks <pr>            list CI check results (name, pass/fail/pending bucket, workflow,
+#                          description, link) — this is how SonarQube/SonarCloud and any other
+#                          third-party analyzer surface here: they post a check with a link to
+#                          their own web UI rather than GitHub review comments, so `threads`/
+#                          `reviews` alone would miss them entirely.
 #   comment <pr> <body>   post a general/top-level PR comment, not tied to any review thread
 #                         (body = inline string or path to a markdown file); use this to
 #                         respond to PR-level reviews (from `reviews`) that have no thread.
@@ -350,6 +355,53 @@ cmd_reviews() {
   echo "[pr]   Your response here.'"
 }
 
+cmd_checks() {
+  local pr="${1:?usage: pr.sh checks <pr-number>}"
+  # `gh pr checks` exits non-zero for non-passing states — 8 for pending,
+  # and (undocumented but observed) nonzero for a fail bucket too — even
+  # though it still printed the exact JSON we want. Gating on a specific
+  # set of "acceptable" exit codes previously misrouted the fail-bucket
+  # case (the one this subcommand exists to surface) into the error path
+  # instead of the formatted listing. Gate on whether stdout actually
+  # parses as the expected JSON array instead: that's true for pass, fail,
+  # and pending alike, and false for a genuine gh/API failure (bad auth,
+  # network error, nonexistent PR) — keep stdout and stderr separate so a
+  # real error's text can't corrupt what should be pure JSON.
+  local json err_file rc
+  err_file="$(mktemp)"
+  # `json=$(...); rc=$?` here would be the exact bug called out in
+  # _bot_secret's own comment: under set -e, a failing command substitution
+  # in a plain assignment kills the script right there, before `rc=$?`
+  # ever runs. An `if`/`else` (rather than `cmd && a || b`, which ShellCheck
+  # flags as SC2015 since the `||` branch would also fire if `a` itself
+  # failed) keeps the assignment in a context set -e doesn't fire on, and
+  # captures the real exit code in each branch explicitly.
+  if json="$(gh pr checks "$pr" --json name,bucket,description,link,workflow 2>"$err_file")"; then
+    rc=0
+  else
+    rc=$?
+  fi
+  if ! jq -e 'type == "array"' <<<"$json" >/dev/null 2>&1; then
+    warn "gh pr checks $pr failed (exit $rc):"
+    cat "$err_file" >&2
+    [[ -n "$json" ]] && echo "$json" >&2
+    rm -f "$err_file"
+    return 1
+  fi
+  rm -f "$err_file"
+  local count
+  count="$(jq 'length' <<<"$json")"
+  if [[ "$count" = "0" ]]; then
+    log "no CI checks reported for PR $pr."
+    return 0
+  fi
+  # SonarQube/SonarCloud (and most third-party analyzers) post their
+  # findings on their own web UI, not as GitHub review comments — this
+  # surfaces the check's own link (and any inline description GitHub does
+  # have) instead of leaving those checks invisible to the review loop.
+  jq -r '.[] | "── \(.name) [\(.bucket)] \(.workflow)\n   \(if (.description // "") != "" then .description else "(no inline description — see link)" end)\n   \(.link)\n"' <<<"$json"
+}
+
 cmd_cleanup() {
   git rev-parse --git-dir >/dev/null 2>&1 || die "not a git repo"
   # git status ignores gitignored build artifacts, so a non-empty result is real
@@ -426,10 +478,11 @@ case "${1:-}" in
   open)    shift; cmd_open "$@" ;;
   threads) shift; cmd_threads "$@" ;;
   reviews) shift; cmd_reviews "$@" ;;
+  checks)  shift; cmd_checks "$@" ;;
   comment) shift; cmd_comment "$@" ;;
   close)   shift; cmd_close "$@" ;;
   comment-delete) shift; cmd_comment_delete "$@" ;;
   reply)   shift; cmd_reply "$@" ;;
   cleanup) shift; cmd_cleanup "$@" ;;
-  *) die "usage: pr.sh {start|push|open|threads|reviews|comment|close|comment-delete|reply|cleanup} ...  (BASE=$BASE)" ;;
+  *) die "usage: pr.sh {start|push|open|threads|reviews|checks|comment|close|comment-delete|reply|cleanup} ...  (BASE=$BASE)" ;;
 esac

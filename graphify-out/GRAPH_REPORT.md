@@ -33,9 +33,9 @@
 - Agent Operations Guide
 
 ## God Nodes (most connected - your core abstractions)
-1. `pr.sh script` - 13 edges
-2. `issue.sh script` - 10 edges
-3. `log()` - 10 edges
+1. `pr.sh script` - 14 edges
+2. `log()` - 11 edges
+3. `issue.sh script` - 10 edges
 4. `create_required_path()` - 10 edges
 5. `repo-standard.sh script` - 9 edges
 6. `Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill` - 8 edges
@@ -66,7 +66,7 @@
 - **Six external repos rolled out under repo-standard stage tiers via issue #3 task 3** — tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_roset_sh, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_iklo, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_what_about, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_guiltty, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_obsidian_hivemind, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_wawk_js [EXTRACTED 1.00]
 - **Repo-standard design doc and skill jointly amended by issues #3 and #9** — docs_superpowers_specs_2026_08_01_repo_standard_design_document, skills_repo_standard_skill_document, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_9_repo_standard_design_make_repos_agent_agnostic_by_issue [INFERRED 0.85]
 
-## Communities (16 total, 4 thin omitted)
+## Communities (17 total, 4 thin omitted)
 
 ### Community 0 - "pr.sh"
 Cohesion: 0.24
