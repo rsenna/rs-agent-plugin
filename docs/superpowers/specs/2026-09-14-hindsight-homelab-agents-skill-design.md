@@ -194,10 +194,13 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    That's an amplification this skill specifically causes by widening
    who can write, distinct from "a rogue host on the LAN" and not
    addressed by observing that the network boundary itself is
-   unchanged. Accepted for now, same reasoning as the network point
-   (auth on the deployment is out of scope here — see below), but
-   worth a session author being aware of before pointing an
-   untrusted-content-processing session at this skill. Not fixed in
+   unchanged. This is a separate risk from the network point above,
+   not excused by the same argument — it's accepted for now for a
+   different reason: auth belongs on the Hindsight deployment itself,
+   not in this skill's client-side commands (out of scope here — see
+   below), but it's worth a session author being aware of before
+   pointing an untrusted-content-processing session at this skill. Not
+   fixed in
    this proposal; if this bank's blast radius ever needs to shrink,
    the fix belongs on the `entrement.es` deployment
    (e.g. a shared secret or mTLS on the data-plane), not in this
