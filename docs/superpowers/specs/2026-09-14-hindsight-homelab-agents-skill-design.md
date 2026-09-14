@@ -1,9 +1,14 @@
-# `hindsight-homelab-agents` skill: design proposal (not yet implemented)
+# `hindsight-homelab-agents` skill: design proposal (implemented as `hindsight-homelab`)
 
 ## Status
 
-**Proposal only.** No skill code is added by this PR — see "Why this is a
-design doc, not the skill" below.
+**Implemented.** This proposal was approved and shipped as
+`skills/hindsight-homelab/SKILL.md` (shorter name than originally
+proposed — see "Open questions for review" below). This document is
+kept as the historical design record; the body below still describes
+the original proposal, not necessarily every detail of the shipped
+skill verbatim — read `skills/hindsight-homelab/SKILL.md` itself for
+the current, authoritative version.
 
 ## Context
 
@@ -244,15 +249,20 @@ if review changes the shape) implements it once approved.
 
 ## Open questions for review
 
-- Skill name: `hindsight-homelab-agents` vs. something shorter
-  (`hindsight-homelab`)? Longer name is more specific/searchable, matches
-  the "which deployment" framing; shorter is easier to type/recall.
-- Should the setup-check step also probe reachability
-  (`docker.iceking.entrement.es:8888/health`) and say something useful
-  ("you're probably not on the homelab LAN/VPN") rather than just fail
-  cryptically when a session runs this away from home? The remote-VPN-
-  access ticket (`entrement.es` issue #74) is separately tracking
-  whether that access path even works yet.
+- ~~Skill name: `hindsight-homelab-agents` vs. something shorter
+  (`hindsight-homelab`)?~~ — resolved at implementation time: shipped
+  as `skills/hindsight-homelab/SKILL.md` (shorter form). This doc's
+  body still refers to the longer proposed name throughout; that's the
+  historical proposal text, not stale — the actual skill name is
+  `hindsight-homelab`.
+- ~~Should the setup-check step also probe reachability~~ — resolved
+  at implementation time: yes. Confirmed `/health` returns 200 on the
+  live deployment; the shipped skill's preflight step curls it and
+  prints a clear "you're probably not on the homelab LAN/VPN" message
+  on failure instead of letting the first real command fail cryptically.
+  The remote-VPN-access ticket (`entrement.es` issue #74) is separately
+  tracking whether that access path even works yet — this probe will
+  correctly report failure either way, it doesn't resolve that ticket.
 - ~~Worth adding a `hindsight profile show homelab` idempotency check
   before `create`~~ — resolved during review: dropped the existence
   check entirely and made step 1 always (re)create the profile
