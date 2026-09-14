@@ -82,30 +82,49 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    `tool:{name}`, `host:{name}` — omit `repo:`/`host:` when not
    applicable, never omit `tool:` on a directive or failure-journal
    entry about a specific tool.
-3. **Three kinds of content:**
-   - Semantic fact → `hindsight -p homelab memory retain homelab-agents "<content>" --context "<context>"` (plain retain; tags not supported by the CLI, see the gap below — use curl if tagging matters).
+3. **Three kinds of content.** `/v1/default/...` below — `default` is a
+   literal path segment in this Hindsight deployment (not a placeholder
+   to fill in; verify against the live OpenAPI spec at
+   `http://docker.iceking.entrement.es:8888/openapi.json` before
+   implementing, in case that changes):
+   - Semantic fact, untagged → `hindsight -p homelab memory retain homelab-agents "<content>" --context "<context>"` is fine (plain retain; tags not supported by the CLI, see the gap below). Semantic fact WITH tags → curl, same shape as the failure-journal example below, just without `"context": "tooling failure"`.
    - Procedure ("how we do things here") → a Hindsight **directive**, not
-     a plain fact, so it's enforced, not just recallable. The CLI's
-     `directive create` has no `--tags` option (same gap), so tagged
-     directives go through curl:
+     a plain fact, so it's enforced, not just recallable (see the
+     `hindsight-docs` skill for the full directive/reflect model). The
+     CLI's `directive create` has no `--tags` option (same gap), so
+     tagged directives go through curl:
      ```bash
      curl -sf -X POST http://docker.iceking.entrement.es:8888/v1/default/banks/homelab-agents/directives \
        -H "Content-Type: application/json" \
        -d '{"name": "<name>", "content": "<content>", "priority": 0, "tags": ["repo:...", "tool:..."]}'
      ```
    - Failure journal entry → `retain` with `context="tooling failure"`
-     and tags (again via curl for the tags), so Hindsight's own
-     observation consolidation merges recurring issues under the same
-     tag scope instead of piling up duplicates.
+     and tags, so Hindsight's own observation consolidation merges
+     recurring issues under the same tag scope instead of piling up
+     duplicates. The CLI's `memory retain` also has no `--tags` option,
+     so this goes through curl too — the shape a future SKILL.md needs
+     (retain's actual payload structure, confirmed against this bank
+     during the `entrement.es` rollout):
+     ```bash
+     curl -sf -X POST http://docker.iceking.entrement.es:8888/v1/default/banks/homelab-agents/memories \
+       -H "Content-Type: application/json" \
+       -d '{"items": [{"content": "<content>", "context": "tooling failure", "tags": ["tool:...", "host:..."]}]}'
+     ```
+     (Same endpoint/shape, minus the `"context": "tooling failure"`, for
+     a tagged semantic fact.)
 4. **Read-before-write, always:** before creating a directive or failure
    entry, check what's already known on the same tags —
    ```bash
    hindsight -p homelab directive list homelab-agents -o json   # filter client-side by tag, CLI has no --tags on this subcommand
    hindsight -p homelab memory recall homelab-agents "<query>" --tags <tags> --tags-match any --max-tokens 5000
    ```
-   This is the actual fix for the rule-duplication problem this skill
-   exists to solve — not agents remembering to check, but the skill
-   always making them check first.
+   `--tags` takes a single comma-separated string for multiple tags
+   (e.g. `--tags repo:entrement.es,tool:gh`), not a repeated flag —
+   confirm against `hindsight memory recall --help` on the machine
+   implementing this, since CLI flag syntax can change between
+   versions. This read-before-write step is the actual fix for the
+   rule-duplication problem this skill exists to solve — not agents
+   remembering to check, but the skill always making them check first.
 5. **Known CLI/API version gap** (stated as a fact to re-verify, not a
    permanent constraint): as of CLI `0.9.2` / API `0.10.0`, `memory
    retain`, `retain-files`, and `directive create`/`update` have no
