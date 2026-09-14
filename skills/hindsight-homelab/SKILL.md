@@ -124,14 +124,22 @@ correctness failure. If this becomes an actual recurring problem,
 revisit with an API-level upsert/idempotency key if Hindsight adds one
 (as of this writing, `RetainRequest.operation_id` gives retry-safety
 for a single client-supplied UUID, but doesn't solve cross-session
-semantic-duplicate detection), or a serialization convention.
+semantic-duplicate detection — and per the live schema it's ignored
+for synchronous retain anyway, which is what every example in this
+skill uses, so it isn't something to reach for today, only if this
+skill's retain calls ever move to `async: true`), or a serialization
+convention.
 
 ## 5. Known CLI/API version gap
 
 Confirmed as of CLI `0.9.2` / this deployment's live OpenAPI spec:
 `memory retain`, `retain-files`, and `directive create`/`update` have
-no `--tags` option; only `memory recall` does (this is why steps 3
-and 4 above use curl for anything tagged). Check `hindsight --version`
+no *item-level* `--tags` option; only `memory recall` does (this is
+why steps 3 and 4 above use curl for anything tagged). `memory retain
+--help` does show a `--document-tags` flag — don't be fooled by it,
+it's deprecated, document-level, and explicitly superseded by
+item-level tags in the API itself; it isn't the gap closing. Check
+`hindsight --version`
 and `hindsight memory retain --help` / `hindsight directive create
 --help` before assuming this is still true — once `--tags` shows up
 there, switch the retain/directive snippets above from curl to the
@@ -172,13 +180,20 @@ recallable: every future `reflect` call across every session sharing
 this bank will treat an attacker- or malfunction-injected directive as
 a hard rule, not a fact to weigh. Reachability from the LAN/VPN is not
 the same thing as authorization to write, and today this deployment
-doesn't distinguish the two at all. Worth being deliberate about: a
-session working on some unrelated repo that ingests untrusted content
-(a malicious file, a poisoned dependency, a prompt-injection payload
-in an issue/PR/webpage it reads) has, via this skill, a documented,
-copy-pasteable path to inject a directive that every other session
-sharing the bank — including trusted ones — will subsequently treat
-as an enforced hard rule. Not fixed here; if this bank's blast radius
+doesn't distinguish the two at all. That network exposure itself isn't
+new — the same unauthenticated-LAN trust boundary already covers plenty
+of other homelab services — but this *skill* introduces a distinct,
+non-network risk worth naming as the additional part, not a
+restatement of the LAN-only caveat: today, only a session working
+inside the `entrement.es` checkout has scripts that can write to this
+bank; this skill hands that same write path to every agent session, in
+every repo, on any machine. A session working on some unrelated repo
+that ingests untrusted content (a malicious file, a poisoned
+dependency, a prompt-injection payload in an issue/PR/webpage it
+reads) now has, via this skill, a documented, copy-pasteable path to
+inject a directive that every other session sharing the bank —
+including trusted ones — will subsequently treat as an enforced hard
+rule. Not fixed here; if this bank's blast radius
 ever needs to shrink, the fix (a shared secret or mTLS on the
 data-plane, which would also close the transport-cleartext gap above)
 belongs on the `entrement.es` deployment, not in this skill's
