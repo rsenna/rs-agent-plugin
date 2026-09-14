@@ -168,43 +168,62 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    agent-to-agent messaging the current harness provides for that.
 8. **Auth:** none on the data-plane API today (LAN-only trust boundary,
    deliberate). These commands only work from inside the homelab
-   LAN/VPN.
+   LAN/VPN. **Transport is plain HTTP, not TLS** — every example in
+   this doc (`--api-url http://docker.iceking...`, every `curl`
+   example, the `/openapi.json` check) is cleartext, so anything on the
+   network path between a session and `docker.iceking` can observe or
+   alter memories/directives in transit, not just inject new ones from
+   an endpoint. Not glossing over this: it's a second, distinct gap
+   from the unauthenticated-writes one below (observation/tampering in
+   transit vs. missing access control), and it's real today, not
+   hypothetical — the URL is HTTP because the deployment is HTTP, this
+   doc isn't going to write `https://` examples that don't match what's
+   actually running. Deferred to the deployment for the same reason as
+   the auth gap (see Out of scope below): fixing it means TLS or an
+   authenticated tunnel on `docker.iceking` itself, not a change to
+   this skill's client-side commands.
 
-   **Blast radius, stated explicitly (reviewers correctly flagged this
-   needed more than one line):** any host that can reach
-   `docker.iceking.entrement.es:8888` — not just a trusted agent
-   session — can POST a directive, and a directive is *enforced*, not
-   just recallable (point 3): every future `reflect` call across every
-   session sharing this bank will treat an attacker- or
+   **Blast radius of the missing auth, stated explicitly (reviewers
+   correctly flagged this needed more than one line):** any host that
+   can reach `docker.iceking.entrement.es:8888` — not just a trusted
+   agent session — can POST a directive, and a directive is *enforced*,
+   not just recallable (point 3): every future `reflect` call across
+   every session sharing this bank will treat an attacker- or
    malfunction-injected directive as a hard rule, not a fact to weigh.
-   The *network* exposure (unauthenticated API, reachable from anywhere
-   on the LAN/VPN) isn't new — that trust boundary already covers
-   plenty of other homelab services. But this proposal does introduce a
-   distinct, non-network risk worth naming on its own: today, only a
-   session working inside the `entrement.es` checkout has the scripts
-   to write to this bank. This skill's entire point is to hand that
-   same write path — a documented, copy-pasteable `curl -X POST
-   .../directives` recipe — to every agent session, in every repo, on
-   any machine. A session working on some unrelated repo that ingests
-   untrusted content (a malicious file, a poisoned dependency, a
-   prompt-injection payload in an issue/PR/webpage it reads) now has a
-   ready-made, in-scope-of-its-own-instructions path to inject a
-   directive that every *other* session sharing the bank — including
-   trusted ones — will subsequently treat as an enforced hard rule.
-   That's an amplification this skill specifically causes by widening
-   who can write, distinct from "a rogue host on the LAN" and not
-   addressed by observing that the network boundary itself is
-   unchanged. This is a separate risk from the network point above,
-   not excused by the same argument — it's accepted for now for a
-   different reason: auth belongs on the Hindsight deployment itself,
-   not in this skill's client-side commands (out of scope here — see
-   below), but it's worth a session author being aware of before
-   pointing an untrusted-content-processing session at this skill. Not
-   fixed in
-   this proposal; if this bank's blast radius ever needs to shrink,
-   the fix belongs on the `entrement.es` deployment
-   (e.g. a shared secret or mTLS on the data-plane), not in this
-   skill's client-side commands.
+   Being precise about what "LAN-only trust boundary" actually claims:
+   reachability from the LAN/VPN is not the same thing as authorization
+   to write, and today this design doesn't distinguish the two at all —
+   anything that can route a packet to `docker.iceking:8888` is
+   functionally treated as an authorized writer, which is worth naming
+   as a category error rather than letting "LAN-only" read like it
+   settles the question. The *network* exposure itself (unauthenticated
+   API, reachable from anywhere on the LAN/VPN) isn't new — that trust
+   boundary already covers plenty of other homelab services. But this
+   proposal does introduce a distinct, non-network risk worth naming on
+   its own: today, only a session working inside the `entrement.es`
+   checkout has the scripts to write to this bank. This skill's entire
+   point is to hand that same write path — a documented,
+   copy-pasteable `curl -X POST .../directives` recipe — to every agent
+   session, in every repo, on any machine. A session working on some
+   unrelated repo that ingests untrusted content (a malicious file, a
+   poisoned dependency, a prompt-injection payload in an issue/PR/
+   webpage it reads) now has a ready-made, in-scope-of-its-own-
+   instructions path to inject a directive that every *other* session
+   sharing the bank — including trusted ones — will subsequently treat
+   as an enforced hard rule. That's an amplification this skill
+   specifically causes by widening who can write, distinct from "a
+   rogue host on the LAN" and not addressed by observing that the
+   network boundary itself is unchanged. This is a separate risk from
+   the network point above, not excused by the same argument — it's
+   accepted for now for a different reason: auth belongs on the
+   Hindsight deployment itself, not in this skill's client-side
+   commands (out of scope here — see below), but it's worth a session
+   author being aware of before pointing an untrusted-content-
+   processing session at this skill. Not fixed in this proposal; if
+   this bank's blast radius ever needs to shrink, the fix belongs on
+   the `entrement.es` deployment (e.g. a shared secret or mTLS on the
+   data-plane, which would also close the transport-cleartext gap
+   above), not in this skill's client-side commands.
 
 ### Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/`
 
@@ -247,9 +266,12 @@ if review changes the shape) implements it once approved.
   concern.
 - Fixing the CLI's missing `--tags` support upstream (this is Roger's
   plugin repo, not the `hindsight` CLI's own repo).
-- Adding authentication to the Hindsight data-plane API itself (see the
-  "Auth" note under Body outline point 8) — that's a change to the
-  `entrement.es` deployment, not to this skill's client-side commands.
+- Adding authentication, authorization, or TLS/an authenticated tunnel
+  to the Hindsight data-plane API itself (see the "Auth" note under
+  Body outline point 8, which covers both the missing-access-control
+  gap and the separate plaintext-transport gap) — both are changes to
+  the `entrement.es` deployment, not to this skill's client-side
+  commands.
 - Any change to `entrement.es` itself — that repo's PR #73 already ships
   the repo-local scripts and `AGENTS.md` update independently of whether
   this proposal is accepted.
