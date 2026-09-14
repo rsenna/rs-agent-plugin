@@ -166,7 +166,7 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    concurrently-running agent sessions. This bank is durable,
    recalled-later knowledge, not a message queue — use whatever
    agent-to-agent messaging the current harness provides for that.
-8. **Auth:** none on the data-plane API today (LAN-only trust boundary,
+8. **Auth & transport:** none on the data-plane API today (LAN-only trust boundary,
    deliberate). These commands only work from inside the homelab
    LAN/VPN. **Transport is plain HTTP, not TLS** — every example in
    this doc (`--api-url http://docker.iceking...`, every `curl`
@@ -267,7 +267,7 @@ if review changes the shape) implements it once approved.
 - Fixing the CLI's missing `--tags` support upstream (this is Roger's
   plugin repo, not the `hindsight` CLI's own repo).
 - Adding authentication, authorization, or TLS/an authenticated tunnel
-  to the Hindsight data-plane API itself (see the "Auth" note under
+  to the Hindsight data-plane API itself (see the "Auth & transport" note under
   Body outline point 8, which covers both the missing-access-control
   gap and the separate plaintext-transport gap) — both are changes to
   the `entrement.es` deployment, not to this skill's client-side
