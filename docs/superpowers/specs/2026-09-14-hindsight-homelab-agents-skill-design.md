@@ -70,11 +70,16 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
 
 ### Body outline
 
-1. **Setup check** (idempotent, run once per machine): verify the CLI
-   profile exists —
+1. **Setup check** (idempotent, run every time, not just once): don't
+   test for the profile's *name* — a stale profile pointing at an old
+   URL (e.g. `docker.iceking` renumbered) would pass a name-only check
+   and silently send every later `-p homelab` operation to the wrong
+   deployment. `profile create` overwrites unconditionally per its own
+   `--help` text ("Create or overwrite a profile"), so there's no
+   idempotency cost to just always (re)creating it — skip the
+   existence check entirely:
    ```bash
-   hindsight profile list | grep -q '^\s*•\s*homelab$' || \
-     hindsight profile create homelab --api-url http://docker.iceking.entrement.es:8888
+   hindsight profile create homelab --api-url http://docker.iceking.entrement.es:8888
    ```
 2. **Bank & tag schema** — fixed: `homelab-agents` (never
    `prod-smoke-test`, the deployment's own smoke-test bank). Tags are
@@ -122,9 +127,25 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    (e.g. `--tags repo:entrement.es,tool:gh`), not a repeated flag —
    confirm against `hindsight memory recall --help` on the machine
    implementing this, since CLI flag syntax can change between
-   versions. This read-before-write step is the actual fix for the
-   rule-duplication problem this skill exists to solve — not agents
-   remembering to check, but the skill always making them check first.
+   versions. This read-before-write step is the main mitigation for
+   the rule-duplication problem this skill exists to solve — not
+   agents remembering to check, but the skill always making them check
+   first.
+
+   **Known limitation, not eliminated:** this is check-then-write, not
+   atomic — two agent sessions racing on the same tag scope can both
+   observe "nothing exists yet" and both create an entry. At homelab
+   scale (a handful of personal agent sessions, not concurrent
+   production traffic) this is accepted as a low-probability residual
+   risk rather than engineered away: for failure-journal entries,
+   Hindsight's own observation consolidation already merges recurring
+   duplicates under the same tag scope (see point 3); for directives,
+   a rare duplicate is a manual cleanup, not a correctness failure (the
+   read-before-write step still eliminates the common case — an agent
+   that never checks). If this becomes an actual recurring problem,
+   revisit with an API-level upsert/idempotency key if Hindsight adds
+   one, or a serialization convention — not attempted here since
+   neither exists in the current CLI/API.
 5. **Known CLI/API version gap** (stated as a fact to re-verify, not a
    permanent constraint): as of CLI `0.9.2` / API `0.10.0`, `memory
    retain`, `retain-files`, and `directive create`/`update` have no
@@ -145,6 +166,25 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
 8. **Auth:** none on the data-plane API today (LAN-only trust boundary,
    deliberate). These commands only work from inside the homelab
    LAN/VPN.
+
+   **Blast radius, stated explicitly (reviewers correctly flagged this
+   needed more than one line):** any host that can reach
+   `docker.iceking.entrement.es:8888` — not just a trusted agent
+   session — can POST a directive, and a directive is *enforced*, not
+   just recallable (point 3): every future `reflect` call across every
+   session sharing this bank will treat an attacker- or
+   malfunction-injected directive as a hard rule, not a fact to weigh.
+   This is accepted for now because the trust boundary is "whatever can
+   reach this specific homelab LAN/VPN," which is already the trust
+   boundary for plenty of other unauthenticated homelab services — it
+   is not a new exposure introduced by this skill, but it is worth
+   naming precisely rather than waving at "LAN-only" as if that alone
+   settles it. Not fixed in this proposal (auth on the Hindsight
+   deployment itself is out of scope for a skill that only consumes
+   it — see "Out of scope" below); if this bank's blast radius ever
+   needs to shrink, the fix belongs on the `entrement.es` deployment
+   (e.g. a shared secret or mTLS on the data-plane), not in this
+   skill's client-side commands.
 
 ### Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/`
 
@@ -174,12 +214,11 @@ if review changes the shape) implements it once approved.
   cryptically when a session runs this away from home? The remote-VPN-
   access ticket (`entrement.es` issue #74) is separately tracking
   whether that access path even works yet.
-- Worth adding a `hindsight profile show homelab` idempotency check
-  before `create` in case the URL ever changes (e.g. if `docker.iceking`
-  gets renumbered) — `create` overwrites unconditionally per its own
-  `--help` text ("Create or overwrite a profile"), so re-running the
-  setup check is always safe, but a stale profile pointing at an old IP
-  would fail silently different than "not set up at all."
+- ~~Worth adding a `hindsight profile show homelab` idempotency check
+  before `create`~~ — resolved during review: dropped the existence
+  check entirely and made step 1 always (re)create the profile
+  unconditionally, since `create` already overwrites safely. See step 1
+  above.
 
 ## Out of scope for this proposal
 
@@ -188,6 +227,9 @@ if review changes the shape) implements it once approved.
   concern.
 - Fixing the CLI's missing `--tags` support upstream (this is Roger's
   plugin repo, not the `hindsight` CLI's own repo).
+- Adding authentication to the Hindsight data-plane API itself (see the
+  "Auth" note under Body outline point 8) — that's a change to the
+  `entrement.es` deployment, not to this skill's client-side commands.
 - Any change to `entrement.es` itself — that repo's PR #73 already ships
   the repo-local scripts and `AGENTS.md` update independently of whether
   this proposal is accepted.
