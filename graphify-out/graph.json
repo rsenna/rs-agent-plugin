@@ -1392,7 +1392,7 @@
       "node_kind": "heading",
       "norm_label": "open questions for review",
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L206"
+      "source_location": "L223"
     },
     {
       "id": "docs_superpowers_specs_2026_09_14_hindsight_homelab_agents_skill_design_out_of_scope_for_this_proposal",
@@ -1404,7 +1404,7 @@
       "node_kind": "heading",
       "norm_label": "out of scope for this proposal",
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L223"
+      "source_location": "L240"
     },
     {
       "id": "docs_superpowers_specs_2026_09_14_hindsight_homelab_agents_skill_design_proposal",
@@ -1428,7 +1428,7 @@
       "node_kind": "heading",
       "norm_label": "relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/`",
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L189"
+      "source_location": "L206"
     },
     {
       "id": "docs_superpowers_specs_2026_09_14_hindsight_homelab_agents_skill_design_status",
@@ -1464,7 +1464,7 @@
       "node_kind": "heading",
       "norm_label": "why this is a design doc, not the skill",
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L199"
+      "source_location": "L216"
     },
     {
       "id": "skills_pull_request_process_skill_md_doc",
@@ -3541,7 +3541,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L199",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -3552,7 +3552,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L206",
+      "source_location": "L223",
       "weight": 1.0
     },
     {
@@ -3563,7 +3563,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L223",
+      "source_location": "L240",
       "weight": 1.0
     },
     {
@@ -3607,7 +3607,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
-      "source_location": "L189",
+      "source_location": "L206",
       "weight": 1.0
     },
     {
@@ -4938,5 +4938,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "0f4693a332639cfc4ada32c8e3bc95b1d5d211d0"
+  "built_at_commit": "01c35449521147908d78ddbd1c28985097a8beeb"
 }

@@ -70,13 +70,16 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
 
 ### Body outline
 
-1. **Setup check** (idempotent, run every time, not just once): don't
-   test for the profile's *name* — a stale profile pointing at an old
-   URL (e.g. `docker.iceking` renumbered) would pass a name-only check
-   and silently send every later `-p homelab` operation to the wrong
-   deployment. `profile create` overwrites unconditionally per its own
-   `--help` text ("Create or overwrite a profile"), so there's no
-   idempotency cost to just always (re)creating it — skip the
+1. **Preflight profile check** (run every invocation, not a one-time
+   setup step): don't test for the profile's *name* — a stale profile
+   pointing at an old URL (e.g. `docker.iceking` renumbered) would pass
+   a name-only check and silently send every later `-p homelab`
+   operation to the wrong deployment. `profile create` overwrites
+   unconditionally per its own `--help` text ("Create or overwrite a
+   profile"), and (verified: `hindsight profile create --help`) it's a
+   purely local write to `~/.hindsight/cli-profiles/homelab.toml` — no
+   network round-trip to `docker.iceking` — so there's no per-invocation
+   cost, network or otherwise, to just always (re)creating it. Skip the
    existence check entirely:
    ```bash
    hindsight profile create homelab --api-url http://docker.iceking.entrement.es:8888
@@ -174,15 +177,29 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    just recallable (point 3): every future `reflect` call across every
    session sharing this bank will treat an attacker- or
    malfunction-injected directive as a hard rule, not a fact to weigh.
-   This is accepted for now because the trust boundary is "whatever can
-   reach this specific homelab LAN/VPN," which is already the trust
-   boundary for plenty of other unauthenticated homelab services — it
-   is not a new exposure introduced by this skill, but it is worth
-   naming precisely rather than waving at "LAN-only" as if that alone
-   settles it. Not fixed in this proposal (auth on the Hindsight
-   deployment itself is out of scope for a skill that only consumes
-   it — see "Out of scope" below); if this bank's blast radius ever
-   needs to shrink, the fix belongs on the `entrement.es` deployment
+   The *network* exposure (unauthenticated API, reachable from anywhere
+   on the LAN/VPN) isn't new — that trust boundary already covers
+   plenty of other homelab services. But this proposal does introduce a
+   distinct, non-network risk worth naming on its own: today, only a
+   session working inside the `entrement.es` checkout has the scripts
+   to write to this bank. This skill's entire point is to hand that
+   same write path — a documented, copy-pasteable `curl -X POST
+   .../directives` recipe — to every agent session, in every repo, on
+   any machine. A session working on some unrelated repo that ingests
+   untrusted content (a malicious file, a poisoned dependency, a
+   prompt-injection payload in an issue/PR/webpage it reads) now has a
+   ready-made, in-scope-of-its-own-instructions path to inject a
+   directive that every *other* session sharing the bank — including
+   trusted ones — will subsequently treat as an enforced hard rule.
+   That's an amplification this skill specifically causes by widening
+   who can write, distinct from "a rogue host on the LAN" and not
+   addressed by observing that the network boundary itself is
+   unchanged. Accepted for now, same reasoning as the network point
+   (auth on the deployment is out of scope here — see below), but
+   worth a session author being aware of before pointing an
+   untrusted-content-processing session at this skill. Not fixed in
+   this proposal; if this bank's blast radius ever needs to shrink,
+   the fix belongs on the `entrement.es` deployment
    (e.g. a shared secret or mTLS on the data-plane), not in this
    skill's client-side commands.
 
