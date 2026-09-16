@@ -1,16 +1,16 @@
-# Graph Report - hindsight-homelab-agents-skill-proposal  (2026-09-14)
+# Graph Report - hindsight-deploy-guarantee-proposal  (2026-09-16)
 
 ## Corpus Check
-- 33 files · ~33,299 words
+- 33 files · ~33,782 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 159 nodes · 250 edges · 18 communities (14 shown, 4 thin omitted)
+- 160 nodes · 251 edges · 18 communities (14 shown, 4 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3a3783a6`
+- Built from commit: `c416b639`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -40,21 +40,21 @@
 3. `issue.sh script` - 10 edges
 4. `create_required_path()` - 10 edges
 5. `repo-standard.sh script` - 9 edges
-6. `Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill` - 8 edges
-7. `die()` - 7 edges
-8. `cmd_cleanup()` - 7 edges
-9. `log()` - 7 edges
-10. `run_audit()` - 7 edges
+6. ``hindsight-homelab-agents` skill: design proposal (not yet implemented)` - 8 edges
+7. `Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill` - 8 edges
+8. `die()` - 7 edges
+9. `cmd_cleanup()` - 7 edges
+10. `log()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `repo-standard SKILL.md` --references--> `Cross-repo documentation/folder standard design doc`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
-- `Sanctioned 'create' subcommand with bot-identity enforcement` --semantically_similar_to--> `Centralized worktree-root strategy (not sibling of main checkout)`  [INFERRED] [semantically similar]
-  tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md → tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md
 - `repo-standard audit mode (read-only compliance check)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
 - `repo-standard scaffold mode (non-destructive creation)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
+- `Sanctioned 'create' subcommand with bot-identity enforcement` --semantically_similar_to--> `Centralized worktree-root strategy (not sibling of main checkout)`  [INFERRED] [semantically similar]
+  tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md → tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md
 - `rs-agent-plugin README` --references--> `fix-mapped-issue SKILL.md`  [EXTRACTED]
   README.md → skills/fix-mapped-issue/SKILL.md
 
@@ -83,8 +83,8 @@ Cohesion: 0.22
 Nodes (17): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+9 more)
 
 ### Community 3 - "`hindsight-homelab-agents` skill: design proposal (not yet implemented)"
-Cohesion: 0.17
-Nodes (11): Body outline, Context, Frontmatter (proposed), `hindsight-homelab-agents` skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal, Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/` (+3 more)
+Cohesion: 0.15
+Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), `hindsight-homelab-agents` skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
 ### Community 4 - "pull-request-process SKILL.md"
 Cohesion: 0.36
