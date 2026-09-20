@@ -1,7 +1,7 @@
 # Graph Report - hindsight-deploy-guarantee-proposal  (2026-09-20)
 
 ## Corpus Check
-- 33 files · ~35,284 words
+- 33 files · ~34,015 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `94c1b42d`
+- Built from commit: `bc3d5d4b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
