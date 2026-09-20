@@ -1,7 +1,7 @@
-# Graph Report - hindsight-deploy-guarantee-proposal  (2026-09-18)
+# Graph Report - hindsight-deploy-guarantee-proposal  (2026-09-20)
 
 ## Corpus Check
-- 33 files · ~33,993 words
+- 33 files · ~35,284 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `76b13659`
+- Built from commit: `94c1b42d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -40,7 +40,7 @@
 3. `issue.sh script` - 10 edges
 4. `create_required_path()` - 10 edges
 5. `repo-standard.sh script` - 9 edges
-6. ``hindsight-homelab-agents` skill: design proposal (not yet implemented)` - 8 edges
+6. `Hindsight homelab-agents skill: design proposal (not yet implemented)` - 8 edges
 7. `Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill` - 8 edges
 8. `die()` - 7 edges
 9. `cmd_cleanup()` - 7 edges
@@ -84,7 +84,7 @@ Nodes (17): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), c
 
 ### Community 3 - "`hindsight-homelab-agents` skill: design proposal (not yet implemented)"
 Cohesion: 0.15
-Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), `hindsight-homelab-agents` skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
+Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
 ### Community 4 - "pull-request-process SKILL.md"
 Cohesion: 0.36

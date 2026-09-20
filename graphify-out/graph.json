@@ -1399,13 +1399,13 @@
     },
     {
       "id": "docs_superpowers_specs_2026_09_14_hindsight_homelab_agents_skill_design_hindsight_homelab_agents_skill_design_proposal_not_yet_implemented",
-      "label": "`hindsight-homelab-agents` skill: design proposal (not yet implemented)",
+      "label": "Hindsight homelab-agents skill: design proposal (not yet implemented)",
       "_origin": "ast",
       "community": 3,
       "community_name": "`hindsight-homelab-agents` skill: design proposal (not yet implemented)",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "`hindsight-homelab-agents` skill: design proposal (not yet implemented)",
+      "norm_label": "hindsight homelab-agents skill: design proposal (not yet implemented)",
       "source_file": "docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md",
       "source_location": "L1"
     },
@@ -5296,5 +5296,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "76b136598532f848b13105a53051e886368da6c5"
+  "built_at_commit": "94c1b42db2b06ab1676c18831e064d9c8e9df43b"
 }

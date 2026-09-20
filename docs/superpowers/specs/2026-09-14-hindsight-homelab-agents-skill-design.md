@@ -1,4 +1,4 @@
-# `hindsight-homelab-agents` skill: design proposal (not yet implemented)
+# Hindsight homelab-agents skill: design proposal (not yet implemented)
 
 ## Status
 
