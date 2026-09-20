@@ -42,6 +42,7 @@ path="$1"
 shift
 
 if [ -n "${DOPPLER_TOKEN:-}" ]; then
+    # shellcheck disable=SC2016
     doppler run --token "$DOPPLER_TOKEN" -- bash -c '
         user="${!1}"; pass="${!2}"; path="$3"; shift 3
         jwt=$(curl -sk -m 10 -X POST "https://'"${PATCHMON_HOST}"'/api/v1/auth/login" \

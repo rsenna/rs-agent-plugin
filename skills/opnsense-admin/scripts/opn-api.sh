@@ -46,6 +46,7 @@ path="$1"
 shift
 
 if [ -n "${DOPPLER_TOKEN:-}" ]; then
+    # shellcheck disable=SC2016
     doppler run --token "$DOPPLER_TOKEN" -- bash -c '
         key="${!1}"; secret="${!2}"
         curl -sk -m 20 -u "${key}:${secret}" "https://'"${OPN_HOST}"':'"${OPN_PORT}"'${3}" "${@:4}"

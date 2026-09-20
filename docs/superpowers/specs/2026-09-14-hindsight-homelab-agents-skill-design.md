@@ -1,4 +1,4 @@
-# `hindsight-homelab-agents` skill: design proposal (not yet implemented)
+# Hindsight homelab-agents skill: design proposal (not yet implemented)
 
 ## Status
 
@@ -224,6 +224,86 @@ description: Shared cross-agent-session memory for Roger's homelab (entrement.es
    the `entrement.es` deployment (e.g. a shared secret or mTLS on the
    data-plane, which would also close the transport-cleartext gap
    above), not in this skill's client-side commands.
+
+## Guaranteeing this happens on every deployment (added after review)
+
+Follow-up question after `entrement.es` backfilled its currently-deployed
+services into Hindsight by hand: should updating Hindsight be *guaranteed*
+on every future deployment, not just something an agent remembers to do?
+
+**Evaluation:** a skill cannot guarantee this the way `pull-request-process`'s
+`pr.sh push` guarantees `REVIEWED=1` was set — that's a hard gate wired
+into one deterministic tool every project that has adopted
+`pull-request-process` already funnels through (adoption is opt-in per
+project, not forced). "Deployment" has no equivalent single choke point across
+projects (Dokploy API, `docker-compose up`, `ansible-playbook`,
+`terraform apply` — all different, and this plugin repo doesn't own any
+of them). So at this repo's level, the realistic options are a documented
+convention (soft) or a hook wired into a project's own deterministic
+deploy path (hard, but per-project).
+
+**What's proposed here (docs/wording only, no skill code, no changes to
+`skills/pull-request-process/`):**
+
+1. Widen this skill's own trigger wording (frontmatter `description` and
+   body outline, once actually implemented) to explicitly include "use
+   this after deploying or redeploying any service," not just "before
+   touching an unfamiliar tool" — the current phrasing doesn't obviously
+   cover the deploy-time case.
+2. **Separate proposal for `pull-request-process`'s `SKILL.md`:** its
+   existing step 2 already says "Check docs for staleness before
+   committing... does this change make README.md or any other project
+   doc inaccurate." Widen that one line to also ask "did a deployed
+   service's address/port change? Update your project's service
+   registry/memory system if it has one" — worded generically, not
+   naming Hindsight or this homelab, so it stays a reusable prompt for
+   any project with any kind of service registry. This is the closest
+   thing to real reach across the projects that have adopted
+   `pull-request-process`, since their changes already flow through
+   `pr.sh` — but that adoption is itself opt-in, so this doesn't reach
+   every project either. Still soft — an agent has to act on the
+   prompt, same as the existing staleness check today. **Not implemented
+   in this PR** — a session scoped to this repo should make that specific
+   one-line edit as its own change; this doc only records the proposal
+   and rationale.
+
+**What's NOT proposed here:** a generic "deploy" skill that wraps
+arbitrary deploy actions and force-updates a memory system as part of
+running them. Deployment mechanics vary too much across projects to
+unify safely, and this plugin doesn't have a project-agnostic notion of
+"a deployed service" to hang that on.
+
+**What actually happened for `entrement.es` specifically:** a deployment-path
+hook wired into a deterministic choke point, not a reminder an agent has to
+remember — `homelab/opnsense/manage-haproxy-site.sh`'s `add`/`remove` (the
+script every new public-facing service in that repo already goes through)
+now automatically attempts to retain the service's address into the
+`homelab-agents` bank. Two real limits on how much this actually
+guarantees, surfaced during review here — worth stating precisely rather
+than overselling:
+
+- **The Hindsight write itself is best-effort, not blocking.** If the
+  retain call fails (Hindsight down, network issue, etc.), `add`/`remove`
+  still completes successfully and no address gets recorded — by design,
+  since a memory-bank outage should never block a real infrastructure
+  change. So this is a *hook*, not a *hard gate* in the same sense as
+  `pr.sh push`'s `REVIEWED=1` check, which genuinely refuses to proceed.
+- **It only fires on `add`/`remove`, not on every redeploy.** A service
+  whose address or port changes through some other path — one that never
+  calls this script's `add`/`remove` again — leaves the Hindsight record
+  stale with no signal that anything changed. This covers the "a new
+  service went live" case well; it does not cover "an existing service's
+  address changed without re-registering."
+
+That's `entrement.es`-repo-specific implementation, doesn't belong in this
+plugin, and isn't part of this PR — noted here only so this doc's own
+"guarantee" question has a complete, honest answer: *sometimes* a
+deployment-path hook exists (when a project has one deterministic deploy
+choke point to hook into), it's still best-effort rather than blocking,
+and it only covers the specific action it's wired to, not every way a
+service's address can change. When no such hook exists, the best
+available fallback is widening an existing generic prompt (point 2
+above), not inventing a new one.
 
 ### Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/`
 
