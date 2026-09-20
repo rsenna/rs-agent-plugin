@@ -18,7 +18,7 @@
 - pr.sh
 - Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill
 - issue.sh
-- `hindsight-homelab-agents` skill: design proposal (not yet implemented)
+- Hindsight homelab-agents skill: design proposal (not yet implemented)
 - pull-request-process SKILL.md
 - doppler-secrets SKILL.md
 - Git Branch Hygiene
@@ -82,7 +82,7 @@ Nodes (12): docs/superpowers/specs/2026-08-01-repo-standard-design.md, skills/re
 Cohesion: 0.22
 Nodes (17): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+9 more)
 
-### Community 3 - "`hindsight-homelab-agents` skill: design proposal (not yet implemented)"
+### Community 3 - "Hindsight homelab-agents skill: design proposal (not yet implemented)"
 Cohesion: 0.15
 Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
