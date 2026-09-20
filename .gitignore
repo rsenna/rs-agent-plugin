@@ -2,15 +2,17 @@
 .DS_Store
 *.swp
 
-# AGENTS.md is committed here on purpose (README points readers at it for
-# operational detail) even though it's excluded by many contributors' global
-# gitignore (agent-tooling files are usually local-only) — un-ignore it for
-# this repo specifically so it stays tracked regardless of that global rule.
-!AGENTS.md
-
 # graphify (knowledge graph) — allowlist: commit only graph.json + GRAPH_REPORT.md,
 # ignore everything else graphify-out/ produces (exports, caches, bookkeeping)
 graphify-out/*
 !graphify-out/graph.json
 !graphify-out/GRAPH_REPORT.md
+
+# Serena: https://github.com/oraios/serena
+.serena/cache
+.serena/logs
+
+# Un-ignore AGENTS.md files - globally gitignored on this machine, but required
+# and committed here per the repo-standard prototype-stage convention.
+!**/AGENTS.md
 
