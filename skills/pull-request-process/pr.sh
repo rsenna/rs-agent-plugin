@@ -295,6 +295,8 @@ cmd_threads() {
   local pr="${1:?usage: pr.sh threads <pr-number>}"
   local nwo owner repo; nwo="$(gh repo view --json nameWithOwner -q .nameWithOwner)"
   owner="${nwo%%/*}"; repo="${nwo##*/}"
+  # GraphQL variables are passed literally to gh api.
+  # shellcheck disable=SC2016
   gh api graphql -F owner="$owner" -F repo="$repo" -F pr="$pr" -f query='
     query($owner:String!,$repo:String!,$pr:Int!){
       repository(owner:$owner,name:$repo){
@@ -343,6 +345,8 @@ cmd_reviews() {
     ' <<<"$body")"
     if [ -n "$prompt" ]; then
       echo "  prompt:"
+      # Keep the existing simple line-prefix pipeline.
+      # shellcheck disable=SC2001
       echo "$prompt" | sed 's/^/    /'
     else
       echo "  $(echo "$body" | tr '\n' ' ' | cut -c1-280)"
@@ -441,6 +445,8 @@ cmd_cleanup() {
   ignored="$(git status --porcelain --ignored=matching | sed -n 's/^!! //p')"
   if [ -n "$ignored" ] && [ "${FORCE_REMOVE_IGNORED:-0}" != "1" ]; then
     warn "worktree has gitignored files 'git worktree remove' would delete along with the directory:"
+    # Keep the existing simple line-prefix pipeline.
+    # shellcheck disable=SC2001
     echo "$ignored" | sed 's/^/  /' >&2
     warn "if these are disposable build artifacts, re-run with FORCE_REMOVE_IGNORED=1 to remove anyway."
     warn "if not, move/copy anything you need out first."
