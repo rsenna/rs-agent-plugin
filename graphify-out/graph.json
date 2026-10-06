@@ -120,7 +120,7 @@
       },
       "norm_label": "cmd_checks()",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L358"
+      "source_location": "L362"
     },
     {
       "id": "skills_pull_request_process_pr_cmd_cleanup",
@@ -135,7 +135,7 @@
       },
       "norm_label": "cmd_cleanup()",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L405"
+      "source_location": "L409"
     },
     {
       "id": "skills_pull_request_process_pr_cmd_close",
@@ -240,7 +240,7 @@
       },
       "norm_label": "cmd_reviews()",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L316"
+      "source_location": "L318"
     },
     {
       "id": "skills_pull_request_process_pr_cmd_start",
@@ -1158,6 +1158,106 @@
       "source_location": "L28"
     },
     {
+      "id": "skills_check_uncommitted_work_check_uncommitted_work",
+      "label": "check-uncommitted-work.sh",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "check-uncommitted-work.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "check-uncommitted-work.sh",
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "skills_check_uncommitted_work_check_uncommitted_work_fail",
+      "label": "fail()",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "check-uncommitted-work.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "fail()",
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L5"
+    },
+    {
+      "id": "skills_check_uncommitted_work_check_uncommitted_work_is_known_noise",
+      "label": "is_known_noise()",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "check-uncommitted-work.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "is_known_noise()",
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L61"
+    },
+    {
+      "id": "skills_check_uncommitted_work_check_uncommitted_work_sh__entry",
+      "label": "check-uncommitted-work.sh script",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "check-uncommitted-work.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "check-uncommitted-work.sh script",
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "skills_check_uncommitted_work_skill",
+      "label": "check-uncommitted-work/SKILL.md",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "Check Uncommitted Work",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "check-uncommitted-work",
+        "description": "Audit a shared Git checkout for branch drift and uncommitted, untracked, or ignored paths, then classify each item conservatively. Use at session start when the shared checkout may contain stray work, or when asked to check for uncommitted work."
+      },
+      "node_kind": "page",
+      "norm_label": "check-uncommitted-work/skill.md",
+      "source_file": "skills/check-uncommitted-work/SKILL.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "skills_check_uncommitted_work_skill_check_uncommitted_work",
+      "label": "Check Uncommitted Work",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "Check Uncommitted Work",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "check uncommitted work",
+      "source_file": "skills/check-uncommitted-work/SKILL.md",
+      "source_location": "L6"
+    },
+    {
+      "id": "skills_check_uncommitted_work_skill_classify_each_path",
+      "label": "Classify each path",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "Check Uncommitted Work",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "classify each path",
+      "source_file": "skills/check-uncommitted-work/SKILL.md",
+      "source_location": "L15"
+    },
+    {
       "id": "skills_map_issue_to_tasks_issue",
       "label": "issue.sh",
       "_origin": "ast",
@@ -1338,6 +1438,53 @@
       "source_location": "L1"
     },
     {
+      "id": "tasks_issue_30_add_a_check_uncommitted_work_skill",
+      "label": "issue-30-add-a-check-uncommitted-work-skill.md",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "Issue #30 \u2014 Add a check-uncommitted-work skill",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "issue-30-add-a-check-uncommitted-work-skill.md",
+      "source_file": "tasks/issue-30-add-a-check-uncommitted-work-skill.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "tasks_issue_30_add_a_check_uncommitted_work_skill_issue_30_add_a_check_uncommitted_work_skill",
+      "label": "Issue #30 \u2014 Add a check-uncommitted-work skill",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "Issue #30 \u2014 Add a check-uncommitted-work skill",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "issue #30 \u2014 add a check-uncommitted-work skill",
+      "source_file": "tasks/issue-30-add-a-check-uncommitted-work-skill.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "tasks_issue_30_add_a_check_uncommitted_work_skill_tasks",
+      "label": "Tasks",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "Issue #30 \u2014 Add a check-uncommitted-work skill",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "tasks",
+      "source_file": "tasks/issue-30-add-a-check-uncommitted-work-skill.md",
+      "source_location": "L5"
+    },
+    {
+      "id": "package",
+      "label": "package.json",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "package.json",
+      "source_file": "package.json",
+      "source_location": "L1"
+    },
+    {
       "id": "docs_superpowers_specs_2026_09_14_hindsight_homelab_agents_skill_design",
       "label": "2026-09-14-hindsight-homelab-agents-skill-design.md",
       "_origin": "ast",
@@ -1483,7 +1630,7 @@
     },
     {
       "id": "skills_git_branch_hygiene_skill",
-      "label": "SKILL.md",
+      "label": "git-branch-hygiene/SKILL.md",
       "_origin": "ast",
       "community": 6,
       "community_name": "Git Branch Hygiene",
@@ -1493,7 +1640,7 @@
         "description": "Audit and clean up accumulated local git branches and worktrees (from past pr.sh/pull-request-process sessions that never ran cleanup). Use when the user says branches/worktrees feel cluttered, asks for a branch cleanup or &quot;git hygiene&quot; pass, or periodically after a run of merged PRs \u2014 never automatically deletes anything without a review pass and explicit confirmation."
       },
       "node_kind": "page",
-      "norm_label": "skill.md",
+      "norm_label": "git-branch-hygiene/skill.md",
       "source_file": "skills/git-branch-hygiene/SKILL.md",
       "source_location": "L1"
     },
@@ -2352,6 +2499,30 @@
   ],
   "links": [
     {
+      "source": "skills_check_uncommitted_work_check_uncommitted_work_sh__entry",
+      "target": "skills_check_uncommitted_work_check_uncommitted_work_fail",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_check_uncommitted_work_check_uncommitted_work_sh__entry",
+      "target": "skills_check_uncommitted_work_check_uncommitted_work_is_known_noise",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
       "source": "skills_map_issue_to_tasks_check_caveman_compress_sh__entry",
       "target": "skills_map_issue_to_tasks_check_caveman_compress_find_compress_py",
       "relation": "calls",
@@ -2600,7 +2771,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L385",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -2612,7 +2783,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L395",
+      "source_location": "L399",
       "weight": 1.0
     },
     {
@@ -2624,7 +2795,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L406",
+      "source_location": "L410",
       "weight": 1.0
     },
     {
@@ -2636,7 +2807,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L410",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -2648,7 +2819,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L415",
+      "source_location": "L419",
       "weight": 1.0
     },
     {
@@ -2660,7 +2831,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L418",
+      "source_location": "L422",
       "weight": 1.0
     },
     {
@@ -2672,7 +2843,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L421",
+      "source_location": "L425",
       "weight": 1.0
     },
     {
@@ -2816,7 +2987,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L325",
+      "source_location": "L327",
       "weight": 1.0
     },
     {
@@ -2876,7 +3047,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L476",
+      "source_location": "L482",
       "weight": 1.0
     },
     {
@@ -2888,7 +3059,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L477",
+      "source_location": "L483",
       "weight": 1.0
     },
     {
@@ -2900,7 +3071,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L478",
+      "source_location": "L484",
       "weight": 1.0
     },
     {
@@ -2912,7 +3083,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L479",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -2924,7 +3095,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L480",
+      "source_location": "L486",
       "weight": 1.0
     },
     {
@@ -2936,7 +3107,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L481",
+      "source_location": "L487",
       "weight": 1.0
     },
     {
@@ -2948,7 +3119,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L482",
+      "source_location": "L488",
       "weight": 1.0
     },
     {
@@ -2960,7 +3131,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L483",
+      "source_location": "L489",
       "weight": 1.0
     },
     {
@@ -2972,7 +3143,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L484",
+      "source_location": "L490",
       "weight": 1.0
     },
     {
@@ -2984,7 +3155,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L485",
+      "source_location": "L491",
       "weight": 1.0
     },
     {
@@ -2996,7 +3167,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L486",
+      "source_location": "L492",
       "weight": 1.0
     },
     {
@@ -3847,6 +4018,39 @@
       "weight": 1.0
     },
     {
+      "source": "skills_check_uncommitted_work_check_uncommitted_work",
+      "target": "skills_check_uncommitted_work_check_uncommitted_work_sh__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_check_uncommitted_work_skill",
+      "target": "skills_check_uncommitted_work_skill_check_uncommitted_work",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/check-uncommitted-work/SKILL.md",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_check_uncommitted_work_skill_check_uncommitted_work",
+      "target": "skills_check_uncommitted_work_skill_classify_each_path",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/check-uncommitted-work/SKILL.md",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
       "source": "skills_git_branch_hygiene_audit",
       "target": "skills_git_branch_hygiene_audit_sh__entry",
       "relation": "contains",
@@ -3998,6 +4202,50 @@
       "confidence_score": 1.0,
       "source_file": "skills/repo-standard/test-repo-standard.sh",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tasks_issue_30_add_a_check_uncommitted_work_skill",
+      "target": "tasks_issue_30_add_a_check_uncommitted_work_skill_issue_30_add_a_check_uncommitted_work_skill",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tasks/issue-30-add-a-check-uncommitted-work-skill.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "tasks_issue_30_add_a_check_uncommitted_work_skill_issue_30_add_a_check_uncommitted_work_skill",
+      "target": "tasks_issue_30_add_a_check_uncommitted_work_skill_tasks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tasks/issue-30-add-a-check-uncommitted-work-skill.md",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_check_uncommitted_work_check_uncommitted_work",
+      "target": "skills_check_uncommitted_work_check_uncommitted_work_fail",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "skills_check_uncommitted_work_check_uncommitted_work",
+      "target": "skills_check_uncommitted_work_check_uncommitted_work_is_known_noise",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "skills/check-uncommitted-work/check-uncommitted-work.sh",
+      "source_location": "L61",
       "weight": 1.0
     },
     {
@@ -4316,7 +4564,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L316",
+      "source_location": "L318",
       "weight": 1.0
     },
     {
@@ -4327,7 +4575,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L358",
+      "source_location": "L362",
       "weight": 1.0
     },
     {
@@ -4338,7 +4586,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "skills/pull-request-process/pr.sh",
-      "source_location": "L405",
+      "source_location": "L409",
       "weight": 1.0
     },
     {
@@ -5273,5 +5521,5 @@
       "source_file": "tasks/issue-3-design-cross-repo-doc-folder-standard-repo-toml.md"
     }
   ],
-  "built_at_commit": "3a3783a6206534cf787d29d9ba68589e277dd5c8"
+  "built_at_commit": "d9f52e214a5212db3fa18477395eb2e8dba8825d"
 }
