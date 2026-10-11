@@ -1,0 +1,23 @@
+skills/map-issue-to-tasks/SKILL.md
+  s_61118a90e6edd6::t_aea49fce87326d 50-52
+graphify-out/GRAPH_REPORT.md
+  s_61118a90e6edd6::t_956161ccc51383 1,4,8,13,55-56,126,133
+graphify-out/graph.json
+  s_61118a90e6edd6::t_91b230a335ca34 885-886,889,891-892,1043,3466,5094
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c763ae6b32d53d96c3f8e8ff4ed9560ece8c6d05",
+  "prompts": {},
+  "sessions": {
+    "s_61118a90e6edd6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_efe3416e3ffev9NchTCcQqRg6e",
+        "model": "big-pickle"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
