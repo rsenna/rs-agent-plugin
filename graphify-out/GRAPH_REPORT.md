@@ -1,16 +1,16 @@
-# Graph Report - hindsight-homelab-agents-skill-proposal  (2026-09-14)
+# Graph Report - remove-caveman-compress-guard  (2026-10-11)
 
 ## Corpus Check
-- 33 files · ~33,299 words
+- 33 files · ~33,329 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 159 nodes · 250 edges · 18 communities (14 shown, 4 thin omitted)
+- 154 nodes · 241 edges · 18 communities (13 shown, 4 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3a3783a6`
+- Built from commit: `d9f52e21`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,7 +30,6 @@
 - opencode GitHub Action workflow
 - repo-standard.sh
 - graphify as a standard dev-process artifact: `.gitignore` requirement design
-- check-caveman-compress.sh
 - test-repo-standard.sh
 - Agent Operations Guide
 
@@ -49,12 +48,12 @@
 ## Surprising Connections (you probably didn't know these)
 - `repo-standard SKILL.md` --references--> `Cross-repo documentation/folder standard design doc`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
-- `Sanctioned 'create' subcommand with bot-identity enforcement` --semantically_similar_to--> `Centralized worktree-root strategy (not sibling of main checkout)`  [INFERRED] [semantically similar]
-  tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md → tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md
 - `repo-standard audit mode (read-only compliance check)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
 - `repo-standard scaffold mode (non-destructive creation)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
   skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
+- `Sanctioned 'create' subcommand with bot-identity enforcement` --semantically_similar_to--> `Centralized worktree-root strategy (not sibling of main checkout)`  [INFERRED] [semantically similar]
+  tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md → tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md
 - `rs-agent-plugin README` --references--> `fix-mapped-issue SKILL.md`  [EXTRACTED]
   README.md → skills/fix-mapped-issue/SKILL.md
 
@@ -114,10 +113,6 @@ Nodes (19): check_graphify_gitignore_behavior(), copy_specify_from_reference(), 
 Cohesion: 0.11
 Nodes (18): Cross-repo documentation/folder standard design doc, On-demand (not pre-PR-gated) enforcement decision for repo-standard, repo.toml stage field decision, Per-stage doc/folder tier table (prototype/in-progress/released/archived), Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist (+10 more)
 
-### Community 15 - "check-caveman-compress.sh"
-Cohesion: 0.60
-Nodes (5): find_compress_py(), has_isolated_claude_invocation(), log(), check-caveman-compress.sh script, warn()
-
 ### Community 16 - "test-repo-standard.sh"
 Cohesion: 0.73
 Nodes (5): assert_contains(), fail(), run_expect_fail(), run_expect_ok(), test-repo-standard.sh script
@@ -128,14 +123,14 @@ Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation E
 
 ## Knowledge Gaps
 - **46 isolated node(s):** `audit.sh script`, `SAFE`, `NEEDS_DECISION`, `DIRTY`, `opn-api.sh script` (+41 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 58 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 59 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Centralized worktree-root strategy (not sibling of main checkout)` connect `issue.sh` to `pr.sh`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **What connects `audit.sh script`, `SAFE`, `NEEDS_DECISION` to the rest of the system?**
   _46 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `graphify as a standard dev-process artifact: `.gitignore` requirement design` be split into smaller, more focused modules?**
