@@ -1,11 +1,11 @@
-# Graph Report - remove-caveman-compress-guard  (2026-10-11)
+# Graph Report - rs-agent-plugin  (2026-10-11)
 
 ## Corpus Check
 - 33 files · ~33,329 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 154 nodes · 241 edges · 18 communities (13 shown, 4 thin omitted)
+- 154 nodes · 241 edges · 18 communities (13 shown, 5 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
@@ -67,7 +67,7 @@
 - **Six external repos rolled out under repo-standard stage tiers via issue #3 task 3** — tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_roset_sh, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_iklo, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_what_about, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_guiltty, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_obsidian_hivemind, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_wawk_js [EXTRACTED 1.00]
 - **Repo-standard design doc and skill jointly amended by issues #3 and #9** — docs_superpowers_specs_2026_08_01_repo_standard_design_document, skills_repo_standard_skill_document, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_9_repo_standard_design_make_repos_agent_agnostic_by_issue [INFERRED 0.85]
 
-## Communities (18 total, 4 thin omitted)
+## Communities (18 total, 5 thin omitted)
 
 ### Community 0 - "pr.sh"
 Cohesion: 0.29
@@ -124,7 +124,7 @@ Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation E
 ## Knowledge Gaps
 - **46 isolated node(s):** `audit.sh script`, `SAFE`, `NEEDS_DECISION`, `DIRTY`, `opn-api.sh script` (+41 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 59 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
