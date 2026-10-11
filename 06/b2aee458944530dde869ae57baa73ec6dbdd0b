@@ -1,0 +1,19 @@
+graphify-out/GRAPH_REPORT.md
+  s_61118a90e6edd6::t_4660abc1b62152 1,8,70,127,137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "06b2aee458944530dde869ae57baa73ec6dbdd0b",
+  "prompts": {},
+  "sessions": {
+    "s_61118a90e6edd6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_efe3416e3ffev9NchTCcQqRg6e",
+        "model": "big-pickle"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
