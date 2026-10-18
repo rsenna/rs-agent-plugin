@@ -1,0 +1,19 @@
+tasks/issue-30-add-a-check-uncommitted-work-skill.md
+  s_61118a90e6edd6::t_d08f266c5dab47 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e36fc27b230e63a418041c53161ab0d8759aca48",
+  "prompts": {},
+  "sessions": {
+    "s_61118a90e6edd6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_efe3416e3ffev9NchTCcQqRg6e",
+        "model": "big-pickle"
+      },
+      "human_author": "Roger Senna [parser] <roger.senna@tesco.com>"
+    }
+  }
+}
