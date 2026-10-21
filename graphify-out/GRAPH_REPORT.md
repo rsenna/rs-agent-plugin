@@ -1,11 +1,11 @@
-# Graph Report - issue-30-check-uncommitted-work-detection  (2026-10-06)
+# Graph Report - rs-agent-plugin  (2026-10-11)
 
 ## Corpus Check
-- 37 files · ~35,767 words
+- 33 files · ~33,329 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 170 nodes · 259 edges · 22 communities (15 shown, 6 thin omitted)
+- 154 nodes · 241 edges · 18 communities (13 shown, 5 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
@@ -30,12 +30,8 @@
 - opencode GitHub Action workflow
 - repo-standard.sh
 - graphify as a standard dev-process artifact: `.gitignore` requirement design
-- check-caveman-compress.sh
 - test-repo-standard.sh
 - Agent Operations Guide
-- check-uncommitted-work.sh
-- Check Uncommitted Work
-- Issue #30 — Add a check-uncommitted-work skill
 
 ## God Nodes (most connected - your core abstractions)
 1. `pr.sh script` - 14 edges
@@ -71,7 +67,7 @@
 - **Six external repos rolled out under repo-standard stage tiers via issue #3 task 3** — tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_roset_sh, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_iklo, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_what_about, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_guiltty, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_obsidian_hivemind, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_wawk_js [EXTRACTED 1.00]
 - **Repo-standard design doc and skill jointly amended by issues #3 and #9** — docs_superpowers_specs_2026_08_01_repo_standard_design_document, skills_repo_standard_skill_document, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_9_repo_standard_design_make_repos_agent_agnostic_by_issue [INFERRED 0.85]
 
-## Communities (22 total, 6 thin omitted)
+## Communities (18 total, 5 thin omitted)
 
 ### Community 0 - "pr.sh"
 Cohesion: 0.29
@@ -117,10 +113,6 @@ Nodes (19): check_graphify_gitignore_behavior(), copy_specify_from_reference(), 
 Cohesion: 0.11
 Nodes (18): Cross-repo documentation/folder standard design doc, On-demand (not pre-PR-gated) enforcement decision for repo-standard, repo.toml stage field decision, Per-stage doc/folder tier table (prototype/in-progress/released/archived), Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist (+10 more)
 
-### Community 15 - "check-caveman-compress.sh"
-Cohesion: 0.60
-Nodes (5): find_compress_py(), has_isolated_claude_invocation(), log(), check-caveman-compress.sh script, warn()
-
 ### Community 16 - "test-repo-standard.sh"
 Cohesion: 0.73
 Nodes (5): assert_contains(), fail(), run_expect_fail(), run_expect_ok(), test-repo-standard.sh script
@@ -129,21 +121,17 @@ Nodes (5): assert_contains(), fail(), run_expect_fail(), run_expect_ok(), test-r
 Cohesion: 0.25
 Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, Quality Gate, Repo Notes
 
-### Community 18 - "check-uncommitted-work.sh"
-Cohesion: 0.83
-Nodes (3): fail(), is_known_noise(), check-uncommitted-work.sh script
-
 ## Knowledge Gaps
-- **48 isolated node(s):** `audit.sh script`, `SAFE`, `NEEDS_DECISION`, `DIRTY`, `opn-api.sh script` (+43 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 63 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **46 isolated node(s):** `audit.sh script`, `SAFE`, `NEEDS_DECISION`, `DIRTY`, `opn-api.sh script` (+41 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 59 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Centralized worktree-root strategy (not sibling of main checkout)` connect `issue.sh` to `pr.sh`?**
-  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **What connects `audit.sh script`, `SAFE`, `NEEDS_DECISION` to the rest of the system?**
-  _48 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _46 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `graphify as a standard dev-process artifact: `.gitignore` requirement design` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._

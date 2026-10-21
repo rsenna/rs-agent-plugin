@@ -47,23 +47,9 @@ The enrichment template is at `templates/issue-enrichment.md`, relative to that 
      `<n>-<slug>` stem). Never overwrite an unrelated existing task file.
    - Enrichment → a **GitHub issue comment** via `issue.sh comment <n> <file>`.
      The original issue body is **left untouched**.
-   - **Compress the tasks file with `caveman-compress`.** It's read every
-     time an agent picks up this issue, so a leaner file pays off repeatedly.
-     Before invoking it, run
-     the `check-caveman-compress.sh` next to this file (same directory as this `SKILL.md`):
-     - exit 0 → invoke `caveman-compress` on `tasks/issue-<n>-<slug>.md` —
-       trigger it the same way as `/caveman-compress <filepath>` (see that
-       skill's own `SKILL.md` for the exact process)
-     - exit 1 → not installed anywhere it looked; **not a failure** — it already
-       printed a warning, skip compression and proceed uncompressed
-     - exit 2 → installed but **unpatched** (its `claude --print` fallback can
-       leak this host's hooks/MCP context into the file it's compressing —
-       [JuliusBrussee/caveman#920](https://github.com/JuliusBrussee/caveman/issues/920),
-       fixed in [#921](https://github.com/JuliusBrussee/caveman/pull/921)).
-       **Stop and surface the script's remediation message to the user** —
-       do not run the unpatched compressor and do not silently skip it either,
-       since the whole point is that it's unsafe, not merely absent. This is a
-       temporary guardrail; drop it once the fix has been upstream a while.
+   - **Keep the tasks file lean.** It's read every time an agent picks up this
+     issue, so prefer terse, scannable task entries over prose — a leaner file
+     pays off repeatedly.
 6. **Label it.** `issue.sh label <n>` — tags the issue `mapped` (creating the
    label on first use). This is what lets `issue.sh unmapped` distinguish
    issues still needing this treatment from ones already scoped. Do this last,
