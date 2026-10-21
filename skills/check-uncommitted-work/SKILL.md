@@ -10,7 +10,9 @@ Run this audit from the repository's shared checkout, not from a task worktree. 
     A=<this-skill's-own-directory>/check-uncommitted-work.sh
     "$A"
 
-The script is read-only. It compares the current branch with the target of origin/HEAD, flags a non-default branch, and reports whether its HEAD is already an ancestor of the default branch. It lists changed, untracked, and ignored paths individually. A linked Git worktree is rejected so a task branch cannot be mistaken for the shared checkout. If origin/HEAD is unset, configure it with git remote set-head origin --auto; the audit does not guess a default branch or fetch.
+The script is read-only. It compares the current branch with the target of origin/HEAD, including whether the local default branch is behind, ahead of, or diverged from its origin ref. For a non-default branch, it checks ancestry, cherry-picked patches, and squash-equivalent changes before deciding whether the work is already integrated; uncertain cases are marked for review. It lists changed, untracked, and ignored paths individually, expanding ignored directories so nested files receive their own classification. A linked Git worktree is rejected as the audit's starting checkout so a task branch cannot be mistaken for the shared checkout.
+
+The audit also inventories all Git worktrees and reports each path, branch, lock/prunable markers, and whether it has local or ignored state. It does not remove or clean worktrees. For stale-worktree classification and cleanup, hand off to the `git-branch-hygiene` skill, which inspects work before removal and requires explicit confirmation. If `origin/HEAD` is unset, configure it with `git remote set-head origin --auto`; the audit does not guess a default branch or fetch.
 
 ## Classify each path
 
