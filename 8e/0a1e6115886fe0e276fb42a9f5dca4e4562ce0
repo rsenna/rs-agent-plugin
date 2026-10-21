@@ -1,0 +1,18 @@
+graphify-out/GRAPH_REPORT.md
+  h_ccc29536574c7b 1,4,8,70,125-127,133,135,137
+graphify-out/graph.json
+  h_ccc29536574c7b 123,138,243,885-886,889,891-892,1043,1407,1417,2476,2488,2500,2512,2524,2536,2548,2692,2752,2764,2776,2788,2800,2812,2824,2836,2848,2860,2872,3466,4137,4148,4159
+skills/map-issue-to-tasks/SKILL.md
+  h_ccc29536574c7b 50-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8e0a1e6115886fe0e276fb42a9f5dca4e4562ce0",
+  "prompts": {},
+  "humans": {
+    "h_ccc29536574c7b": {
+      "author": "Roger Senna [parser] <roger.senna@tesco.com>"
+    }
+  }
+}
