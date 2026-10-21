@@ -1,0 +1,24 @@
+graphify-out/GRAPH_REPORT.md
+  h_ccc29536574c7b 1,4,6,9,14,36-39,56-57,75,78-79,83,86-87,95,99,119,129-136,138-140,145-148,151-152
+graphify-out/graph.json
+  h_ccc29536574c7b 1
+skills/check-uncommitted-work/SKILL.md
+  h_ccc29536574c7b 13-15
+skills/check-uncommitted-work/check-uncommitted-work.sh
+  h_ccc29536574c7b 12,29-36,38-46,48-75,109-122,125-128,137-162,169-218
+skills/check-uncommitted-work/test-check-uncommitted-work.sh
+  h_ccc29536574c7b 1-142
+tasks/issue-30-add-a-check-uncommitted-work-skill.md
+  h_ccc29536574c7b 8-9,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "169adc9b83544cd8b5f718365bd374d7a78351fb",
+  "prompts": {},
+  "humans": {
+    "h_ccc29536574c7b": {
+      "author": "Roger Senna [parser] <roger.senna@tesco.com>"
+    }
+  }
+}
