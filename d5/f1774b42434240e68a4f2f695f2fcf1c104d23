@@ -1,0 +1,21 @@
+graphify-out/GRAPH_REPORT.md
+  s_bf58f7825b0625::t_58f85767a9581c 1,4,6,14,79,83,91,95,115,126,135-136,138
+graphify-out/graph.json
+  s_bf58f7825b0625::t_b9dca5d72e6095 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d5f1774b42434240e68a4f2f695f2fcf1c104d23",
+  "prompts": {},
+  "sessions": {
+    "s_bf58f7825b0625": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a8f5be3a-d539-48bb-9b14-1ce633ba4cea",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
