@@ -1,8 +1,9 @@
-# Graph Report - rs-agent-plugin  (2026-10-11)
+# Graph Report - cubic-ignore-graphify  (2026-10-23)
 
 ## Corpus Check
-- 33 files · ~33,329 words
+- 33 files · ~33,363 words
 - Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 8 file(s) not represented in the graph (top: (none) 4, .fish 3, .toml 1)
 
 ## Summary
 - 154 nodes · 241 edges · 18 communities (13 shown, 5 thin omitted)
@@ -10,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d9f52e21`
+- Built from commit: `3ad77eca`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -75,11 +76,11 @@ Nodes (19): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment
 
 ### Community 1 - "Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill"
 Cohesion: 0.21
-Nodes (12): docs/superpowers/specs/2026-08-01-repo-standard-design.md, skills/repo-standard/SKILL.md, guiltty (external repo), iklo (external repo, in-progress tier), Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill, obsidian-hivemind (external repo), roset.sh (external repo, prototype tier), repo.toml stage field + per-stage doc/folder tier table (+4 more)
+Nodes (10): docs/superpowers/specs/2026-08-01-repo-standard-design.md, skills/repo-standard/SKILL.md, guiltty (external repo), iklo (external repo, in-progress tier), Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill, obsidian-hivemind (external repo), roset.sh (external repo, prototype tier), wawk.js (external repo) (+2 more)
 
 ### Community 2 - "issue.sh"
 Cohesion: 0.22
-Nodes (17): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+9 more)
+Nodes (15): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+7 more)
 
 ### Community 3 - "`hindsight-homelab-agents` skill: design proposal (not yet implemented)"
 Cohesion: 0.17
@@ -87,11 +88,11 @@ Nodes (11): Body outline, Context, Frontmatter (proposed), `hindsight-homelab-ag
 
 ### Community 4 - "pull-request-process SKILL.md"
 Cohesion: 0.36
-Nodes (8): rs-agent-plugin README, fix-mapped-issue SKILL.md, map-issue-to-tasks SKILL.md, issue-enrichment.md template, Dedicated agent git/gh identity enforcement (rationale), pull-request-process SKILL.md, Explicit-refspec push guardrail against advancing main (rationale), Git worktree isolation instead of shared checkout (rationale)
+Nodes (5): rs-agent-plugin README, fix-mapped-issue SKILL.md, map-issue-to-tasks SKILL.md, issue-enrichment.md template, pull-request-process SKILL.md
 
 ### Community 5 - "doppler-secrets SKILL.md"
 Cohesion: 0.29
-Nodes (8): doppler-secrets SKILL.md, Doppler service-token least-privilege scoping rationale, OPNsense API lessons learned, Always pull config backup before nontrivial change (rationale), opnsense-admin SKILL.md, PatchMon API lessons learned, patchmon-admin SKILL.md, patch_all is a real immediate live-host action (rationale)
+Nodes (5): doppler-secrets SKILL.md, OPNsense API lessons learned, opnsense-admin SKILL.md, PatchMon API lessons learned, patchmon-admin SKILL.md
 
 ### Community 6 - "Git Branch Hygiene"
 Cohesion: 0.29
@@ -111,7 +112,7 @@ Nodes (19): check_graphify_gitignore_behavior(), copy_specify_from_reference(), 
 
 ### Community 14 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
 Cohesion: 0.11
-Nodes (18): Cross-repo documentation/folder standard design doc, On-demand (not pre-PR-gated) enforcement decision for repo-standard, repo.toml stage field decision, Per-stage doc/folder tier table (prototype/in-progress/released/archived), Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist (+10 more)
+Nodes (16): Cross-repo documentation/folder standard design doc, Per-stage doc/folder tier table (prototype/in-progress/released/archived), Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope (+8 more)
 
 ### Community 16 - "test-repo-standard.sh"
 Cohesion: 0.73
@@ -122,7 +123,7 @@ Cohesion: 0.25
 Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, Quality Gate, Repo Notes
 
 ## Knowledge Gaps
-- **46 isolated node(s):** `audit.sh script`, `SAFE`, `NEEDS_DECISION`, `DIRTY`, `opn-api.sh script` (+41 more)
+- **16 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`, `guiltty (external repo)`, `iklo (external repo, in-progress tier)` (+11 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 59 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -131,7 +132,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Centralized worktree-root strategy (not sibling of main checkout)` connect `issue.sh` to `pr.sh`?**
   _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **What connects `audit.sh script`, `SAFE`, `NEEDS_DECISION` to the rest of the system?**
-  _46 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
+  _16 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `graphify as a standard dev-process artifact: `.gitignore` requirement design` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
