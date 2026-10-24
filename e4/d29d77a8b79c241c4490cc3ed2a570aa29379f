@@ -1,0 +1,31 @@
+skills/opnsense-admin/scripts/opn-api.sh
+  s_9dcf7294293433::t_a6a871fc585b6c 49-50
+  s_9dcf7294293433::t_d19d6b500c808a 52-54
+skills/hindsight-homelab/SKILL.md
+  s_9dcf7294293433::t_7711e1f11a3254 72,77,80-82,100-102,104-106,118-119,121-122
+  s_9dcf7294293433::t_20e50216c9e693 73-76,138-140
+skills/patchmon-admin/scripts/patchmon-api.sh
+  s_9dcf7294293433::t_2bdcdc1b12e861 45-46
+skills/pull-request-process/pr.sh
+  s_9dcf7294293433::t_2bdcdc1b12e861 298-299,348,446
+graphify-out/GRAPH_REPORT.md
+  s_9dcf7294293433::t_3f0cf9cdccd22e 1,4,6,14,77,81,85,93,97,117,136,145-146,148-150
+graphify-out/graph.json
+  s_9dcf7294293433::t_7b75314f55559f 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e4d29d77a8b79c241c4490cc3ed2a570aa29379f",
+  "prompts": {},
+  "sessions": {
+    "s_9dcf7294293433": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "61497288-02a2-4b93-80b7-e6b898effc70",
+        "model": "auto"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
