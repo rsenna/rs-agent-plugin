@@ -46,10 +46,12 @@ path="$1"
 shift
 
 if [ -n "${DOPPLER_TOKEN:-}" ]; then
+    # The inner bash command intentionally resolves Doppler variable names.
+    # shellcheck disable=SC2016
     doppler run --token "$DOPPLER_TOKEN" -- bash -c '
-        key="${!1}"; secret="${!2}"
-        curl -sk -m 20 -u "${key}:${secret}" "https://'"${OPN_HOST}"':'"${OPN_PORT}"'${3}" "${@:4}"
-    ' _ "$DOPPLER_KEY_NAME" "$DOPPLER_SECRET_NAME" "$path" "$@"
+        key="${!1}"; secret="${!2}"; host="$3"; port="$4"; path="$5"; shift 5
+        curl -sk -m 20 -u "${key}:${secret}" "https://${host}:${port}${path}" "$@"
+    ' _ "$DOPPLER_KEY_NAME" "$DOPPLER_SECRET_NAME" "$OPN_HOST" "$OPN_PORT" "$path" "$@"
 else
     OPN_KEY="${OPN_KEY:?set OPN_KEY or DOPPLER_TOKEN}"
     OPN_SECRET="${OPN_SECRET:?set OPN_SECRET or DOPPLER_TOKEN}"

@@ -69,9 +69,17 @@ OpenAPI spec at `http://docker.iceking.entrement.es:8888/openapi.json`
 — confirm again if this skill is ever revised, in case the deployment
 changes).
 
+For free-form values in the examples below, put the text in the named
+files first; `tags.json` should contain a JSON array. `cat` reads those
+files as data; pass the resulting variables in double quotes, and let
+`jq --arg` encode JSON strings. Do not paste untrusted text into shell
+command source.
+
 **Semantic fact, untagged** — plain retain is fine:
 ```bash
-hindsight -p homelab memory retain homelab-agents "<content>" --context "<context>"
+content=$(cat ./content.txt)
+context=$(cat ./context.txt)
+hindsight -p homelab memory retain homelab-agents "$content" --context "$context"
 ```
 
 **Semantic fact, tagged** — the CLI has no `--tags` on `memory retain`
@@ -89,10 +97,13 @@ someone ran, an error message, a code snippet), any of which breaks a
 naively-interpolated JSON literal or, worse, lets attacker-controlled
 content escape the string and alter the request:
 ```bash
+name=$(cat ./name.txt)
+content=$(cat ./content.txt)
+tags=$(cat ./tags.json)
 body=$(jq -n \
-  --arg name "<name>" \
-  --arg content "<content>" \
-  --argjson tags '["repo:...", "tool:..."]' \
+  --arg name "$name" \
+  --arg content "$content" \
+  --argjson tags "$tags" \
   '{name: $name, content: $content, priority: 0, tags: $tags}')
 curl -sf -X POST http://docker.iceking.entrement.es:8888/v1/default/banks/homelab-agents/directives \
   -H "Content-Type: application/json" \
@@ -104,9 +115,11 @@ and tags, so Hindsight's own observation consolidation merges
 recurring issues under the same tag scope instead of piling up
 duplicates. Same `jq`-built-body discipline as above:
 ```bash
+content=$(cat ./content.txt)
+tags=$(cat ./tags.json)
 body=$(jq -n \
-  --arg content "<content>" \
-  --argjson tags '["tool:...", "host:..."]' \
+  --arg content "$content" \
+  --argjson tags "$tags" \
   '{items: [{content: $content, context: "tooling failure", tags: $tags}]}')
 curl -sf -X POST http://docker.iceking.entrement.es:8888/v1/default/banks/homelab-agents/memories \
   -H "Content-Type: application/json" \
@@ -122,7 +135,9 @@ known on the same tags:
 
 ```bash
 hindsight -p homelab directive list homelab-agents -o json   # filter client-side by tag, CLI has no --tags on this subcommand
-hindsight -p homelab memory recall homelab-agents "<query>" --tags <tags> --tags-match all_strict --max-tokens 5000
+query=$(cat ./query.txt)
+tags=$(cat ./tags.txt)
+hindsight -p homelab memory recall homelab-agents "$query" --tags "$tags" --tags-match all_strict --max-tokens 5000
 ```
 
 Use `all_strict` here, not `any` (confirmed against Hindsight's own
