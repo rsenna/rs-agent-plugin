@@ -1,0 +1,19 @@
+skills/repo-standard/graphify-merge-driver.sh
+  s_548a191dcd5a5c::t_9c9f47ba3be39e 57-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7cf55ce9694e2929d765fd57d11aa92d820ba6f8",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
