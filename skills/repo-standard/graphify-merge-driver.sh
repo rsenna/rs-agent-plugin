@@ -54,5 +54,8 @@ if ! graphify update . >/dev/null 2>&1; then
   exit 0
 fi
 
-cp "$path" "$ours"
+if ! cp "$path" "$ours"; then
+  echo "[graphify-merge-driver] failed to copy regenerated $path into place; keeping 'ours' as-is." >&2
+  exit 0
+fi
 echo "[graphify-merge-driver] regenerated $path from the merged tree." >&2
