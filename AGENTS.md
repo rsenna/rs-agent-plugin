@@ -12,6 +12,24 @@ Run these before every push:
 
 If a new language/tooling shows up, extend this list rather than skipping the gate.
 
+### One-time setup: graphify merge driver
+
+`graphify-out/graph.json`/`GRAPH_REPORT.md` are generated, so a textual 3-way merge between branches that each regenerated them conflicts even when nothing meaningful diverged. `.gitattributes` routes both through a custom merge driver (`skills/repo-standard/graphify-merge-driver.sh`) that regenerates instead of diffing — see [the design doc](docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md). Registration is local git config, not something a commit can ship — run once per clone, resolving the install root the same way the README's install recipe does, and quoting the resolved path (git runs the registered command through a shell, so an unquoted path with a space or shell metacharacter either fails to launch or gets interpreted as shell syntax):
+
+```bash
+if [ -n "${AGENT_SKILLS_ROOT:-}" ]; then
+  SKILLS_ROOT="$AGENT_SKILLS_ROOT"
+elif [ -d "./.agents/skills/repo-standard" ]; then
+  SKILLS_ROOT="$PWD/.agents/skills"
+else
+  SKILLS_ROOT="$HOME/.agents/skills"
+fi
+DRIVER="$SKILLS_ROOT/repo-standard/graphify-merge-driver.sh"
+git config merge.graphify.driver "'$DRIVER' %O %A %B %P"
+```
+
+The driver is best-effort, not a substitute for the gate: always rerun `graphify update .` after any merge, same as step 2 above.
+
 ## Identity & Secrets
 `pr.sh` fetches the agent's git/gh identity fresh from Doppler on every invocation (`doppler secrets get GHUB_AGENT_PATC`/`GHUB_AGENT_USERNAME`/`GHUB_AGENT_EMAIL`, project/config from `PR_BOT_DOPPLER_PROJECT`/`PR_BOT_DOPPLER_CONFIG`, default `homelab`/`dev`) — never the ambient `gh auth`/git identity. Authenticate the `doppler` CLI in your environment (e.g. `doppler login`, or a configured service token) so those secrets are reachable; `pr.sh` dies loudly rather than falling back if they aren't.
 

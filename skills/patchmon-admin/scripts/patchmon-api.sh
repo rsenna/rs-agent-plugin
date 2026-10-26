@@ -42,7 +42,7 @@ path="$1"
 shift
 
 if [ -n "${DOPPLER_TOKEN:-}" ]; then
-    # The child Bash expands this command body after Doppler supplies the secrets.
+    # The inner bash command intentionally receives the outer host via quote splicing.
     # shellcheck disable=SC2016
     doppler run --token "$DOPPLER_TOKEN" -- bash -c '
         user="${!1}"; pass="${!2}"; path="$3"; shift 3

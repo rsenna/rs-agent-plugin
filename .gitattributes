@@ -1,0 +1,8 @@
+# graphify-out: generated knowledge-graph artifacts. A textual merge conflict
+# here is meaningless — the files are a pure function of the rest of the repo —
+# so route them through a custom merge driver that regenerates instead of
+# diffing. One-time per clone, register the driver before this takes effect:
+#   git config merge.graphify.driver '<skills-root>/repo-standard/graphify-merge-driver.sh %O %A %B %P'
+# (skills-root defaults to ~/.agents/skills; see skills/repo-standard/SKILL.md)
+graphify-out/graph.json merge=graphify
+graphify-out/GRAPH_REPORT.md merge=graphify
