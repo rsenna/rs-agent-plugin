@@ -1,0 +1,21 @@
+AGENTS.md
+  s_548a191dcd5a5c::t_14aea1b9bdb22d 12
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_f896e4527793c8 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "08f3b8ccecd490b378fd3f8be3f39c5e7ac41ad5",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
