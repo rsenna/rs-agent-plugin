@@ -1,4 +1,4 @@
-# Graph Report - graphify-merge-driver  (2026-10-26)
+# Graph Report - rs-agent-plugin  (2026-10-26)
 
 ## Corpus Check
 - 37 files · ~41,089 words
