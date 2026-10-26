@@ -168,6 +168,16 @@ before push (see `AGENTS.md`) — run it again after any merge this driver
 touched, same as always; don't treat the driver's own regeneration as the
 final word.
 
+A second gap: the driver only fires when git considers the path
+**conflicted** (modified on both sides). If only one branch touched the
+graph file, git takes that side's version as-is with no conflict at
+all — the driver never runs, so a graph that's now stale relative to the
+rest of the merged tree goes uncaught. Fixing this fully would need a
+`post-merge` hook that reruns `graphify update .` unconditionally after
+every merge, which is the same kind of local-machine-state hook this
+design already declines to auto-install. Same backstop applies: the
+pre-push gate step catches it either way.
+
 **Audit behavior:** same "behavioral, not textual" principle as
 `.gitignore` above, plus one check textual matching can't substitute for.
 First, ask git what it would actually do:

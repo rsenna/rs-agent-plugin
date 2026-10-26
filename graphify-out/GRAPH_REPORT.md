@@ -1,7 +1,7 @@
 # Graph Report - graphify-merge-driver  (2026-10-26)
 
 ## Corpus Check
-- 37 files · ~40,806 words
+- 37 files · ~41,089 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3c131fd4`
+- Built from commit: `c0b92a07`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

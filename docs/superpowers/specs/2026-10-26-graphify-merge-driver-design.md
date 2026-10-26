@@ -127,6 +127,23 @@ fully solved here: the actual correctness backstop remains the mandatory
 `graphify update .` gate step before push, which this design doesn't
 replace, only reduces how often a human needs to invoke by hand.
 
+A second, distinct gap in the same spirit: a merge driver only runs when
+git considers a path **conflicted** — modified differently on both sides.
+If only one branch touched `graph.json`/`GRAPH_REPORT.md` (because only
+that branch's source changes happened to move the graph, or the other side
+simply didn't run `graphify update .` before committing), git treats that
+as a normal, non-conflicting change and takes it as-is — the driver never
+fires, so it can't catch a graph that's now stale relative to the rest of
+the *merged* tree (which may include source changes from the side that
+never touched the graph file). This is inherent to how merge drivers work
+(they resolve conflicts, they don't audit every merge for staleness) and
+isn't something a per-path driver can address at all — a true fix would be
+a `post-merge` hook that unconditionally reruns `graphify update .` after
+*every* merge regardless of conflict status, which is exactly the kind of
+local-machine-state hook this design already declines to auto-install (see
+"Out of scope"). The mandatory pre-push gate step is, again, what actually
+closes this gap in practice.
+
 ## Rollout in this repo
 
 - `.gitattributes` added at repo root with the two `merge=graphify` lines.
