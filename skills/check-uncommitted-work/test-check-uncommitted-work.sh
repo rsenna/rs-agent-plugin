@@ -71,6 +71,18 @@ git -C "$repo" commit -qam local
 out="$(run_audit "$repo" env)"
 assert_contains "$out" "local main is ahead of origin/main by 1 commit(s)"
 
+# The local default branch must report both-sided divergence distinctly from a one-sided drift.
+repo="$(init_repo default-diverged)"
+printf 'local\n' >> "$repo/base.txt"
+git -C "$repo" commit -qam local
+git -C "$repo" switch -q -c upstream HEAD~1
+printf 'upstream\n' >> "$repo/base.txt"
+git -C "$repo" commit -qam upstream
+git -C "$repo" update-ref refs/remotes/origin/main HEAD
+git -C "$repo" switch -q main
+out="$(run_audit "$repo" env)"
+assert_contains "$out" "local main and origin/main have diverged (1 remote-only, 1 local-only commit(s))"
+
 # An ancestor branch is recognized as integrated.
 repo="$(init_repo ancestry-merged)"
 git -C "$repo" switch -q -c feature
@@ -88,6 +100,9 @@ printf 'feature\n' > "$repo/feature.txt"
 git -C "$repo" add feature.txt
 git -C "$repo" commit -qm feature
 git -C "$repo" switch -q main
+printf 'other\n' > "$repo/other.txt"
+git -C "$repo" add other.txt
+git -C "$repo" commit -qm other
 git -C "$repo" cherry-pick feature >/dev/null
 git -C "$repo" update-ref refs/remotes/origin/main HEAD
 git -C "$repo" switch -q feature
@@ -100,6 +115,9 @@ git -C "$repo" switch -q -c feature
 printf 'feature\n' > "$repo/feature.txt"
 git -C "$repo" add feature.txt
 git -C "$repo" commit -qm feature
+printf 'feature two\n' > "$repo/feature-two.txt"
+git -C "$repo" add feature-two.txt
+git -C "$repo" commit -qm 'feature two'
 git -C "$repo" switch -q main
 git -C "$repo" merge --squash feature >/dev/null
 git -C "$repo" commit -qm 'squash feature'
@@ -121,17 +139,22 @@ if [[ "$out" == *"check-uncommitted-work."* ]]; then
   fail "audit reported its own temporary status file"
 fi
 
-# Inventory reports linked worktrees without changing or removing them.
+# Inventory reports linked worktrees without changing or removing them —
+# both a dirty one (local/ignored state) and a clean one side by side.
 repo="$(init_repo worktree-inventory)"
 linked="$TMP_ROOT/linked-worktree"
 git -C "$repo" worktree add -q -b task-worktree "$linked" HEAD
 printf 'leftover\n' > "$linked/leftover.txt"
 git -C "$repo" worktree lock "$linked"
+clean_linked="$TMP_ROOT/clean-linked-worktree"
+git -C "$repo" worktree add -q -b clean-worktree "$clean_linked" HEAD
 out="$(run_audit "$repo" env)"
 assert_contains "$out" "$repo [main] clean"
 assert_contains "$out" "$linked [task-worktree locked] has local or ignored state; review before cleanup"
+assert_contains "$out" "$clean_linked [clean-worktree] clean"
 assert_contains "$out" "For worktree cleanup decisions, use git-branch-hygiene"
 [[ -d "$linked" ]] || fail "audit removed a linked worktree"
+[[ -d "$clean_linked" ]] || fail "audit removed a linked worktree"
 
 # A check invoked inside a linked worktree must still refuse to treat it as the shared checkout.
 if out="$(cd "$linked" && HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/config" "$SCRIPT" 2>&1)"; then

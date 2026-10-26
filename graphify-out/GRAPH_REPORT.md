@@ -1,7 +1,7 @@
 # Graph Report - rs-agent-plugin  (2026-10-26)
 
 ## Corpus Check
-- 41 files · ~43,603 words
+- 41 files · ~43,749 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `169adc9b`
+- Built from commit: `1f10ef41`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
