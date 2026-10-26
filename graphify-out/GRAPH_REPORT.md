@@ -1,24 +1,24 @@
-# Graph Report - graphify-merge-driver  (2026-10-26)
+# Graph Report - rs-agent-plugin  (2026-10-26)
 
 ## Corpus Check
-- 37 files · ~41,089 words
+- 41 files · ~43,749 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 356 nodes · 426 edges · 35 communities (25 shown, 10 thin omitted)
+- 375 nodes · 451 edges · 39 communities (27 shown, 12 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c0b92a07`
+- Built from commit: `1f10ef41`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Obsidian CLI
 - Obsidian Bases Skill
-- clawhub.obsidian-bases/skill-card.md
+- Functions Reference
 - Agent Operations Guide
 - pr.sh
 - repo-standard.sh
@@ -49,6 +49,10 @@
 - patchmon-api.sh
 - graphify as a standard dev-process artifact: `.gitignore` requirement design
 - graphify-merge-driver.sh
+- check-uncommitted-work.sh
+- test-check-uncommitted-work.sh
+- Check Uncommitted Work
+- Issue #30 — Add a check-uncommitted-work skill
 
 ## God Nodes (most connected - your core abstractions)
 1. `pr.sh script` - 14 edges
@@ -68,22 +72,22 @@
 ## Import Cycles
 - None detected.
 
-## Communities (35 total, 10 thin omitted)
+## Communities (39 total, 12 thin omitted)
 
 ### Community 0 - "Obsidian CLI"
 Cohesion: 0.06
 Nodes (32): Advanced Features, Basic File Management, Bookmarks, Command Palette, Command Structure, Core Patterns, Daily Notes, Daily Notes and Tasks (+24 more)
 
 ### Community 1 - "Obsidian Bases Skill"
-Cohesion: 0.04
-Nodes (43): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+35 more)
+Cohesion: 0.07
+Nodes (30): Cards View, Common Formula Errors, Complete Examples, Daily Notes Index, Date Arithmetic, Default Summary Formulas, Duration Type, Embedding Bases (+22 more)
 
-### Community 2 - "clawhub.obsidian-bases/skill-card.md"
-Cohesion: 0.18
-Nodes (10): Deployment Geography for Use: <br>, Description: <br>, Ethical Considerations: <br>, Known Risks and Mitigations: <br>, License/Terms of Use: <br>, Publisher: <br>, Reference(s): <br>, Skill Output: <br> (+2 more)
+### Community 2 - "Functions Reference"
+Cohesion: 0.08
+Nodes (23): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+15 more)
 
 ### Community 3 - "Agent Operations Guide"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (17): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+9 more)
 
 ### Community 4 - "pr.sh"
@@ -111,7 +115,7 @@ Cohesion: 0.41
 Nodes (11): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+3 more)
 
 ### Community 10 - "Graphify"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (11): Alternate install: vercel-labs/skills, Development Remarks, Files, Graphify, Guardrails these skills share, Install, Merge conflicts on `graph.json`/`GRAPH_REPORT.md`, PR-related Skills (+3 more)
 
 ### Community 11 - "Hindsight Homelab Agents"
@@ -170,25 +174,33 @@ Nodes (4): Before wiring up anything automated, Getting access, PatchMon adminis
 Cohesion: 0.18
 Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope, Required-paths table, Rollout in this repo (+3 more)
 
+### Community 35 - "check-uncommitted-work.sh"
+Cohesion: 0.52
+Nodes (6): branch_is_integrated(), fail(), is_known_noise(), report_path(), report_worktree(), check-uncommitted-work.sh script
+
+### Community 36 - "test-check-uncommitted-work.sh"
+Cohesion: 0.67
+Nodes (5): assert_contains(), fail(), init_repo(), run_audit(), test-check-uncommitted-work.sh script
+
 ## Knowledge Gaps
 - **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 224 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 228 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `repo-standard` connect `Starter content for `scaffold`` to `Agent Operations Guide`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
   _3 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Obsidian CLI` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
+- **Why does `Obsidian Bases Skill` connect `Obsidian Bases Skill` to `Functions Reference`?**
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **Should `Obsidian Bases Skill` be split into smaller, more focused modules?**
-  _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
+- **Should `Functions Reference` be split into smaller, more focused modules?**
+  _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
 - **Should `Agent Operations Guide` be split into smaller, more focused modules?**
-  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
-- **Should `Starter content for `scaffold`` be split into smaller, more focused modules?**
-  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
-- **Should `OPNsense API — lessons learned` be split into smaller, more focused modules?**
-  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
