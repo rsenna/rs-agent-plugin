@@ -1,0 +1,53 @@
+.gitattributes
+  s_548a191dcd5a5c::t_9543d0209717af 1-8
+.serena/project.yml
+  s_548a191dcd5a5c::t_9ccdac3c60afc2 5-20,29,34-35,175-188
+AGENTS.md
+  s_548a191dcd5a5c::t_b61fada5637f28 15-32
+README.md
+  s_548a191dcd5a5c::t_9908ebb9875572 53,117-120
+docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md
+  s_548a191dcd5a5c::t_c2f77e107fff34 1,5-11,233-312,323,325-333,337-350
+docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md
+  s_548a191dcd5a5c::t_08554f3737c589 1-180
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_3b7ae5447b2883 1,4,6,9-10,14,19-22,24-27,29-35,37-40,42-47,51,55-63,66,71-79,81-83,85-89,93-107,109-111,113,115,117-119,121-133,135,137,139,141-143,145-147,149-151,153-155,157,161-171,174-176,181-182,184-194
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_64833303805873 1
+skills/hindsight-homelab/SKILL.md
+  s_548a191dcd5a5c::t_e531d5e0ddec76 1-255
+skills/opnsense-admin/references/lessons-learned.md
+  s_548a191dcd5a5c::t_4bec63954fb190 104,108-111
+skills/opnsense-admin/scripts/opn-api.sh
+  s_548a191dcd5a5c::t_b38099fb4f5e45 26-31,51-53,58-59,61-65,69-71
+skills/patchmon-admin/scripts/patchmon-api.sh
+  s_548a191dcd5a5c::t_1c65e8b07be874 45-46
+skills/pull-request-process/pr.sh
+  s_548a191dcd5a5c::t_f9bb96a8f42a83 298-299,348,446
+skills/repo-standard/SKILL.md
+  s_548a191dcd5a5c::t_0e4b7d8b0de032 44,104-214,353
+skills/repo-standard/graphify-merge-driver.sh
+  s_548a191dcd5a5c::t_272fe6868cd860 1-144
+skills/repo-standard/repo-standard.sh
+  s_548a191dcd5a5c::t_4537d5f64477e4 40,105-129,133,182-188,198-203,225-235,350
+skills/repo-standard/test-repo-standard.sh
+  s_548a191dcd5a5c::t_a338cd48dbafb3 73,78-120
+tasks/issue-33-cross-project-skill-management-safe-updates-drift.md
+  s_548a191dcd5a5c::t_6ef0590c35c961 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "57610b65e1540325cc20895eac42ec6759d0460e",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
