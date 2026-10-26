@@ -105,9 +105,22 @@ EOF
 check_graphify_gitattributes_behavior() {
   local path value mismatches=0
   for path in "graphify-out/graph.json" "graphify-out/GRAPH_REPORT.md"; do
+    # Effective-attribute check: catches a later rule in .gitattributes
+    # itself overriding the earlier merge=graphify declaration.
     value="$(git check-attr merge -- "$path" | sed -E 's/^.*: merge: //')"
     if [ "$value" != "graphify" ]; then
       warn ".gitattributes non-compliant for '$path': expected merge=graphify, got '$value'"
+      mismatches=$((mismatches + 1))
+      continue
+    fi
+    # `git check-attr` reports the *effective* attribute, which a local,
+    # uncommitted $GIT_DIR/info/attributes override can satisfy even though
+    # the tracked .gitattributes itself is missing or wrong — every other
+    # clone would then fall back to a plain text merge and still conflict.
+    # Confirm the declaration actually lives in the tracked file, not just
+    # in local config.
+    if ! grep -qE "^${path//\//\\/}[[:space:]]+merge=graphify([[:space:]]|\$)" .gitattributes 2>/dev/null; then
+      warn ".gitattributes non-compliant for '$path': effective attribute is graphify, but the tracked .gitattributes file itself doesn't declare it (a local override is masking a missing/wrong committed rule)"
       mismatches=$((mismatches + 1))
     fi
   done
@@ -182,7 +195,12 @@ run_audit() {
 write_file_if_missing() {
   local path="$1"
   local content="$2"
-  if [ -e "$path" ]; then
+  # `-e` follows symlinks and is false for a *dangling* one — a dangling
+  # symlink at $path would pass this check and then have printf's redirect
+  # write straight through it to wherever it points, potentially outside
+  # the repo. `-L` catches the symlink itself regardless of what it
+  # resolves to, so scaffold never writes through one.
+  if [ -e "$path" ] || [ -L "$path" ]; then
     log "skipped (exists): $path"
     return 0
   fi
@@ -209,8 +227,7 @@ create_dot_gitattributes() {
 # here is meaningless — the files are a pure function of the rest of the repo —
 # so route them through a custom merge driver that regenerates instead of
 # diffing. One-time per clone, register the driver before this takes effect:
-#   git config merge.graphify.driver '<skills-root>/repo-standard/graphify-merge-driver.sh %O %A %B %P'
-# (skills-root defaults to ~/.agents/skills; see skills/repo-standard/SKILL.md)
+# see \"One-time per-clone setup\" in skills/repo-standard/SKILL.md
 graphify-out/graph.json merge=graphify
 graphify-out/GRAPH_REPORT.md merge=graphify
 "

@@ -1,25 +1,25 @@
 # Graph Report - graphify-merge-driver  (2026-10-26)
 
 ## Corpus Check
-- 37 files · ~38,975 words
+- 37 files · ~40,738 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 354 nodes · 422 edges · 35 communities (25 shown, 10 thin omitted)
+- 356 nodes · 426 edges · 35 communities (25 shown, 10 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7cf55ce9`
+- Built from commit: `7ef366da`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Obsidian CLI
 - Obsidian Bases Skill
-- Functions Reference
-- Cross-repo documentation/folder standard
+- clawhub.obsidian-bases/skill-card.md
+- Agent Operations Guide
 - pr.sh
 - repo-standard.sh
 - Starter content for `scaffold`
@@ -29,7 +29,7 @@
 - Graphify
 - Hindsight Homelab Agents
 - Pull Request Process
-- Agent Operations Guide
+- Cross-repo documentation/folder standard
 - PatchMon API - lessons learned
 - Doppler CLI - local access + secret injection
 - Fix Mapped Issue
@@ -75,16 +75,16 @@ Cohesion: 0.06
 Nodes (32): Advanced Features, Basic File Management, Bookmarks, Command Palette, Command Structure, Core Patterns, Daily Notes, Daily Notes and Tasks (+24 more)
 
 ### Community 1 - "Obsidian Bases Skill"
-Cohesion: 0.07
-Nodes (30): Cards View, Common Formula Errors, Complete Examples, Daily Notes Index, Date Arithmetic, Default Summary Formulas, Duration Type, Embedding Bases (+22 more)
+Cohesion: 0.04
+Nodes (43): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+35 more)
 
-### Community 2 - "Functions Reference"
-Cohesion: 0.08
-Nodes (23): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+15 more)
+### Community 2 - "clawhub.obsidian-bases/skill-card.md"
+Cohesion: 0.18
+Nodes (10): Deployment Geography for Use: <br>, Description: <br>, Ethical Considerations: <br>, Known Risks and Mitigations: <br>, License/Terms of Use: <br>, Publisher: <br>, Reference(s): <br>, Skill Output: <br> (+2 more)
 
-### Community 3 - "Cross-repo documentation/folder standard"
-Cohesion: 0.09
-Nodes (19): 1. `repo.toml` gets a `stage` field, 2. Each stage maps to a doc/folder tier, 3. Enforcement: on-demand `repo-standard` skill, Cross-repo documentation/folder standard, Decision, Guardrails for agent-agnostic scaffolding (binding canonical rule), Non-goals, Open follow-ups (not blocking this spec) (+11 more)
+### Community 3 - "Agent Operations Guide"
+Cohesion: 0.10
+Nodes (17): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+9 more)
 
 ### Community 4 - "pr.sh"
 Cohesion: 0.29
@@ -122,9 +122,9 @@ Nodes (10): 1. Preflight check (every invocation, not one-time setup), 2. Bank &
 Cohesion: 0.20
 Nodes (9): Agent identity, not the personal one, Commands (verified), Guardrails (never violate), Portability — read the project's specifics first, Pull Request Process, The process, TODO comments, Why the push is done this way (don't shortcut it) (+1 more)
 
-### Community 13 - "Agent Operations Guide"
-Cohesion: 0.25
-Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, Quality Gate, Repo Notes
+### Community 13 - "Cross-repo documentation/folder standard"
+Cohesion: 0.20
+Nodes (10): 1. `repo.toml` gets a `stage` field, 2. Each stage maps to a doc/folder tier, 3. Enforcement: on-demand `repo-standard` skill, Cross-repo documentation/folder standard, Decision, Guardrails for agent-agnostic scaffolding (binding canonical rule), Non-goals, Open follow-ups (not blocking this spec) (+2 more)
 
 ### Community 14 - "PatchMon API - lessons learned"
 Cohesion: 0.25
@@ -172,23 +172,23 @@ Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allo
 
 ## Knowledge Gaps
 - **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 227 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 224 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Obsidian Bases Skill` connect `Obsidian Bases Skill` to `Functions Reference`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `repo-standard` connect `Starter content for `scaffold`` to `Agent Operations Guide`?**
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
   _3 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Obsidian CLI` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
-- **Why does `repo-standard` connect `Starter content for `scaffold`` to `Cross-repo documentation/folder standard`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Should `Obsidian Bases Skill` be split into smaller, more focused modules?**
-  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
-- **Should `Functions Reference` be split into smaller, more focused modules?**
-  _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
-- **Should `Cross-repo documentation/folder standard` be split into smaller, more focused modules?**
-  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+- **Should `Agent Operations Guide` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+- **Should `Starter content for `scaffold`` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+- **Should `OPNsense API — lessons learned` be split into smaller, more focused modules?**
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._

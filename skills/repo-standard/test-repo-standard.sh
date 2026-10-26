@@ -94,6 +94,30 @@ out="$(run_expect_fail "$repo6" audit)"
 assert_contains "$out" ".gitattributes"
 assert_contains "$out" "NON-COMPLIANT"
 
+# .gitattributes behavior check: a local info/attributes override can't mask
+# a missing/wrong declaration in the tracked file itself.
+repo7="$TMP_ROOT/masked-gitattributes"
+mkdir -p "$repo7"
+git -C "$repo7" init -q
+cat > "$repo7/repo.toml" <<'EOF'
+stage = "prototype"
+EOF
+cat > "$repo7/.gitignore" <<'EOF'
+graphify-out/*
+!graphify-out/graph.json
+!graphify-out/GRAPH_REPORT.md
+EOF
+cat > "$repo7/.gitattributes" <<'EOF'
+# missing the real merge=graphify rules
+EOF
+mkdir -p "$repo7/.git/info"
+cat > "$repo7/.git/info/attributes" <<'EOF'
+graphify-out/graph.json merge=graphify
+graphify-out/GRAPH_REPORT.md merge=graphify
+EOF
+out="$(run_expect_fail "$repo7" audit)"
+assert_contains "$out" "tracked .gitattributes file itself doesn't declare it"
+
 # Archived scaffold does not create frozen files.
 repo4="$TMP_ROOT/archived"
 mkdir -p "$repo4"

@@ -82,13 +82,50 @@ someone else's clone.
 
 The driver always exits `0` — a merge driver that exits non-zero leaves the
 path conflicted, and this design never wants to introduce a *new* way for a
-merge to fail. If `graphify` isn't on `PATH`, if `graphify update .` itself
-fails, or if some *other* file in the same merge is still unresolved (which
-would mean regenerating against a half-merged tree), the driver falls back
-to leaving `ours` unchanged and prints a note to rerun `graphify update .`
-manually. The mandatory pre-push gate step already requires that rerun
-before any PR ships, so a deferred case here is never silently wrong for
-long — just not auto-resolved in that one edge case.
+merge to fail. If `%P` isn't exactly one of the two expected artifact paths,
+`graphify` isn't on `PATH`, `graphify update .` itself fails, or some
+*other* file in the same merge is still unresolved (which would mean
+regenerating against a half-merged tree), the driver falls back to leaving
+`ours` unchanged and prints a note to rerun `graphify update .` manually.
+The mandatory pre-push gate step already requires that rerun before any PR
+ships, so a deferred case here is never silently wrong for long — just not
+auto-resolved in that one edge case.
+
+Three further hardening details, each closing a gap found in review of the
+first version of this driver:
+
+- **`%P` is validated before use, not trusted.** It names the path git is
+  resolving, which in an untrusted/malicious repository could be made
+  option-shaped (e.g. `--target-directory=...`) instead of one of the two
+  real artifact paths. The driver rejects anything else outright, before it
+  ever reaches `cp`/`mv`, rather than relying on those commands' own
+  argument parsing to do the right thing with attacker-influenced input.
+- **Writing `%A` is atomic.** The first version copied the regenerated file
+  directly over `%A` (`cp -- "$path" "$ours"`), which truncates `%A` in
+  place as it writes — a failure partway through (disk full, permissions)
+  would leave git reading a partial file back as a "successful" resolution.
+  The driver now copies to a temp file next to `%A` and renames over it, so
+  `%A` is either the old content or the new content, never a partial write.
+- **Both generated artifacts are backed up before regenerating, and
+  restored together on any failure.** `graphify update .` can write one of
+  `graph.json`/`GRAPH_REPORT.md` and then fail before writing the other —
+  without a backup, that would leave a mismatched pair on disk even though
+  the driver only reports success or failure for the single path git asked
+  it to resolve.
+
+**What this driver does *not* fully guarantee, and why:** it runs mid-merge
+— before `HEAD` has advanced to the eventual merge commit, and without a
+documented git-internal guarantee that invocation order across multiple
+custom-merge-driver paths in the same merge always reflects the fully
+finalized conflict set at the moment any single one of them runs. The
+"other conflicts still unresolved" guard (checking for non-`graphify-out/`
+paths still in conflict) covers the common case — a real source conflict
+elsewhere in the same merge — but a per-path driver invocation cannot, by
+construction, prove it is being run after every other path's resolution has
+landed in every possible git-internal ordering. This is not treated as
+fully solved here: the actual correctness backstop remains the mandatory
+`graphify update .` gate step before push, which this design doesn't
+replace, only reduces how often a human needs to invoke by hand.
 
 ## Rollout in this repo
 
@@ -96,10 +133,21 @@ long — just not auto-resolved in that one edge case.
 - `skills/repo-standard/graphify-merge-driver.sh` added.
 - `skills/repo-standard/SKILL.md`, `repo-standard.sh`, and
   `test-repo-standard.sh` updated for the new required path, its audit
-  check, and its scaffold starter content.
-- `README.md`'s existing graphify "Development Remarks" section gains the
-  one-time driver-registration command, same place the commit/ignore split
-  is already documented.
+  check (both the effective-attribute check via `git check-attr` *and* a
+  direct read of the tracked `.gitattributes` file, since the former alone
+  can be satisfied by a local, uncommitted `$GIT_DIR/info/attributes`
+  override that masks a missing/wrong committed rule), and its scaffold
+  starter content.
+- `AGENTS.md`'s Quality Gate section gains the one-time driver-registration
+  command (kept out of `README.md` per this repo's own documented
+  convention — see "Documentation Expectations" in `AGENTS.md` — of
+  keeping the README tool-agnostic and putting deeper operational detail
+  here instead). The registration command resolves the install root the
+  same way the README's own install recipe does (`AGENT_SKILLS_ROOT`, then
+  a project-local `./.agents/skills`, then the global default) and quotes
+  the resolved path, since git runs the registered command through a
+  shell and an unquoted path with a space or metacharacter either fails to
+  launch the driver or is interpreted as shell syntax.
 
 ## Out of scope
 

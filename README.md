@@ -117,9 +117,4 @@ Everything else under `graphify-out/` (`graph.html`, `manifest.json`, `cost.json
 
 #### Merge conflicts on `graph.json`/`GRAPH_REPORT.md`
 
-Both files are generated, so a textual 3-way merge between branches that each regenerated the graph conflicts even when nothing about its meaning diverged. `.gitattributes` routes them through a custom merge driver that regenerates instead of diffing (see [the design doc](docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md)). Registration is local git config and can't ship via a commit — run this once per clone:
-
-```bash
-SKILLS_ROOT="${AGENT_SKILLS_ROOT:-$HOME/.agents/skills}"
-git config merge.graphify.driver "$SKILLS_ROOT/repo-standard/graphify-merge-driver.sh %O %A %B %P"
-```
+Both files are generated, so a textual 3-way merge between branches that each regenerated the graph conflicts even when nothing about its meaning diverged. `.gitattributes` routes them through a custom merge driver that regenerates instead of diffing — see `AGENTS.md` for the one-time per-clone setup command, and [the design doc](docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md) for the full rationale.

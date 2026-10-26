@@ -116,9 +116,8 @@ for the full rationale.
 # graphify-out: generated knowledge-graph artifacts. A textual merge conflict
 # here is meaningless — the files are a pure function of the rest of the repo —
 # so route them through a custom merge driver that regenerates instead of
-# diffing. One-time per clone, register the driver before this takes effect:
-#   git config merge.graphify.driver '<skills-root>/repo-standard/graphify-merge-driver.sh %O %A %B %P'
-# (skills-root defaults to ~/.agents/skills; see skills/repo-standard/SKILL.md)
+# diffing. One-time per clone, register the driver before this takes effect —
+# see "One-time per-clone setup" in skills/repo-standard/SKILL.md.
 graphify-out/graph.json merge=graphify
 graphify-out/GRAPH_REPORT.md merge=graphify
 ```
@@ -129,26 +128,69 @@ rather than auto-installed): register the driver once per machine/clone,
 pointing at wherever this skill actually resolves on disk (consistent with
 this repo's own "no manifest" convention — each `SKILL.md` resolves its own
 plumbing relative to wherever it was loaded from, see Repo Notes in
-`AGENTS.md`):
+`AGENTS.md`). Resolve the install root the same way the README's install
+recipe does — `AGENT_SKILLS_ROOT` if set, else the project-local
+`./.agents/skills` if that's where this skill actually landed, else the
+global `~/.agents/skills` default — and **quote the resolved path inside the
+registered command**: git runs `merge.<name>.driver`'s value through a
+shell, so an unquoted path containing a space or shell metacharacter either
+fails to launch the driver or, worse, gets interpreted as shell syntax:
 
 ```bash
-SKILLS_ROOT="${AGENT_SKILLS_ROOT:-$HOME/.agents/skills}"
-git config merge.graphify.driver "$SKILLS_ROOT/repo-standard/graphify-merge-driver.sh %O %A %B %P"
+if [ -n "${AGENT_SKILLS_ROOT:-}" ]; then
+  SKILLS_ROOT="$AGENT_SKILLS_ROOT"
+elif [ -d "./.agents/skills/repo-standard" ]; then
+  SKILLS_ROOT="$PWD/.agents/skills"
+else
+  SKILLS_ROOT="$HOME/.agents/skills"
+fi
+DRIVER="$SKILLS_ROOT/repo-standard/graphify-merge-driver.sh"
+git config merge.graphify.driver "'$DRIVER' %O %A %B %P"
 ```
 
 If `graphify` isn't on `PATH`, or some other file in the same merge still has
 unresolved conflicts, the driver falls back to keeping `ours` unchanged and
 prints a note to rerun `graphify update .` manually — it never blocks a merge
-and never silently produces a stale graph without saying so.
+and never silently produces a stale graph without saying so. It also never
+regenerates from a path it wasn't told to handle: `%P` is validated against
+the two expected paths before touching any file, and the regenerated output
+is written atomically rather than truncating `%A` in place, so a failure
+partway through a merge can never leave a corrupted or partial file behind.
+
+**Known residual limitation:** this driver runs mid-merge — before `HEAD`
+has advanced to the eventual merge commit, and without a documented
+git-internal guarantee about invocation order across multiple
+custom-merge-driver paths in the same merge. The "other conflicts still
+unresolved" guard above covers the common case (a real conflict elsewhere in
+the same merge), but can't rule out every possible invocation ordering. The
+actual correctness backstop is the mandatory `graphify update .` gate step
+before push (see `AGENTS.md`) — run it again after any merge this driver
+touched, same as always; don't treat the driver's own regeneration as the
+final word.
 
 **Audit behavior:** same "behavioral, not textual" principle as
-`.gitignore` above — a grep for the `merge=graphify` string can be satisfied
-by a commented-out line or one later overridden by a rule further down the
-file. Instead, ask git what it would actually do:
+`.gitignore` above, plus one check textual matching can't substitute for.
+First, ask git what it would actually do:
 
 ```shell
 git check-attr merge -- graphify-out/graph.json graphify-out/GRAPH_REPORT.md
 ```
+
+Both must report `merge: graphify`. But `check-attr` reports the *effective*
+attribute — a local, uncommitted `$GIT_DIR/info/attributes` override can
+satisfy this even though the tracked `.gitattributes` itself is missing or
+wrong, which would pass audit here while every other clone (which doesn't
+have that local override) falls back to a plain text merge and still
+conflicts. So also confirm the declaration lives in the tracked file itself:
+
+```shell
+grep -E '^graphify-out/graph\.json[[:space:]]+merge=graphify([[:space:]]|$)' .gitattributes
+grep -E '^graphify-out/GRAPH_REPORT\.md[[:space:]]+merge=graphify([[:space:]]|$)' .gitattributes
+```
+
+Both checks must pass; either failing makes `.gitattributes` non-compliant,
+even though the file exists and even though `check-attr` alone might say
+otherwise.
 
 Both must report `merge: graphify`; anything else (`unspecified`, a
 different driver name) is non-compliant. This only verifies the attribute
