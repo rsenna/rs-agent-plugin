@@ -1,35 +1,35 @@
-# Graph Report - hindsight-deploy-guarantee-proposal  (2026-10-26)
+# Graph Report - graphify-merge-driver  (2026-10-26)
 
 ## Corpus Check
-- 35 files · ~36,947 words
+- 37 files · ~41,089 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 8 file(s) not represented in the graph (top: (none) 4, .fish 3, .toml 1)
+- Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 338 nodes · 401 edges · 33 communities (24 shown, 9 thin omitted)
+- 356 nodes · 426 edges · 35 communities (25 shown, 10 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b47af5cf`
+- Built from commit: `c0b92a07`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Obsidian CLI
 - Obsidian Bases Skill
-- Functions Reference
-- graphify as a standard dev-process artifact: `.gitignore` requirement design
+- clawhub.obsidian-bases/skill-card.md
+- Agent Operations Guide
 - pr.sh
 - repo-standard.sh
 - Starter content for `scaffold`
 - OPNsense API — lessons learned
 - Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`)
 - issue.sh
-- rs-agent-plugin
+- Graphify
 - Hindsight Homelab Agents
 - Pull Request Process
-- Agent Operations Guide
+- Cross-repo documentation/folder standard
 - PatchMon API - lessons learned
 - Doppler CLI - local access + secret injection
 - Fix Mapped Issue
@@ -47,6 +47,8 @@
 - Issue #9 — repo-standard-design: make repos agent-agnostic by default (Claude, Copilot, others)
 - opn-api.sh
 - patchmon-api.sh
+- graphify as a standard dev-process artifact: `.gitignore` requirement design
+- graphify-merge-driver.sh
 
 ## God Nodes (most connected - your core abstractions)
 1. `pr.sh script` - 14 edges
@@ -55,10 +57,10 @@
 4. `OPNsense API — lessons learned` - 13 edges
 5. `Obsidian CLI` - 12 edges
 6. `log()` - 11 edges
-7. `issue.sh script` - 10 edges
-8. `create_required_path()` - 10 edges
+7. `create_required_path()` - 11 edges
+8. `issue.sh script` - 10 edges
 9. `Hindsight Homelab Agents` - 10 edges
-10. `repo-standard.sh script` - 9 edges
+10. `Starter content for `scaffold`` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -66,35 +68,35 @@
 ## Import Cycles
 - None detected.
 
-## Communities (33 total, 9 thin omitted)
+## Communities (35 total, 10 thin omitted)
 
 ### Community 0 - "Obsidian CLI"
 Cohesion: 0.06
 Nodes (32): Advanced Features, Basic File Management, Bookmarks, Command Palette, Command Structure, Core Patterns, Daily Notes, Daily Notes and Tasks (+24 more)
 
 ### Community 1 - "Obsidian Bases Skill"
-Cohesion: 0.07
-Nodes (30): Cards View, Common Formula Errors, Complete Examples, Daily Notes Index, Date Arithmetic, Default Summary Formulas, Duration Type, Embedding Bases (+22 more)
+Cohesion: 0.04
+Nodes (43): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+35 more)
 
-### Community 2 - "Functions Reference"
-Cohesion: 0.08
-Nodes (23): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+15 more)
+### Community 2 - "clawhub.obsidian-bases/skill-card.md"
+Cohesion: 0.18
+Nodes (10): Deployment Geography for Use: <br>, Description: <br>, Ethical Considerations: <br>, Known Risks and Mitigations: <br>, License/Terms of Use: <br>, Publisher: <br>, Reference(s): <br>, Skill Output: <br> (+2 more)
 
-### Community 3 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
-Cohesion: 0.08
-Nodes (21): 1. `repo.toml` gets a `stage` field, 2. Each stage maps to a doc/folder tier, 3. Enforcement: on-demand `repo-standard` skill, Cross-repo documentation/folder standard, Decision, Guardrails for agent-agnostic scaffolding (binding canonical rule), Non-goals, Open follow-ups (not blocking this spec) (+13 more)
+### Community 3 - "Agent Operations Guide"
+Cohesion: 0.10
+Nodes (17): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+9 more)
 
 ### Community 4 - "pr.sh"
 Cohesion: 0.29
 Nodes (19): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+11 more)
 
 ### Community 5 - "repo-standard.sh"
-Cohesion: 0.28
-Nodes (19): check_graphify_gitignore_behavior(), copy_specify_from_reference(), create_agents(), create_changelog(), create_dir_with_gitkeep_if_missing(), create_dot_gitignore(), create_readme(), create_required_path() (+11 more)
+Cohesion: 0.26
+Nodes (21): check_graphify_gitattributes_behavior(), check_graphify_gitignore_behavior(), copy_specify_from_reference(), create_agents(), create_changelog(), create_dir_with_gitkeep_if_missing(), create_dot_gitattributes(), create_dot_gitignore() (+13 more)
 
 ### Community 6 - "Starter content for `scaffold`"
 Cohesion: 0.10
-Nodes (20): `AGENTS.md`, `audit` — read-only compliance check, `CHANGELOG.md`, Example session, `.gitignore`, Guardrails, in-progress / released style, Invocation (+12 more)
+Nodes (21): `AGENTS.md`, `audit` — read-only compliance check, `CHANGELOG.md`, Example session, `.gitattributes`, `.gitignore`, Guardrails, in-progress / released style (+13 more)
 
 ### Community 7 - "OPNsense API — lessons learned"
 Cohesion: 0.14
@@ -108,9 +110,9 @@ Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this hap
 Cohesion: 0.41
 Nodes (11): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+3 more)
 
-### Community 10 - "rs-agent-plugin"
-Cohesion: 0.18
-Nodes (10): Alternate install: vercel-labs/skills, Development Remarks, Files, Graphify, Guardrails these skills share, Install, PR-related Skills, Queries (+2 more)
+### Community 10 - "Graphify"
+Cohesion: 0.17
+Nodes (11): Alternate install: vercel-labs/skills, Development Remarks, Files, Graphify, Guardrails these skills share, Install, Merge conflicts on `graph.json`/`GRAPH_REPORT.md`, PR-related Skills (+3 more)
 
 ### Community 11 - "Hindsight Homelab Agents"
 Cohesion: 0.18
@@ -120,9 +122,9 @@ Nodes (10): 1. Preflight check (every invocation, not one-time setup), 2. Bank &
 Cohesion: 0.20
 Nodes (9): Agent identity, not the personal one, Commands (verified), Guardrails (never violate), Portability — read the project's specifics first, Pull Request Process, The process, TODO comments, Why the push is done this way (don't shortcut it) (+1 more)
 
-### Community 13 - "Agent Operations Guide"
-Cohesion: 0.25
-Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, Quality Gate, Repo Notes
+### Community 13 - "Cross-repo documentation/folder standard"
+Cohesion: 0.20
+Nodes (10): 1. `repo.toml` gets a `stage` field, 2. Each stage maps to a doc/folder tier, 3. Enforcement: on-demand `repo-standard` skill, Cross-repo documentation/folder standard, Decision, Guardrails for agent-agnostic scaffolding (binding canonical rule), Non-goals, Open follow-ups (not blocking this spec) (+2 more)
 
 ### Community 14 - "PatchMon API - lessons learned"
 Cohesion: 0.25
@@ -164,25 +166,29 @@ Nodes (4): DIRTY, NEEDS_DECISION, SAFE, audit.sh script
 Cohesion: 0.40
 Nodes (4): Before wiring up anything automated, Getting access, PatchMon administration via REST API, The core model
 
+### Community 33 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
+Cohesion: 0.18
+Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope, Required-paths table, Rollout in this repo (+3 more)
+
 ## Knowledge Gaps
 - **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 217 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 224 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Obsidian Bases Skill` connect `Obsidian Bases Skill` to `Functions Reference`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+- **Why does `repo-standard` connect `Starter content for `scaffold`` to `Agent Operations Guide`?**
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
   _3 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Obsidian CLI` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
-- **Why does `repo-standard` connect `Starter content for `scaffold`` to `graphify as a standard dev-process artifact: `.gitignore` requirement design`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Should `Obsidian Bases Skill` be split into smaller, more focused modules?**
-  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
-- **Should `Functions Reference` be split into smaller, more focused modules?**
-  _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
-- **Should `graphify as a standard dev-process artifact: `.gitignore` requirement design` be split into smaller, more focused modules?**
-  _Cohesion score 0.08333333333333333 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+- **Should `Agent Operations Guide` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+- **Should `Starter content for `scaffold`` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+- **Should `OPNsense API — lessons learned` be split into smaller, more focused modules?**
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
