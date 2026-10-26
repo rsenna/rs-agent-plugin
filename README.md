@@ -50,7 +50,7 @@ and symlinks it into each other target agent's own skills folder (e.g.
 `~/.claude/skills/<name>` → `~/.agents/skills/<name>`) — no duplication, and the
 `~/.agents/skills` root matches the python recipe above's own default. Note
 `<name>` there is each `SKILL.md`'s **frontmatter** `name:`, not its directory
-name — identical for 7 of these 9 skills, but `clawhub.obsidian-cli` and
+name — identical for 9 of these 11 skills, but `clawhub.obsidian-cli` and
 `clawhub.obsidian-bases` install under `obsidian-official-cli` and
 `obsidian-bases` respectively via `bunx`/`npx skills` (their frontmatter
 names), vs. their directory names via the python recipe above. Either way
@@ -114,3 +114,7 @@ For codebase questions, run `graphify query "<question>"` before falling back to
 `graphify-out/graph.json` and `graphify-out/GRAPH_REPORT.md` are committed: the graph and its audit report are real outputs worth having on a fresh clone and worth tracking in history.
 
 Everything else under `graphify-out/` (`graph.html`, `manifest.json`, `cost.json`, `cache/`, `.graphify_*`) is local bookkeeping and stays gitignored. Those artifacts can be regenerated, but semantic extraction from a fresh clone can redo non-trivial LLM work/cost.
+
+#### Merge conflicts on `graph.json`/`GRAPH_REPORT.md`
+
+Both files are generated, so a textual 3-way merge between branches that each regenerated the graph conflicts even when nothing about its meaning diverged. `.gitattributes` routes them through a custom merge driver that regenerates instead of diffing — see `AGENTS.md` for the one-time per-clone setup command, and [the design doc](docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md) for the full rationale.
