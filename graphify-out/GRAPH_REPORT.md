@@ -1,17 +1,17 @@
-# Graph Report - hindsight-homelab-agents-skill  (2026-10-26)
+# Graph Report - hindsight-deploy-guarantee-proposal  (2026-10-26)
 
 ## Corpus Check
-- 35 files · ~36,256 words
+- 35 files · ~36,947 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
+- Unclassified: 8 file(s) not represented in the graph (top: (none) 4, .fish 3, .toml 1)
 
 ## Summary
-- 337 nodes · 400 edges · 33 communities (24 shown, 9 thin omitted)
+- 338 nodes · 401 edges · 33 communities (24 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `93d1160e`
+- Built from commit: `b47af5cf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -24,7 +24,7 @@
 - repo-standard.sh
 - Starter content for `scaffold`
 - OPNsense API — lessons learned
-- `hindsight-homelab-agents` skill: design proposal (implemented as `hindsight-homelab`)
+- Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`)
 - issue.sh
 - rs-agent-plugin
 - Hindsight Homelab Agents
@@ -100,9 +100,9 @@ Nodes (20): `AGENTS.md`, `audit` — read-only compliance check, `CHANGELOG.md`,
 Cohesion: 0.14
 Nodes (13): Config backups are cheap insurance, Contents, Endpoint shape and discovery, Finding the API in the first place, OPNsense API — lessons learned, Reading and writing multi-select fields, Save vs. apply, Settings with no API at all (+5 more)
 
-### Community 8 - "`hindsight-homelab-agents` skill: design proposal (implemented as `hindsight-homelab`)"
-Cohesion: 0.17
-Nodes (11): Body outline, Context, Frontmatter (proposed), `hindsight-homelab-agents` skill: design proposal (implemented as `hindsight-homelab`), Open questions for review, Out of scope for this proposal, Proposal, Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/` (+3 more)
+### Community 8 - "Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`)"
+Cohesion: 0.15
+Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
 ### Community 9 - "issue.sh"
 Cohesion: 0.41
