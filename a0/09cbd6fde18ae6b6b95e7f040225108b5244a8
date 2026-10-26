@@ -1,0 +1,31 @@
+.gitignore
+  s_548a191dcd5a5c::t_71f4946be261c7 11-18
+.serena/.gitignore
+  s_548a191dcd5a5c::t_cd8b123270e468 1-2
+.serena/project.yml
+  s_548a191dcd5a5c::t_77e4cd883d5b14 1-188
+package-lock.json
+  s_548a191dcd5a5c::t_25212230a6002b 1-6
+package.json
+  s_548a191dcd5a5c::t_2058e448fcf668 1
+skills/map-issue-to-tasks/SKILL.md
+  s_548a191dcd5a5c::t_b3cdaa9c25e149 50-52
+tasks/issue-33-cross-project-skill-management-safe-updates-drift.md
+  s_548a191dcd5a5c::t_f21c0f52407cbb 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a009cbd6fde18ae6b6b95e7f040225108b5244a8",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "unknown"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
