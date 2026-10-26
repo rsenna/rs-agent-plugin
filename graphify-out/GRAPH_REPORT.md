@@ -1,147 +1,194 @@
 # Graph Report - graphify-merge-driver  (2026-10-26)
 
 ## Corpus Check
-- 36 files · ~36,144 words
+- 37 files · ~38,975 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 171 nodes · 262 edges · 21 communities (14 shown, 7 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
+- 354 nodes · 422 edges · 35 communities (25 shown, 10 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f57b1faa`
+- Built from commit: `7cf55ce9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
+- Obsidian CLI
+- Obsidian Bases Skill
+- Functions Reference
+- Cross-repo documentation/folder standard
 - pr.sh
-- Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill
+- repo-standard.sh
+- Starter content for `scaffold`
+- OPNsense API — lessons learned
+- Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`)
 - issue.sh
-- `hindsight-homelab-agents` skill: design proposal (not yet implemented)
-- pull-request-process SKILL.md
-- doppler-secrets SKILL.md
+- Graphify
+- Hindsight Homelab Agents
+- Pull Request Process
+- Agent Operations Guide
+- PatchMon API - lessons learned
+- Doppler CLI - local access + secret injection
+- Fix Mapped Issue
 - Git Branch Hygiene
+- issue-enrichment.md
+- OPNsense administration via REST API
+- Map Issue → Tasks
+- test-repo-standard.sh
 - audit.sh
-- obsidian-official-cli skill-card (top-level)
-- Obsidian Bases Functions Reference
+- PatchMon administration via REST API
+- Issue #10 — issue.sh/pr.sh: no sanctioned way to create a new issue under the bot identity
+- Issue #14 — pr.sh worktrees should not live alongside personal repos under ~/REPO/ME
+- Issue #33 — Cross-project skill management
+- Issue #3 — Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill
+- Issue #9 — repo-standard-design: make repos agent-agnostic by default (Claude, Copilot, others)
 - opn-api.sh
 - patchmon-api.sh
-- opencode GitHub Action workflow
-- repo-standard.sh
 - graphify as a standard dev-process artifact: `.gitignore` requirement design
-- test-repo-standard.sh
-- Agent Operations Guide
-- Cross-repo documentation/folder standard design doc
-- Issue #33 — Cross-project skill management
 - graphify-merge-driver.sh
 
 ## God Nodes (most connected - your core abstractions)
 1. `pr.sh script` - 14 edges
-2. `log()` - 11 edges
-3. `create_required_path()` - 11 edges
-4. `issue.sh script` - 10 edges
-5. `repo-standard.sh script` - 9 edges
-6. `run_audit()` - 8 edges
-7. `write_file_if_missing()` - 8 edges
-8. `Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill` - 8 edges
-9. `die()` - 7 edges
-10. `cmd_cleanup()` - 7 edges
+2. `Obsidian Bases Skill` - 14 edges
+3. `Functions Reference` - 13 edges
+4. `OPNsense API — lessons learned` - 13 edges
+5. `Obsidian CLI` - 12 edges
+6. `log()` - 11 edges
+7. `create_required_path()` - 11 edges
+8. `issue.sh script` - 10 edges
+9. `Hindsight Homelab Agents` - 10 edges
+10. `Starter content for `scaffold`` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `repo-standard SKILL.md` --references--> `Cross-repo documentation/folder standard design doc`  [EXTRACTED]
-  skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
-- `repo-standard audit mode (read-only compliance check)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
-  skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
-- `repo-standard scaffold mode (non-destructive creation)` --conceptually_related_to--> `Per-stage doc/folder tier table (prototype/in-progress/released/archived)`  [EXTRACTED]
-  skills/repo-standard/SKILL.md → docs/superpowers/specs/2026-08-01-repo-standard-design.md
-- `Sanctioned 'create' subcommand with bot-identity enforcement` --semantically_similar_to--> `Centralized worktree-root strategy (not sibling of main checkout)`  [INFERRED] [semantically similar]
-  tasks/issue-10-issue-sh-pr-sh-no-sanctioned-way-to-create-a-new.md → tasks/issue-14-pr-sh-worktrees-should-not-live-alongside.md
-- `rs-agent-plugin README` --references--> `fix-mapped-issue SKILL.md`  [EXTRACTED]
-  README.md → skills/fix-mapped-issue/SKILL.md
+- None detected - all connections are within the same source files.
 
 ## Import Cycles
 - None detected.
 
-## Hyperedges (group relationships)
-- **Shared Doppler-sourced credential injection pattern across admin skills** — skills_doppler_secrets_skill_document, skills_opnsense_admin_references_lessons_learned_document, skills_patchmon_admin_references_lessons_learned_document [EXTRACTED 1.00]
-- **Issue -> tasks -> implementation -> PR skill pipeline** — readme_document, skills_map_issue_to_tasks_skill_document, skills_fix_mapped_issue_skill_document, skills_pull_request_process_skill_document [EXTRACTED 1.00]
-- **repo.toml stage-tier design, enforcing skill, and rollout task** — docs_superpowers_specs_2026_08_01_repo_standard_design_document, skills_repo_standard_skill_document, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue [EXTRACTED 1.00]
-- **Six external repos rolled out under repo-standard stage tiers via issue #3 task 3** — tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_roset_sh, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_iklo, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_what_about, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_guiltty, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_obsidian_hivemind, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_wawk_js [EXTRACTED 1.00]
-- **Repo-standard design doc and skill jointly amended by issues #3 and #9** — docs_superpowers_specs_2026_08_01_repo_standard_design_document, skills_repo_standard_skill_document, tasks_issue_3_design_cross_repo_doc_folder_standard_repo_toml_issue, tasks_issue_9_repo_standard_design_make_repos_agent_agnostic_by_issue [INFERRED 0.85]
+## Communities (35 total, 10 thin omitted)
 
-## Communities (21 total, 7 thin omitted)
+### Community 0 - "Obsidian CLI"
+Cohesion: 0.06
+Nodes (32): Advanced Features, Basic File Management, Bookmarks, Command Palette, Command Structure, Core Patterns, Daily Notes, Daily Notes and Tasks (+24 more)
 
-### Community 0 - "pr.sh"
+### Community 1 - "Obsidian Bases Skill"
+Cohesion: 0.07
+Nodes (30): Cards View, Common Formula Errors, Complete Examples, Daily Notes Index, Date Arithmetic, Default Summary Formulas, Duration Type, Embedding Bases (+22 more)
+
+### Community 2 - "Functions Reference"
+Cohesion: 0.08
+Nodes (23): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+15 more)
+
+### Community 3 - "Cross-repo documentation/folder standard"
+Cohesion: 0.09
+Nodes (19): 1. `repo.toml` gets a `stage` field, 2. Each stage maps to a doc/folder tier, 3. Enforcement: on-demand `repo-standard` skill, Cross-repo documentation/folder standard, Decision, Guardrails for agent-agnostic scaffolding (binding canonical rule), Non-goals, Open follow-ups (not blocking this spec) (+11 more)
+
+### Community 4 - "pr.sh"
 Cohesion: 0.29
 Nodes (19): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+11 more)
 
-### Community 1 - "Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill"
-Cohesion: 0.21
-Nodes (10): docs/superpowers/specs/2026-08-01-repo-standard-design.md, skills/repo-standard/SKILL.md, guiltty (external repo), iklo (external repo, in-progress tier), Issue #3 - Design: cross-repo doc/folder standard (repo.toml stage tiers) + repo-standard skill, obsidian-hivemind (external repo), roset.sh (external repo, prototype tier), wawk.js (external repo) (+2 more)
-
-### Community 2 - "issue.sh"
-Cohesion: 0.22
-Nodes (15): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+7 more)
-
-### Community 3 - "`hindsight-homelab-agents` skill: design proposal (not yet implemented)"
-Cohesion: 0.17
-Nodes (11): Body outline, Context, Frontmatter (proposed), `hindsight-homelab-agents` skill: design proposal (not yet implemented), Open questions for review, Out of scope for this proposal, Proposal, Relationship to `entrement.es`'s `homelab/scripts/hindsight-agents/` (+3 more)
-
-### Community 4 - "pull-request-process SKILL.md"
-Cohesion: 0.36
-Nodes (5): rs-agent-plugin README, fix-mapped-issue SKILL.md, map-issue-to-tasks SKILL.md, issue-enrichment.md template, pull-request-process SKILL.md
-
-### Community 5 - "doppler-secrets SKILL.md"
-Cohesion: 0.29
-Nodes (5): doppler-secrets SKILL.md, OPNsense API lessons learned, opnsense-admin SKILL.md, PatchMon API lessons learned, patchmon-admin SKILL.md
-
-### Community 6 - "Git Branch Hygiene"
-Cohesion: 0.29
-Nodes (6): Common rationalizations, Core principle, Git Branch Hygiene, Step 1: Run the audit, Step 2: Resolve every NEEDS A DECISION and DIRTY WORKTREE item first, Step 3: Execute
-
-### Community 7 - "audit.sh"
-Cohesion: 0.40
-Nodes (4): DIRTY, NEEDS_DECISION, SAFE, audit.sh script
-
-### Community 9 - "Obsidian Bases Functions Reference"
-Cohesion: 1.00
-Nodes (3): Obsidian Bases Functions Reference, obsidian-bases skill-card, obsidian-bases SKILL.md
-
-### Community 13 - "repo-standard.sh"
+### Community 5 - "repo-standard.sh"
 Cohesion: 0.26
 Nodes (21): check_graphify_gitattributes_behavior(), check_graphify_gitignore_behavior(), copy_specify_from_reference(), create_agents(), create_changelog(), create_dir_with_gitkeep_if_missing(), create_dot_gitattributes(), create_dot_gitignore() (+13 more)
 
-### Community 14 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
+### Community 6 - "Starter content for `scaffold`"
+Cohesion: 0.10
+Nodes (21): `AGENTS.md`, `audit` — read-only compliance check, `CHANGELOG.md`, Example session, `.gitattributes`, `.gitignore`, Guardrails, in-progress / released style (+13 more)
+
+### Community 7 - "OPNsense API — lessons learned"
+Cohesion: 0.14
+Nodes (13): Config backups are cheap insurance, Contents, Endpoint shape and discovery, Finding the API in the first place, OPNsense API — lessons learned, Reading and writing multi-select fields, Save vs. apply, Settings with no API at all (+5 more)
+
+### Community 8 - "Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`)"
+Cohesion: 0.15
+Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
+
+### Community 9 - "issue.sh"
+Cohesion: 0.41
+Nodes (11): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+3 more)
+
+### Community 10 - "Graphify"
+Cohesion: 0.17
+Nodes (11): Alternate install: vercel-labs/skills, Development Remarks, Files, Graphify, Guardrails these skills share, Install, Merge conflicts on `graph.json`/`GRAPH_REPORT.md`, PR-related Skills (+3 more)
+
+### Community 11 - "Hindsight Homelab Agents"
 Cohesion: 0.18
-Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope, Required-paths table, Rollout in this repo (+3 more)
+Nodes (10): 1. Preflight check (every invocation, not one-time setup), 2. Bank & tag schema, 3. Three kinds of content, 4. Read-before-write, always, 5. Known CLI/API version gap, 6. Bank-split criterion, 7. Explicitly out of scope, 8. Auth & transport (+2 more)
 
-### Community 16 - "test-repo-standard.sh"
-Cohesion: 0.73
-Nodes (5): assert_contains(), fail(), run_expect_fail(), run_expect_ok(), test-repo-standard.sh script
+### Community 12 - "Pull Request Process"
+Cohesion: 0.20
+Nodes (9): Agent identity, not the personal one, Commands (verified), Guardrails (never violate), Portability — read the project's specifics first, Pull Request Process, The process, TODO comments, Why the push is done this way (don't shortcut it) (+1 more)
 
-### Community 17 - "Agent Operations Guide"
+### Community 13 - "Agent Operations Guide"
 Cohesion: 0.25
 Nodes (7): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, Quality Gate, Repo Notes
 
-### Community 18 - "Cross-repo documentation/folder standard design doc"
-Cohesion: 0.12
-Nodes (14): Cross-repo documentation/folder standard design doc, Per-stage doc/folder tier table (prototype/in-progress/released/archived), Context, Decision, graphify-out merge conflicts: a regenerate-not-merge driver, Known limitation: driver registration is local, not shippable, Out of scope, Rollout in this repo (+6 more)
+### Community 14 - "PatchMon API - lessons learned"
+Cohesion: 0.25
+Nodes (7): Destination `config` field shapes (from Go source, not docs), Endpoints confirmed working (some undocumented), Patch policies don't schedule themselves, `/patching/trigger` request shape (undocumented, from `patching.go`), PatchMon API - lessons learned, Policy assignment coverage is easy to get wrong silently, Two unrelated auth schemes - don't mix them up
+
+### Community 15 - "Doppler CLI - local access + secret injection"
+Cohesion: 0.29
+Nodes (6): Doppler CLI - local access + secret injection, Nested-shell quoting gotcha, Read-only vs read/write tokens, Reading secrets into a command, Scoping automation to less than "the whole project", Setting up local access from a token the user gives you
+
+### Community 16 - "Fix Mapped Issue"
+Cohesion: 0.29
+Nodes (6): Close it (step 6), Close-out comment template, Do this (per task, until the issue is done), Fix Mapped Issue, Guardrails (never violate), Portability — read the project's specifics first
+
+### Community 17 - "Git Branch Hygiene"
+Cohesion: 0.29
+Nodes (6): Common rationalizations, Core principle, Git Branch Hygiene, Step 1: Run the audit, Step 2: Resolve every NEEDS A DECISION and DIRTY WORKTREE item first, Step 3: Execute
+
+### Community 18 - "issue-enrichment.md"
+Cohesion: 0.29
+Nodes (6): Acceptance criteria, Analysis, Context & affected areas, Non-goals / out of scope, Open questions, Task breakdown
+
+### Community 19 - "OPNsense administration via REST API"
+Cohesion: 0.29
+Nodes (6): Before changing anything, Discovering the right endpoint, Getting access, OPNsense administration via REST API, Quick-reference gotchas (see references/lessons-learned.md for full detail), Working examples
+
+### Community 20 - "Map Issue → Tasks"
+Cohesion: 0.33
+Nodes (5): Boundaries, Do this, Filing a follow-up issue, Map Issue → Tasks, Review before posting
+
+### Community 21 - "test-repo-standard.sh"
+Cohesion: 0.73
+Nodes (5): assert_contains(), fail(), run_expect_fail(), run_expect_ok(), test-repo-standard.sh script
+
+### Community 22 - "audit.sh"
+Cohesion: 0.40
+Nodes (4): DIRTY, NEEDS_DECISION, SAFE, audit.sh script
+
+### Community 23 - "PatchMon administration via REST API"
+Cohesion: 0.40
+Nodes (4): Before wiring up anything automated, Getting access, PatchMon administration via REST API, The core model
+
+### Community 33 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
+Cohesion: 0.18
+Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope, Required-paths table, Rollout in this repo (+3 more)
 
 ## Knowledge Gaps
-- **15 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`, `guiltty (external repo)`, `iklo (external repo, in-progress tier)` (+10 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 69 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 227 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Centralized worktree-root strategy (not sibling of main checkout)` connect `issue.sh` to `pr.sh`?**
-  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **Why does `Obsidian Bases Skill` connect `Obsidian Bases Skill` to `Functions Reference`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
-  _15 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Cross-repo documentation/folder standard design doc` be split into smaller, more focused modules?**
-  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
-- **Why does `graphify as a standard dev-process artifact: `.gitignore` requirement design` connect `graphify as a standard dev-process artifact: `.gitignore` requirement design` to `Cross-repo documentation/folder standard design doc`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+  _3 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Obsidian CLI` be split into smaller, more focused modules?**
+  _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
+- **Why does `repo-standard` connect `Starter content for `scaffold`` to `Cross-repo documentation/folder standard`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+- **Should `Obsidian Bases Skill` be split into smaller, more focused modules?**
+  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
+- **Should `Functions Reference` be split into smaller, more focused modules?**
+  _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
+- **Should `Cross-repo documentation/folder standard` be split into smaller, more focused modules?**
+  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._

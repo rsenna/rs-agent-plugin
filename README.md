@@ -50,7 +50,7 @@ and symlinks it into each other target agent's own skills folder (e.g.
 `~/.claude/skills/<name>` → `~/.agents/skills/<name>`) — no duplication, and the
 `~/.agents/skills` root matches the python recipe above's own default. Note
 `<name>` there is each `SKILL.md`'s **frontmatter** `name:`, not its directory
-name — identical for 7 of these 9 skills, but `clawhub.obsidian-cli` and
+name — identical for 9 of these 11 skills, but `clawhub.obsidian-cli` and
 `clawhub.obsidian-bases` install under `obsidian-official-cli` and
 `obsidian-bases` respectively via `bunx`/`npx skills` (their frontmatter
 names), vs. their directory names via the python recipe above. Either way
