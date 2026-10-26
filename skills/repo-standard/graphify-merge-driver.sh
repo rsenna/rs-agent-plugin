@@ -67,14 +67,18 @@ cd "$repo_root"
 # mandatory `graphify update .` gate step before push produces the correct
 # file once the rest of the merge is actually resolved.
 #
-# Capture the full `git diff` output into a variable first, then grep it
-# (no -q) rather than piping straight into an early-exiting `grep -qv`: under
-# `set -o pipefail`, `grep -qv` can close its end of the pipe as soon as it
-# finds one match, sending `git diff` a SIGPIPE; pipefail then reports that
-# non-zero (SIGPIPE-killed) exit instead of grep's own successful 0, which
-# would flip this check to "no other conflicts" even when one exists.
+# Capture `git diff`'s output into a variable, then filter it with a plain
+# (non-early-exiting) `grep -v`, and test the *result* rather than piping
+# into any `-q` grep: `grep -q` exits as soon as it finds a match, and under
+# `set -o pipefail` that early exit can SIGPIPE-kill whatever is still
+# writing to its stdin, letting the killed process's non-zero exit override
+# the grep's own successful one — flipping this check to "no other
+# conflicts" even when one exists. Avoiding every `-q` grep in this
+# pipeline (not just the first one) means there's no pipe stage left that
+# can exit early and SIGPIPE an upstream producer.
 unresolved="$(git diff --name-only --diff-filter=U -- .)"
-if printf '%s\n' "$unresolved" | grep -v '^graphify-out/' | grep -q .; then
+other_unresolved="$(printf '%s\n' "$unresolved" | grep -v '^graphify-out/' || true)"
+if [ -n "$other_unresolved" ]; then
   echo "[graphify-merge-driver] other conflicts still unresolved; keeping 'ours' as-is for $path — rerun 'graphify update .' once they're fixed." >&2
   exit 0
 fi
@@ -88,7 +92,10 @@ fi
 # can write one of the pair and then fail (or get killed) before writing the
 # other, which would otherwise leave a mismatched graph/report pair on disk
 # even though this driver reports success for `path` alone.
-backup_dir="$(mktemp -d)"
+if ! backup_dir="$(mktemp -d)"; then
+  echo "[graphify-merge-driver] mktemp -d failed; keeping 'ours' as-is for $path." >&2
+  exit 0
+fi
 trap 'rm -rf "$backup_dir"' EXIT
 for f in graphify-out/graph.json graphify-out/GRAPH_REPORT.md; do
   [ -f "$f" ] && cp -- "$f" "$backup_dir/$(basename -- "$f")"
@@ -120,7 +127,10 @@ fi
 # partway, git would be left reading a truncated/partial file from %A and
 # still treat this as a successful merge resolution.
 ours_dir="$(dirname -- "$ours")"
-tmp_ours="$(mktemp "$ours_dir/.graphify-merge-driver.XXXXXX")"
+if ! tmp_ours="$(mktemp "$ours_dir/.graphify-merge-driver.XXXXXX")"; then
+  echo "[graphify-merge-driver] mktemp failed staging $path; keeping 'ours' as-is." >&2
+  exit 0
+fi
 if ! cp -- "$path" "$tmp_ours"; then
   echo "[graphify-merge-driver] failed to stage regenerated $path; keeping 'ours' as-is." >&2
   rm -f -- "$tmp_ours"
