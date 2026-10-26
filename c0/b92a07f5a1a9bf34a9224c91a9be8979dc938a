@@ -1,0 +1,25 @@
+skills/repo-standard/graphify-merge-driver.sh
+  s_548a191dcd5a5c::t_409db2a0f822a0 95-98
+  s_548a191dcd5a5c::t_7151c8fc44255b 130-133
+  s_548a191dcd5a5c::t_af1875f0c72e84 70-78,80-81
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_fb37bf4dcf5f64 4,14
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_26847f82620699 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c0b92a07f5a1a9bf34a9224c91a9be8979dc938a",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
