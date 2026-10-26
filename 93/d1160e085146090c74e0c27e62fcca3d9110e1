@@ -1,0 +1,24 @@
+skills/opnsense-admin/references/lessons-learned.md
+  s_548a191dcd5a5c::t_f970e8dc5fa3e9 104,108-110
+  s_548a191dcd5a5c::t_d80ed281325b68 111
+skills/opnsense-admin/scripts/opn-api.sh
+  s_548a191dcd5a5c::t_13083cd3e70aef 26-31
+  s_548a191dcd5a5c::t_8a905117d54b3d 51-52,62-64,69-71
+  s_548a191dcd5a5c::t_6ce52eb1640292 53,61,65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "93d1160e085146090c74e0c27e62fcca3d9110e1",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
