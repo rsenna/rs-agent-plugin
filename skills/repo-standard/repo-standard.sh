@@ -37,7 +37,7 @@ esac
 requirement_for() {
   local path="$1"
   case "$path" in
-    repo.toml|.gitignore) echo "required" ;;
+    repo.toml|.gitignore|.gitattributes) echo "required" ;;
     AGENTS.md|README.md)
       if [ "$stage" = "archived" ]; then echo "required-frozen"; else echo "required"; fi
       ;;
@@ -102,9 +102,22 @@ EOF
   [ "$mismatches" -eq 0 ]
 }
 
+check_graphify_gitattributes_behavior() {
+  local path value mismatches=0
+  for path in "graphify-out/graph.json" "graphify-out/GRAPH_REPORT.md"; do
+    value="$(git check-attr merge -- "$path" | sed -E 's/^.*: merge: //')"
+    if [ "$value" != "graphify" ]; then
+      warn ".gitattributes non-compliant for '$path': expected merge=graphify, got '$value'"
+      mismatches=$((mismatches + 1))
+    fi
+  done
+  [ "$mismatches" -eq 0 ]
+}
+
 required_paths=(
   "repo.toml"
   ".gitignore"
+  ".gitattributes"
   "AGENTS.md"
   "README.md"
   "SPEC.md"
@@ -153,6 +166,13 @@ run_audit() {
         noncompliant_required+=("$path")
         warn "✗ $path [NON-COMPLIANT — graphify allowlist behavior mismatch]"
       fi
+    elif [ "$path" = ".gitattributes" ]; then
+      if check_graphify_gitattributes_behavior; then
+        log "✓ $path [behavior-compliant]"
+      else
+        noncompliant_required+=("$path")
+        warn "✗ $path [NON-COMPLIANT — graphify merge-driver attribute mismatch]"
+      fi
     else
       log "✓ $path"
     fi
@@ -181,6 +201,18 @@ create_dot_gitignore() {
 graphify-out/*
 !graphify-out/graph.json
 !graphify-out/GRAPH_REPORT.md
+"
+}
+
+create_dot_gitattributes() {
+  write_file_if_missing ".gitattributes" "# graphify-out: generated knowledge-graph artifacts. A textual merge conflict
+# here is meaningless — the files are a pure function of the rest of the repo —
+# so route them through a custom merge driver that regenerates instead of
+# diffing. One-time per clone, register the driver before this takes effect:
+#   git config merge.graphify.driver '<skills-root>/repo-standard/graphify-merge-driver.sh %O %A %B %P'
+# (skills-root defaults to ~/.agents/skills; see skills/repo-standard/SKILL.md)
+graphify-out/graph.json merge=graphify
+graphify-out/GRAPH_REPORT.md merge=graphify
 "
 }
 
@@ -298,6 +330,7 @@ create_required_path() {
   case "$path" in
     repo.toml) ;;
     .gitignore) create_dot_gitignore; created_any=1 ;;
+    .gitattributes) create_dot_gitattributes; created_any=1 ;;
     AGENTS.md)
       if [ "$stage" = "archived" ]; then
         warn "skipped (frozen archived repo): AGENTS.md"
