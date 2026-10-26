@@ -1,9 +1,14 @@
-# `hindsight-homelab-agents` skill: design proposal (not yet implemented)
+# `hindsight-homelab-agents` skill: design proposal (implemented as `hindsight-homelab`)
 
 ## Status
 
-**Proposal only.** No skill code is added by this PR — see "Why this is a
-design doc, not the skill" below.
+**Implemented.** This proposal was approved and shipped as
+`skills/hindsight-homelab/SKILL.md` (shorter name than originally
+proposed — see "Open questions for review" below). This document is
+kept as the historical design record; the body below still describes
+the original proposal, not necessarily every detail of the shipped
+skill verbatim — read `skills/hindsight-homelab/SKILL.md` itself for
+the current, authoritative version.
 
 ## Context
 
@@ -235,24 +240,34 @@ out anywhere. The two should stay consistent (same bank, same tag
 schema, same CLI-gap caveat); if the CLI gap gets fixed, both should be
 updated in the same pass.
 
-## Why this is a design doc, not the skill
+## Why this was a design doc, not the skill (historical — see Status above)
 
-Explicit instruction from Roger for this round: propose the approach and
-implementation details here, but do not write `skills/hindsight-homelab-
-agents/SKILL.md` itself in this PR. A follow-up (this same doc, revised
-if review changes the shape) implements it once approved.
+This section describes the state of *this original proposal PR* (#27),
+before implementation. Explicit instruction from Roger for that round:
+propose the approach and implementation details here, but do not write
+`skills/hindsight-homelab-agents/SKILL.md` itself in that PR. A
+follow-up PR (#28) implemented it once approved, as `skills/hindsight-
+homelab/SKILL.md` (shorter name — see "Open questions for review"
+below). Kept as-is rather than deleted so the historical record of
+what was and wasn't decided in #27 stays intact; read `skills/
+hindsight-homelab/SKILL.md` for the current, authoritative content.
 
 ## Open questions for review
 
-- Skill name: `hindsight-homelab-agents` vs. something shorter
-  (`hindsight-homelab`)? Longer name is more specific/searchable, matches
-  the "which deployment" framing; shorter is easier to type/recall.
-- Should the setup-check step also probe reachability
-  (`docker.iceking.entrement.es:8888/health`) and say something useful
-  ("you're probably not on the homelab LAN/VPN") rather than just fail
-  cryptically when a session runs this away from home? The remote-VPN-
-  access ticket (`entrement.es` issue #74) is separately tracking
-  whether that access path even works yet.
+- ~~Skill name: `hindsight-homelab-agents` vs. something shorter
+  (`hindsight-homelab`)?~~ — resolved at implementation time: shipped
+  as `skills/hindsight-homelab/SKILL.md` (shorter form). This doc's
+  body still refers to the longer proposed name throughout; that's the
+  historical proposal text, not stale — the actual skill name is
+  `hindsight-homelab`.
+- ~~Should the setup-check step also probe reachability~~ — resolved
+  at implementation time: yes. Confirmed `/health` returns 200 on the
+  live deployment; the shipped skill's preflight step curls it and
+  prints a clear "you're probably not on the homelab LAN/VPN" message
+  on failure instead of letting the first real command fail cryptically.
+  The remote-VPN-access ticket (`entrement.es` issue #74) is separately
+  tracking whether that access path even works yet — this probe will
+  correctly report failure either way, it doesn't resolve that ticket.
 - ~~Worth adding a `hindsight profile show homelab` idempotency check
   before `create`~~ — resolved during review: dropped the existence
   check entirely and made step 1 always (re)create the profile
