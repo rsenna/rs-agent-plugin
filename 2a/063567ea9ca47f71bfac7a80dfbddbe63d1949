@@ -1,0 +1,25 @@
+docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md
+  s_548a191dcd5a5c::t_f4896da8dcb511 130-146
+skills/repo-standard/SKILL.md
+  s_548a191dcd5a5c::t_01dc42eeefd144 171-180
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_211a02103079ce 4,14
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_66e349de58805c 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2a063567ea9ca47f71bfac7a80dfbddbe63d1949",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
