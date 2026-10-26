@@ -1,0 +1,39 @@
+skills/repo-standard/SKILL.md
+  s_548a191dcd5a5c::t_45d5fa9dd4d1c9 119-120,131-137,140-148,154-169,172-173,179-193
+  s_548a191dcd5a5c::t_f7ca661c7e591a 194
+README.md
+  s_548a191dcd5a5c::t_6c066bbc7ef01c 120
+AGENTS.md
+  s_548a191dcd5a5c::t_d24ccf3dde7232 15-32
+skills/repo-standard/repo-standard.sh
+  s_548a191dcd5a5c::t_ba248bbffca394 230
+  s_548a191dcd5a5c::t_e732d1b7b8bd93 108-109,114-123
+  s_548a191dcd5a5c::t_4789682e6b24f8 198-203
+  s_548a191dcd5a5c::t_5bd59622456aed 124
+skills/repo-standard/graphify-merge-driver.sh
+  s_548a191dcd5a5c::t_35e13c0d849539 17,21-22,29-41,48-60,64-77,87-104,106-107,111-131
+skills/repo-standard/test-repo-standard.sh
+  s_548a191dcd5a5c::t_2bd6314f1d64e8 97-120
+docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md
+  s_548a191dcd5a5c::t_31f4c14a3bda23 85-128,136-150
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_62e83642c021c4 4,9,14,21-22,32,78-79,81-83,85-87,125-127,175,181-182,188-194
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_3ce59990eb213a 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3c131fd475be1dfe9fbfa69fc46d08e882823a25",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
