@@ -23,6 +23,12 @@
 #                                service token to pull them from instead
 #   DOPPLER_KEY_NAME/_SECRET_NAME - Doppler secret names to read
 #                                    (default OPNSENSE_API_KEY/_SECRET)
+#   OPN_INSECURE               - set to skip TLS verification (self-signed
+#                                 GUI cert). Verified by default; the
+#                                 API key/secret go over HTTP Basic auth,
+#                                 so skipping verification on a box whose
+#                                 cert you haven't trusted exposes them to
+#                                 anyone who can intercept the connection.
 #
 # The API key/secret pair authenticates via HTTP Basic Auth. Scope the user
 # down to the minimum privileges the task needs - this is a live firewall.
@@ -42,6 +48,9 @@ OPN_PORT="${OPN_PORT:-443}"
 DOPPLER_KEY_NAME="${DOPPLER_KEY_NAME:-OPNSENSE_API_KEY}"
 DOPPLER_SECRET_NAME="${DOPPLER_SECRET_NAME:-OPNSENSE_API_SECRET}"
 
+tls_flag="off"
+[ -n "${OPN_INSECURE:-}" ] && tls_flag="on"
+
 path="$1"
 shift
 
@@ -49,11 +58,15 @@ if [ -n "${DOPPLER_TOKEN:-}" ]; then
     # The inner bash command intentionally resolves Doppler variable names.
     # shellcheck disable=SC2016
     doppler run --token "$DOPPLER_TOKEN" -- bash -c '
-        key="${!1}"; secret="${!2}"; host="$3"; port="$4"; path="$5"; shift 5
-        curl -sk -m 20 -u "${key}:${secret}" "https://${host}:${port}${path}" "$@"
-    ' _ "$DOPPLER_KEY_NAME" "$DOPPLER_SECRET_NAME" "$OPN_HOST" "$OPN_PORT" "$path" "$@"
+        key="${!1}"; secret="${!2}"; host="$3"; port="$4"; path="$5"; tls_flag="$6"; shift 6
+        curl_opts=(-s -m 20)
+        [ "$tls_flag" = on ] && curl_opts+=(-k)
+        curl "${curl_opts[@]}" -u "${key}:${secret}" "https://${host}:${port}${path}" "$@"
+    ' _ "$DOPPLER_KEY_NAME" "$DOPPLER_SECRET_NAME" "$OPN_HOST" "$OPN_PORT" "$path" "$tls_flag" "$@"
 else
     OPN_KEY="${OPN_KEY:?set OPN_KEY or DOPPLER_TOKEN}"
     OPN_SECRET="${OPN_SECRET:?set OPN_SECRET or DOPPLER_TOKEN}"
-    curl -sk -m 20 -u "${OPN_KEY}:${OPN_SECRET}" "https://${OPN_HOST}:${OPN_PORT}${path}" "$@"
+    curl_opts=(-s -m 20)
+    [ "$tls_flag" = on ] && curl_opts+=(-k)
+    curl "${curl_opts[@]}" -u "${OPN_KEY}:${OPN_SECRET}" "https://${OPN_HOST}:${OPN_PORT}${path}" "$@"
 fi

@@ -101,9 +101,13 @@ instead of interpolating them into its script text:
 
 ```bash
 doppler run --token "$DOPPLER_TOKEN" -- bash -c '
-  curl -sk -u "${OPNSENSE_API_KEY}:${OPNSENSE_API_SECRET}" "https://host:port${1}" "${@:2}"
+  curl -s -u "${OPNSENSE_API_KEY}:${OPNSENSE_API_SECRET}" "https://host:port${1}" "${@:2}"
 ' _ "$path" "$@"
 ```
+
+(dropped the `-k` here on purpose — don't skip TLS verification by default
+when sending the API key/secret over Basic auth; `scripts/opn-api.sh`'s
+`OPN_INSECURE` env var is the opt-in escape hatch for a self-signed GUI cert.)
 
 The literal `_` is a throwaway `$0` for the inner shell; `$path` becomes `$1`,
 everything else in `"$@"` becomes `$2` onward. `scripts/opn-api.sh` in this
