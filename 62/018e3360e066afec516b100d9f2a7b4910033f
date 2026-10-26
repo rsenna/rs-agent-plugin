@@ -1,0 +1,42 @@
+skills/repo-standard/repo-standard.sh
+  s_548a191dcd5a5c::t_789b9e3b56d5f5 333
+  s_548a191dcd5a5c::t_af4233160ebaa0 40
+  s_548a191dcd5a5c::t_1a0128e4d6089f 105-116,120
+  s_548a191dcd5a5c::t_93a1e460e287b9 207-218
+  s_548a191dcd5a5c::t_c5d7a77e5506fd 169-175
+docs/superpowers/specs/2026-10-26-graphify-merge-driver-design.md
+  s_548a191dcd5a5c::t_5c63cec95acb20 1-115
+.gitattributes
+  s_548a191dcd5a5c::t_c8fbe41caa6967 1-8
+README.md
+  s_548a191dcd5a5c::t_390df70ebfbde3 117-125
+skills/repo-standard/graphify-merge-driver.sh
+  s_548a191dcd5a5c::t_30f76f9c73d189 1-58
+skills/repo-standard/test-repo-standard.sh
+  s_548a191dcd5a5c::t_a49dd388ca4655 73,78-95
+  s_548a191dcd5a5c::t_7045abdb302ca7 96
+skills/repo-standard/SKILL.md
+  s_548a191dcd5a5c::t_8297671a5133d1 44
+  s_548a191dcd5a5c::t_3492705087de32 301
+  s_548a191dcd5a5c::t_5b51b05a94aea8 104-162
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_1b1167e6a900d9 1,4,6,9,14,36-38,43-44,46-50,74,82,86,94,98,113-114,117-118,128-131,133-135,141-147
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_9ce6bd9489abbd 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "62018e3360e066afec516b100d9f2a7b4910033f",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
