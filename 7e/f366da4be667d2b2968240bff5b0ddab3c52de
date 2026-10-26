@@ -1,0 +1,35 @@
+README.md
+  s_548a191dcd5a5c::t_2f1313044aa6be 53
+docs/superpowers/specs/2026-09-14-hindsight-homelab-agents-skill-design.md
+  s_548a191dcd5a5c::t_31586ded49b78a 1,5-11,233-312,323,325-333,337-350
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_243546492f42ae 4,9-10,14,19-22,24-27,29-35,37-40,42-47,55-63,66,71-83,85-87,89,93-107,109-111,113,115-131,133-135,137,139,141,145-147,149-151,153-155,157,161-167,169-171,174-176,181-182,184-194
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_f1ae83dc081071 1
+skills/hindsight-homelab/SKILL.md
+  s_548a191dcd5a5c::t_53498b92c738d6 1-255
+skills/opnsense-admin/references/lessons-learned.md
+  s_548a191dcd5a5c::t_848e8b9813fb42 104,108-111
+skills/opnsense-admin/scripts/opn-api.sh
+  s_548a191dcd5a5c::t_0a3e68d3038964 26-31,51-53,58-59,61-65,69-71
+skills/patchmon-admin/scripts/patchmon-api.sh
+  s_548a191dcd5a5c::t_e9ef5887cf18f5 45-46
+skills/pull-request-process/pr.sh
+  s_548a191dcd5a5c::t_197c2496e93832 298-299,348,446
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7ef366da4be667d2b2968240bff5b0ddab3c52de",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
