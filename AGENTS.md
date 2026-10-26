@@ -9,6 +9,7 @@ Run these before every push:
 1. `find skills -name '*.sh' -print0 | xargs -0 shellcheck` — keep shell scripts lint-clean.
 2. `graphify update .` (external skill, not shipped in this repo — see `docs/superpowers/specs/2026-08-19-graphify-gitignore-standard-design.md`) — refresh the committed graph artifacts (`graphify-out/graph.json`, `graphify-out/GRAPH_REPORT.md`).
    - If doc-only changes skipped topology updates, the tool reports that it left the outputs untouched; commit the log-friendly message alongside source edits.
+   - **Check `graphify-out/GRAPH_REPORT.md`'s title line (`head -1`).** `graphify` names it after the real (symlink-resolved) working-directory basename, which under this repo's worktree-per-branch workflow (see "Worktrees, not the shared checkout" in the `pull-request-process` skill) is always the branch/worktree directory name, never `rs-agent-plugin`. If it's wrong, hand-correct just that one line to `# Graph Report - rs-agent-plugin  (<date graphify printed>)` before committing — always fix it, every time it's touched; don't leave it wrong and tell reviewers it's a known limitation (that produced an inconsistent "won't fix on one PR, hand-fixed on the next" result in practice — see PR #34 vs #35).
 
 If a new language/tooling shows up, extend this list rather than skipping the gate.
 
