@@ -1,0 +1,34 @@
+docs/superpowers/specs/2026-10-21-cross-project-skill-management-design.md
+  s_548a191dcd5a5c::t_1bbdb05d3be9c9 115-117
+  s_548a191dcd5a5c::t_d02a1c8f155fd5 182-188
+  s_548a191dcd5a5c::t_ed2978eb2c5498 195-203
+  s_548a191dcd5a5c::t_8c97d9513227b2 208,210
+  s_548a191dcd5a5c::t_7d51f8adf17ba4 217-227
+  s_548a191dcd5a5c::t_4b14588aee3038 151,153-156,159-164
+  s_548a191dcd5a5c::t_f7d60d9136ceca 88-102,106-114
+  s_548a191dcd5a5c::t_903c0ca30c86f8 238-248
+  s_548a191dcd5a5c::t_4f19717d9f3435 122-137
+  s_548a191dcd5a5c::t_7932585f8a8cc1 44-62
+  s_548a191dcd5a5c::t_cb74109c56efc6 178-179
+  s_548a191dcd5a5c::t_dda6bb9f6a87e7 189
+graphify-out/GRAPH_REPORT.md
+  s_548a191dcd5a5c::t_9641965f62f84d 1,4,9,14,32,50,57-58,78,93-94,132-134,176-178,192-199,202,209,215,221
+graphify-out/graph.json
+  s_548a191dcd5a5c::t_801521f1349a88 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f3a72f03404f09fe1c96a89f8b19776f877b9d58",
+  "prompts": {},
+  "sessions": {
+    "s_548a191dcd5a5c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3cf9fe9-b7b6-41fc-832b-d46bd3d055ec",
+        "model": "unknown"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
