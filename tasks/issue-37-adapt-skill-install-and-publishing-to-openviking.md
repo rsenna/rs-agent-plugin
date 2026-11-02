@@ -4,7 +4,7 @@ https://github.com/rsenna/rs-agent-plugin/issues/37
 
 ## Tasks
 
-Dependency order: Task 1 unblocks the rest by confirming go/no-go and exact OpenViking import requirements. Tasks 2–4 implement packaging, provenance, and migration/docs. Task 5 retires superseded issue-33 planning artifacts only after the new path is documented.
+Dependency order: Task 1 unblocks the rest by confirming go/no-go and exact OpenViking import requirements. Task 2 can add packaging/metadata mechanics, but packaging/publishing completion is gated by Task 3 license/redistribution clearance for included vendored skills. Task 4 covers migration/docs. Task 5 retires superseded issue-33 planning artifacts only after the new path is documented.
 
 - [ ] **1 — Confirm OpenViking go/no-go and import contract** 🔒ask-first
   - Acceptance: capture the outcome of rsenna/emacs-replicant#35 and the concrete ingest requirements this repo must satisfy (required metadata/files/commands). If #35 is not approved, execute a terminal no-go path: mark Tasks 2–5 as cancelled/not-to-run in this task file and formally redirect/close #37 (not-planned) to rsenna/emacs-replicant#25 as the fallback track.
