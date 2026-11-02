@@ -1,17 +1,17 @@
 # Graph Report - rs-agent-plugin  (2026-11-02)
 
 ## Corpus Check
-- 45 files · ~45,998 words
+- 45 files · ~46,044 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 444 nodes · 535 edges · 42 communities (29 shown, 13 thin omitted)
+- 445 nodes · 539 edges · 42 communities (29 shown, 13 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4c18dd2b`
+- Built from commit: `69670efa`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -66,8 +66,8 @@
 6. `log()` - 12 edges
 7. `Obsidian CLI` - 12 edges
 8. `create_required_path()` - 11 edges
-9. `Hindsight Homelab Agents` - 10 edges
-10. `Pull Request Process` - 10 edges
+9. `die()` - 10 edges
+10. `Hindsight Homelab Agents` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -114,8 +114,8 @@ Cohesion: 0.15
 Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
 ### Community 9 - "issue.sh"
-Cohesion: 0.27
-Nodes (16): assert_issue_number(), cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_reset_mapping() (+8 more)
+Cohesion: 0.26
+Nodes (17): assert_issue_number(), cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_reset_mapping() (+9 more)
 
 ### Community 10 - "Graphify"
 Cohesion: 0.18
@@ -208,7 +208,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Obsidian CLI` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Why does `Obsidian Bases Skill` connect `Obsidian Bases Skill` to `Functions Reference`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Should `Obsidian Bases Skill` be split into smaller, more focused modules?**
   _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
 - **Should `Functions Reference` be split into smaller, more focused modules?**

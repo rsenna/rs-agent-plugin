@@ -108,6 +108,11 @@ issue_has_label() {
   printf '%s\n' "$labels" | grep -Fxq "$label"
 }
 
+git_common_dir() {
+  git rev-parse --git-common-dir 2>/dev/null ||
+    die "failed to resolve git common directory (required for shared remap locks)"
+}
+
 is_valid_issue_tasks_file() {
   local n="${1:?issue number required}"
   local p="${2:?path required}"
@@ -141,26 +146,29 @@ cmd_comment() {
     local bot_name
     bot_name="$(doppler secrets get GHUB_AGENT_USERNAME --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
     [ -n "$bot_name" ] || die "could not fetch GHUB_AGENT_USERNAME from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG)"
-    local marker body_file
+    local marker append_marker
     marker="${ISSUE_COMMENT_MARKER:-<!-- map-issue-to-tasks:enrichment -->}"
-    body_file="$f"
+    append_marker="0"
     if ! grep -Fq "$marker" "$f"; then
-      body_file="$(mktemp)"
-      cat "$f" > "$body_file"
-      printf '\n\n%s\n' "$marker" >> "$body_file"
+      append_marker="1"
     fi
     local last_body
     last_body="$(gh issue view "$n" --json comments --jq ".comments | map(select(.author.login==\"$bot_name\")) | last.body // \"\"")" ||
       die "failed to inspect prior comments for issue #$n"
     if [ -n "$last_body" ] && printf '%s\n' "$last_body" | grep -Fq "$marker"; then
-      gh issue comment "$n" --edit-last --body-file "$body_file"
+      if [ "$append_marker" = "1" ]; then
+        { cat "$f"; printf '\n\n%s\n' "$marker"; } | gh issue comment "$n" --edit-last --body-file -
+      else
+        gh issue comment "$n" --edit-last --body-file "$f"
+      fi
       log "updated existing enrichment comment on #$n"
     else
-      gh issue comment "$n" --body-file "$body_file"
+      if [ "$append_marker" = "1" ]; then
+        { cat "$f"; printf '\n\n%s\n' "$marker"; } | gh issue comment "$n" --body-file -
+      else
+        gh issue comment "$n" --body-file "$f"
+      fi
       log "posted enrichment comment on #$n"
-    fi
-    if [ "$body_file" != "$f" ]; then
-      rm -f -- "$body_file"
     fi
   else
     gh issue comment "$n" --body-file "$f"
@@ -189,7 +197,7 @@ cmd_label() {
   assert_issue_number "$n"
   local clear_remap="${2:-}"
   local lock_dir
-  lock_dir=".git/map-issue-to-tasks/remap-${n}.lock.d"
+  lock_dir="$(git_common_dir)/map-issue-to-tasks/remap-${n}.lock.d"
   if [ -n "$clear_remap" ] && [ "$clear_remap" != "--clear-remap" ]; then
     die "usage: issue.sh label <n> [--clear-remap]"
   fi
@@ -282,7 +290,7 @@ cmd_reset_mapping() {
     die "mapping file not found: $resolved"
   fi
   local lock_root lock_dir keep_lock
-  lock_root=".git/map-issue-to-tasks"
+  lock_root="$(git_common_dir)/map-issue-to-tasks"
   lock_dir="$lock_root/remap-${n}.lock.d"
   mkdir -p "$lock_root"
   mkdir "$lock_dir" 2>/dev/null || die "remap already in progress for issue #$n (lock exists: $lock_dir)"
