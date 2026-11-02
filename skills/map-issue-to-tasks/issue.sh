@@ -54,6 +54,8 @@ PR_BOT_DOPPLER_CONFIG="${PR_BOT_DOPPLER_CONFIG:-dev}"
 GH_TOKEN="$(doppler secrets get GHUB_AGENT_PATC --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
 [ -n "$GH_TOKEN" ] || die "could not fetch GHUB_AGENT_PATC from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG) — refusing to fall back to the ambient 'gh auth' identity. Check Doppler access, or override PR_BOT_DOPPLER_PROJECT/PR_BOT_DOPPLER_CONFIG."
 export GH_TOKEN
+BOT_NAME="$(doppler secrets get GHUB_AGENT_USERNAME --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
+[ -n "$BOT_NAME" ] || die "could not fetch GHUB_AGENT_USERNAME from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG)"
 
 cmd_create() {
   local repo="${1:?usage: issue.sh create <repo> <title> <file>}"
