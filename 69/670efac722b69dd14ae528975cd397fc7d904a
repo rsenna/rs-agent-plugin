@@ -1,0 +1,21 @@
+graphify-out/GRAPH_REPORT.md
+  s_8d5e75aad86bcc::t_82ce5d365eda82 4,9,14,94,97-98,117-118,189-190,198,205,217
+graphify-out/graph.json
+  s_8d5e75aad86bcc::t_0991c2404757ad 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "69670efac722b69dd14ae528975cd397fc7d904a",
+  "prompts": {},
+  "sessions": {
+    "s_8d5e75aad86bcc": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "05438164-f69a-46ec-bfe5-49f80de90037",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
