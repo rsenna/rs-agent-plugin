@@ -1,0 +1,23 @@
+skills/map-issue-to-tasks/issue.sh
+  s_8d5e75aad86bcc::t_94da1605d1e4b9 203-205,207,268-280,286-288
+graphify-out/GRAPH_REPORT.md
+  s_8d5e75aad86bcc::t_178a1921c410cf 4,9,14,116,197
+graphify-out/graph.json
+  s_8d5e75aad86bcc::t_cc5039e177ceee 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "32098b61ab5edbe5adac5947d680114000721056",
+  "prompts": {},
+  "sessions": {
+    "s_8d5e75aad86bcc": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "05438164-f69a-46ec-bfe5-49f80de90037",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
