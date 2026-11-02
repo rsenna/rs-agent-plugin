@@ -1,0 +1,28 @@
+skills/map-issue-to-tasks/SKILL.md
+  s_8d5e75aad86bcc::t_3f2f49c5f8fdd1 59-61,75,78
+skills/pull-request-process/pr.sh
+  s_8d5e75aad86bcc::t_f0a92e83fe6e85 79-80,227,240-243,245-246,248-254,265-267
+skills/fix-mapped-issue/SKILL.md
+  s_8d5e75aad86bcc::t_0569c9b6173d65 28-32
+skills/map-issue-to-tasks/issue.sh
+  s_8d5e75aad86bcc::t_5b142a4768c83f 15,101-117,153-156,158-162,171-177,179,195,197-220,223-224,226,230-231,233-238,242
+  s_8d5e75aad86bcc::t_20d6f1b7df9582 17
+graphify-out/GRAPH_REPORT.md
+  s_8d5e75aad86bcc::t_8d53eeb209a212 21,85-86,88-90,210-211,213-215,217
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b0993a40a0260a869fa9fa0ee5dc79e5c2dbf4a",
+  "prompts": {},
+  "sessions": {
+    "s_8d5e75aad86bcc": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "05438164-f69a-46ec-bfe5-49f80de90037",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
