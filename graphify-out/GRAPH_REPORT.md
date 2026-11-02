@@ -1,17 +1,17 @@
 # Graph Report - rs-agent-plugin  (2026-11-02)
 
 ## Corpus Check
-- 45 files · ~45,068 words
+- 45 files · ~45,998 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 439 nodes · 522 edges · 42 communities (29 shown, 13 thin omitted)
+- 444 nodes · 535 edges · 42 communities (29 shown, 13 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b3ab4cf8`
+- Built from commit: `4c18dd2b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -91,11 +91,11 @@ Nodes (23): Any Type Functions, Date Arithmetic, Date Functions & Fields, Durati
 
 ### Community 3 - "Agent Operations Guide"
 Cohesion: 0.06
-Nodes (29): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+21 more)
+Nodes (27): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+19 more)
 
 ### Community 4 - "pr.sh"
-Cohesion: 0.27
-Nodes (21): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+13 more)
+Cohesion: 0.26
+Nodes (22): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+14 more)
 
 ### Community 5 - "repo-standard.sh"
 Cohesion: 0.26
@@ -114,8 +114,8 @@ Cohesion: 0.15
 Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
 ### Community 9 - "issue.sh"
-Cohesion: 0.34
-Nodes (14): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_reset_mapping(), cmd_slug() (+6 more)
+Cohesion: 0.27
+Nodes (16): assert_issue_number(), cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_reset_mapping() (+8 more)
 
 ### Community 10 - "Graphify"
 Cohesion: 0.18
@@ -186,8 +186,8 @@ Cohesion: 0.67
 Nodes (5): assert_contains(), fail(), init_repo(), run_audit(), test-check-uncommitted-work.sh script
 
 ### Community 39 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
-Cohesion: 0.22
-Nodes (9): Context, Decision, graphify-out merge conflicts: a regenerate-not-merge driver, Known limitation: driver registration is local, not shippable, Out of scope, Rollout in this repo, Safety: never produce a worse outcome than before, Why a driver, not `-X ours`/`-X theirs` (+1 more)
+Cohesion: 0.18
+Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope, Required-paths table, Rollout in this repo (+3 more)
 
 ### Community 40 - "cubic.yaml"
 Cohesion: 0.40
@@ -195,14 +195,14 @@ Nodes (4): files, reviews, ignore, version
 
 ## Knowledge Gaps
 - **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 272 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 274 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `repo-standard` connect `Starter content for `scaffold`` to `Agent Operations Guide`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
   _3 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Obsidian CLI` be split into smaller, more focused modules?**
@@ -214,4 +214,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Functions Reference` be split into smaller, more focused modules?**
   _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
 - **Should `Agent Operations Guide` be split into smaller, more focused modules?**
-  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
