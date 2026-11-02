@@ -19,6 +19,8 @@
 #
 # Env:
 #   DRY_RUN=1   never write to GitHub; print what would be posted.
+#   ISSUE_COMMENT_UPSERT_LAST=1  use gh --edit-last/--create-if-none in `comment`
+#               to avoid duplicate enrichment comments on remap retries.
 #   LABEL       label used to mark a mapped issue (default: mapped)
 #   MUST_REMAP_LABEL  label that forces remapping even when LABEL exists (default: must-remap)
 #   PR_BOT_DOPPLER_PROJECT / PR_BOT_DOPPLER_CONFIG  Doppler project/config holding
@@ -128,8 +130,13 @@ cmd_comment() {
     echo "-----"
     return 0
   fi
-  gh issue comment "$n" --body-file "$f"
-  log "commented on #$n"
+  if [ "${ISSUE_COMMENT_UPSERT_LAST:-0}" = "1" ]; then
+    gh issue comment "$n" --edit-last --create-if-none --body-file "$f"
+    log "upserted latest bot comment on #$n"
+  else
+    gh issue comment "$n" --body-file "$f"
+    log "commented on #$n"
+  fi
 }
 
 cmd_close() {

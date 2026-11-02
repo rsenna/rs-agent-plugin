@@ -76,6 +76,9 @@ DRY_RUN=1 "$I" reset-mapping 24        # for remaps: preview previous mapping-fi
 DRY_RUN=1 "$I" comment 24 enrich.md    # preview the enrichment comment
 "$I" comment 24 enrich.md              # post it for real
 "$I" label 24 --clear-remap            # remap complete: tag mapped + clear must-remap
+
+# Retry-safe remap comment posting (avoid duplicates after partial failures):
+ISSUE_COMMENT_UPSERT_LAST=1 "$I" comment 24 enrich.md
 ```
 
 ## Filing a follow-up issue

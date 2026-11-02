@@ -236,22 +236,25 @@ extract_parent_issue() {
 
 validate_parent_issue_labels() {
   local issue_n="${1:?issue number required}"
-  local labels
-  labels="$(gh issue view "$issue_n" --json labels --jq '.labels[].name')" ||
-    die "failed to read labels for Parent Issue #$issue_n"
-  if ! printf '%s\n' "$labels" | grep -Fxq "$MAPPED_LABEL"; then
-    die "Parent Issue #$issue_n is missing '$MAPPED_LABEL' label"
-  fi
-  if printf '%s\n' "$labels" | grep -Fxq "$MUST_REMAP_LABEL"; then
-    die "Parent Issue #$issue_n is flagged '$MUST_REMAP_LABEL' — remap it before opening this PR"
-  fi
+  local reason
+  reason="$(parent_issue_labels_reason "$issue_n")" || die "$reason"
   log "Parent Issue #$issue_n label gate passed ($MAPPED_LABEL present, $MUST_REMAP_LABEL absent)"
 }
 
-body_references_issue_tasks() {
-  local body_file="$1"
-  [ -n "$body_file" ] && [ -f "$body_file" ] || return 1
-  grep -Eq 'tasks/issue-[0-9]+-[a-z0-9-]+\.md' -- "$body_file"
+parent_issue_labels_reason() {
+  local issue_n="${1:?issue number required}"
+  local labels
+  labels="$(gh issue view "$issue_n" --json labels --jq '.labels[].name')" ||
+    { printf 'failed to read labels for Parent Issue #%s' "$issue_n"; return 1; }
+  if ! printf '%s\n' "$labels" | grep -Fxq "$MAPPED_LABEL"; then
+    printf "Parent Issue #%s is missing '%s' label" "$issue_n" "$MAPPED_LABEL"
+    return 1
+  fi
+  if printf '%s\n' "$labels" | grep -Fxq "$MUST_REMAP_LABEL"; then
+    printf "Parent Issue #%s is flagged '%s' — remap it before opening this PR" "$issue_n" "$MUST_REMAP_LABEL"
+    return 1
+  fi
+  return 0
 }
 
 cmd_open() {
@@ -262,8 +265,15 @@ cmd_open() {
   if [ -n "$body" ]; then [ -f "$body" ] || die "body file not found: $body"; args+=(--body-file "$body"); else args+=(--body ""); fi
   local parent_issue
   parent_issue="$(extract_parent_issue "$body")"
-  if [ -z "$parent_issue" ] && body_references_issue_tasks "$body"; then
-    die "body references tasks/issue-<n>-*.md but is missing 'Parent Issue: #<n>' line"
+  local parent_none_marker="0"
+  if [ -n "$body" ] && [ -f "$body" ] && grep -Eiq '^[[:space:]]*parent issue:[[:space:]]*none[[:space:]]*$' -- "$body"; then
+    parent_none_marker="1"
+  fi
+  if [ -n "$parent_issue" ] && [ "$parent_none_marker" = "1" ]; then
+    die "body contains both 'Parent Issue: #<n>' and 'Parent Issue: none' — keep exactly one"
+  fi
+  if [ -n "$body" ] && [ -f "$body" ] && [ -z "$parent_issue" ] && [ "$parent_none_marker" != "1" ]; then
+    die "body file must include exactly one parent marker: 'Parent Issue: #<n>' or 'Parent Issue: none'"
   fi
   if [ -n "$parent_issue" ]; then
     validate_parent_issue_labels "$parent_issue"
@@ -271,6 +281,13 @@ cmd_open() {
   if [ "${DRY_RUN:-0}" = "1" ]; then log "DRY_RUN — would run: gh ${args[*]}"; return 0; fi
   log "gh ${args[*]}"
   local url; url="$(gh "${args[@]}")"
+  if [ -n "$parent_issue" ]; then
+    local reason
+    reason="$(parent_issue_labels_reason "$parent_issue")" || {
+      gh pr close "$url" --comment "Auto-closed: parent issue label gate failed after create ($reason)." >/dev/null || true
+      die "parent issue labels changed during PR creation; PR auto-closed: $reason"
+    }
+  fi
   log "PR opened: $url"
   warn "STOP: do not merge or mark ready — bots/maintainer review and merge."
 }
