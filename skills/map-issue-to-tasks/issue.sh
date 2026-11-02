@@ -21,6 +21,8 @@
 #   DRY_RUN=1   never write to GitHub; print what would be posted.
 #   ISSUE_COMMENT_UPSERT_LAST=1  use gh --edit-last/--create-if-none in `comment`
 #               to avoid duplicate enrichment comments on remap retries.
+#   ISSUE_COMMENT_MARKER marker string used by upsert mode to identify the
+#               enrichment comment to edit (default: <!-- map-issue-to-tasks:enrichment -->).
 #   LABEL       label used to mark a mapped issue (default: mapped)
 #   MUST_REMAP_LABEL  label that forces remapping even when LABEL exists (default: must-remap)
 #   PR_BOT_DOPPLER_PROJECT / PR_BOT_DOPPLER_CONFIG  Doppler project/config holding
@@ -131,8 +133,27 @@ cmd_comment() {
     return 0
   fi
   if [ "${ISSUE_COMMENT_UPSERT_LAST:-0}" = "1" ]; then
-    gh issue comment "$n" --edit-last --create-if-none --body-file "$f"
-    log "upserted latest bot comment on #$n"
+    local marker body_file
+    marker="${ISSUE_COMMENT_MARKER:-<!-- map-issue-to-tasks:enrichment -->}"
+    body_file="$f"
+    if ! grep -Fq "$marker" "$f"; then
+      body_file="$(mktemp)"
+      cat "$f" > "$body_file"
+      printf '\n\n%s\n' "$marker" >> "$body_file"
+    fi
+    local last_body
+    last_body="$(gh issue view "$n" --json comments --jq ".comments | map(select(.author.login==\"$BOT_NAME\")) | last.body // \"\"")" ||
+      die "failed to inspect prior comments for issue #$n"
+    if [ -n "$last_body" ] && printf '%s\n' "$last_body" | grep -Fq "$marker"; then
+      gh issue comment "$n" --edit-last --body-file "$body_file"
+      log "updated existing enrichment comment on #$n"
+    else
+      gh issue comment "$n" --body-file "$body_file"
+      log "posted enrichment comment on #$n"
+    fi
+    if [ "$body_file" != "$f" ]; then
+      rm -f -- "$body_file"
+    fi
   else
     gh issue comment "$n" --body-file "$f"
     log "commented on #$n"

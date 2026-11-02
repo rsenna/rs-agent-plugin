@@ -265,14 +265,17 @@ cmd_open() {
   if [ -n "$body" ]; then [ -f "$body" ] || die "body file not found: $body"; args+=(--body-file "$body"); else args+=(--body ""); fi
   local parent_issue
   parent_issue="$(extract_parent_issue "$body")"
-  local parent_none_marker="0"
-  if [ -n "$body" ] && [ -f "$body" ] && grep -Eiq '^[[:space:]]*parent issue:[[:space:]]*none[[:space:]]*$' -- "$body"; then
-    parent_none_marker="1"
+  local parent_none_count="0"
+  if [ -n "$body" ] && [ -f "$body" ]; then
+    parent_none_count="$(grep -Eic '^[[:space:]]*parent issue:[[:space:]]*none[[:space:]]*$' -- "$body" || true)"
   fi
-  if [ -n "$parent_issue" ] && [ "$parent_none_marker" = "1" ]; then
+  if [ "$parent_none_count" -gt 1 ]; then
+    die "multiple 'Parent Issue: none' lines found in $body — keep exactly one marker line"
+  fi
+  if [ -n "$parent_issue" ] && [ "$parent_none_count" -eq 1 ]; then
     die "body contains both 'Parent Issue: #<n>' and 'Parent Issue: none' — keep exactly one"
   fi
-  if [ -n "$body" ] && [ -f "$body" ] && [ -z "$parent_issue" ] && [ "$parent_none_marker" != "1" ]; then
+  if [ -n "$body" ] && [ -f "$body" ] && [ -z "$parent_issue" ] && [ "$parent_none_count" -ne 1 ]; then
     die "body file must include exactly one parent marker: 'Parent Issue: #<n>' or 'Parent Issue: none'"
   fi
   if [ -n "$parent_issue" ]; then
@@ -284,7 +287,9 @@ cmd_open() {
   if [ -n "$parent_issue" ]; then
     local reason
     reason="$(parent_issue_labels_reason "$parent_issue")" || {
-      gh pr close "$url" --comment "Auto-closed: parent issue label gate failed after create ($reason)." >/dev/null || true
+      if ! gh pr close "$url" --comment "Attempted auto-close: parent issue label gate failed after create ($reason)." >/dev/null; then
+        die "parent issue labels changed during PR creation, and automatic PR close failed. Close PR manually: $url ($reason)"
+      fi
       die "parent issue labels changed during PR creation; PR auto-closed: $reason"
     }
   fi
