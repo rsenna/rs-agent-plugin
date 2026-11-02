@@ -200,11 +200,11 @@ cmd_label() {
   gh issue edit "$n" --add-label "$LABEL"
   if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
     if [ "$clear_remap" = "--clear-remap" ]; then
-      local lock_file
-      lock_file=".git/map-issue-to-tasks/remap-${n}.lock"
-      [ -f "$lock_file" ] || die "cannot clear '$MUST_REMAP_LABEL' for #$n without an active remap lock (run reset-mapping first)"
+      local lock_dir
+      lock_dir=".git/map-issue-to-tasks/remap-${n}.lock.d"
+      [ -d "$lock_dir" ] || die "cannot clear '$MUST_REMAP_LABEL' for #$n without an active remap lock (run reset-mapping first)"
       gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
-      rm -f -- "$lock_file"
+      rm -rf -- "$lock_dir"
       log "labeled #$n with '$LABEL' and removed '$MUST_REMAP_LABEL'"
     else
       log "labeled #$n with '$LABEL' (left '$MUST_REMAP_LABEL' in place; pass --clear-remap after remap completion)"
@@ -265,20 +265,27 @@ cmd_reset_mapping() {
   if [ ! -e "$resolved" ]; then
     die "mapping file not found: $resolved"
   fi
-  local lock_dir lock_file
-  lock_dir=".git/map-issue-to-tasks"
-  lock_file="$lock_dir/remap-${n}.lock"
-  mkdir -p "$lock_dir"
-  if [ -f "$lock_file" ]; then
-    die "remap already in progress for issue #$n (lock exists: $lock_file)"
-  fi
-  printf 'pid=%s started=%s source=%s\n' "$$" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$resolved" > "$lock_file"
+  local lock_root lock_dir keep_lock
+  lock_root=".git/map-issue-to-tasks"
+  lock_dir="$lock_root/remap-${n}.lock.d"
+  mkdir -p "$lock_root"
+  mkdir "$lock_dir" 2>/dev/null || die "remap already in progress for issue #$n (lock exists: $lock_dir)"
+  keep_lock="0"
+  cleanup_remap_lock() {
+    if [ "$keep_lock" != "1" ] && [ -d "$lock_dir" ]; then
+      rm -rf -- "$lock_dir"
+    fi
+  }
+  trap cleanup_remap_lock RETURN
+  printf 'pid=%s started=%s source=%s\n' "$$" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$resolved" > "$lock_dir/meta.txt"
   local backup_dir backup
   backup_dir="tasks/.remap-backups/issue-$n"
   mkdir -p "$backup_dir"
   backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
   mv -- "$resolved" "$backup"
-  log "archived previous mapping file: $resolved -> $backup (lock: $lock_file)"
+  keep_lock="1"
+  trap - RETURN
+  log "archived previous mapping file: $resolved -> $backup (lock: $lock_dir)"
 }
 
 cmd_unmapped() {
