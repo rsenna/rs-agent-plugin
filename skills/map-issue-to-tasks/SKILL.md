@@ -56,9 +56,9 @@ The enrichment template is at `templates/issue-enrichment.md`, relative to that 
      issue, so prefer terse, scannable task entries over prose — a leaner file
      pays off repeatedly.
 6. **Label transition.** `issue.sh label <n>` — ensure the issue ends in
-   remap-complete state: `mapped` present (created/applied if needed) and
-   `must-remap` removed if present. Do this last, after enrichment comment
-   has posted.
+   mapped state (`LABEL`) after mapping; for remaps, use
+   `issue.sh label <n> --clear-remap` to remove `MUST_REMAP_LABEL` only after
+   the replacement tasks file and enrichment comment are in place. Do this last.
 
 ## Review before posting
 
@@ -72,9 +72,10 @@ I=<this-skill's-own-directory>/issue.sh   # wherever your installer put this ski
 "$I" fetch 24                          # read the issue
 "$I" slug  24                          # -> 24-show-a-notification-when-a-profile-is-re-published
 DRY_RUN=1 "$I" reset-mapping 24        # for remaps: preview previous mapping-file removal
+         "$I" reset-mapping 24          # for remaps: archive/remove prior mapping from active tasks/
 DRY_RUN=1 "$I" comment 24 enrich.md    # preview the enrichment comment
 "$I" comment 24 enrich.md              # post it for real
-"$I" label 24                          # tag it mapped
+"$I" label 24 --clear-remap            # remap complete: tag mapped + clear must-remap
 ```
 
 ## Filing a follow-up issue

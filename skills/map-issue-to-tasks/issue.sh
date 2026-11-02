@@ -12,9 +12,9 @@
 #   slug <n>                      print "<n>-<slugified-title>" (used for tasks/issue-<n>-<slug>.md)
 #   comment <n> <file>            post <file> as a comment on #n   (DRY_RUN=1 prints instead of posting)
 #   close <n> <file>              post <file> as a comment on #n, then close it (DRY_RUN=1 prints, no close)
-#   label <n>                     ensure remap-complete labels on #n: add LABEL ("mapped"), remove MUST_REMAP_LABEL ("must-remap")
+#   label <n> [--clear-remap]     ensure mapped label on #n; with --clear-remap also remove MUST_REMAP_LABEL
 #   unlabel <n>                   remove LABEL from #n
-#   reset-mapping <n> [path]      remove prior mapping task file (default: tasks/issue-<n>-<slug>.md)
+#   reset-mapping <n> [path]      archive prior mapping task file; default auto-detects tasks/issue-<n>-*.md
 #   unmapped                      list open issues still requiring mapping (missing LABEL OR flagged MUST_REMAP_LABEL)
 #
 # Env:
@@ -98,7 +98,23 @@ cmd_slug() {
 issue_has_label() {
   local n="${1:?issue number required}"
   local label="${2:?label required}"
-  gh issue view "$n" --json labels --jq '.labels[].name' 2>/dev/null | grep -Fxq "$label"
+  local labels
+  labels="$(gh issue view "$n" --json labels --jq '.labels[].name')" ||
+    die "failed to read labels for issue #$n"
+  printf '%s\n' "$labels" | grep -Fxq "$label"
+}
+
+is_valid_issue_tasks_file() {
+  local n="${1:?issue number required}"
+  local p="${2:?path required}"
+  # Limit explicit deletions to this issue's own mapping file under tasks/.
+  printf '%s\n' "$p" | grep -Eq "^(\./)?tasks/issue-${n}-[a-z0-9._-]+\\.md$"
+}
+
+find_issue_mapping_files() {
+  local n="${1:?issue number required}"
+  [ -d tasks ] || return 0
+  find tasks -maxdepth 1 -type f -name "issue-${n}-*.md" | LC_ALL=C sort
 }
 
 cmd_comment() {
@@ -134,8 +150,16 @@ cmd_close() {
 
 cmd_label() {
   local n="${1:?usage: issue.sh label <n>}"
+  local clear_remap="${2:-}"
+  if [ -n "$clear_remap" ] && [ "$clear_remap" != "--clear-remap" ]; then
+    die "usage: issue.sh label <n> [--clear-remap]"
+  fi
   if [ "${DRY_RUN:-0}" = "1" ]; then
-    log "DRY_RUN — would ensure label '$LABEL' exists, apply it to #$n, and remove '$MUST_REMAP_LABEL' if present"
+    if [ "$clear_remap" = "--clear-remap" ]; then
+      log "DRY_RUN — would ensure label '$LABEL' exists, apply it to #$n, and remove '$MUST_REMAP_LABEL' if present"
+    else
+      log "DRY_RUN — would ensure label '$LABEL' exists and apply it to #$n"
+    fi
     return 0
   fi
   # Idempotent: create-if-missing (--force updates color/description if it already
@@ -144,11 +168,15 @@ cmd_label() {
   gh label create "$LABEL" --color "0E8A16" --description "Analysed and broken into tasks by map-issue-to-tasks" --force >/dev/null
   gh issue edit "$n" --add-label "$LABEL"
   if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
-    gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
-    log "labeled #$n with '$LABEL' and removed '$MUST_REMAP_LABEL'"
-  else
-    log "labeled #$n with '$LABEL'"
+    if [ "$clear_remap" = "--clear-remap" ]; then
+      gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
+      log "labeled #$n with '$LABEL' and removed '$MUST_REMAP_LABEL'"
+    else
+      log "labeled #$n with '$LABEL' (left '$MUST_REMAP_LABEL' in place; pass --clear-remap after remap completion)"
+    fi
+    return 0
   fi
+  log "labeled #$n with '$LABEL'"
 }
 
 cmd_unlabel() {
@@ -164,29 +192,54 @@ cmd_unlabel() {
 cmd_reset_mapping() {
   local n="${1:?usage: issue.sh reset-mapping <n> [tasks-file]}"
   local tasks_file="${2:-}"
+  local resolved=""
   if [ -z "$tasks_file" ]; then
-    local stem
-    stem="$(cmd_slug "$n")"
-    tasks_file="tasks/issue-${stem}.md"
+    local -a candidates=()
+    while IFS= read -r f; do
+      candidates+=("$f")
+    done < <(find_issue_mapping_files "$n")
+    case "${#candidates[@]}" in
+      0)
+        if [ "${DRY_RUN:-0}" = "1" ]; then
+          log "DRY_RUN — no previous mapping file to remove for issue #$n"
+        else
+          log "no previous mapping file to remove for issue #$n"
+        fi
+        return 0
+        ;;
+      1)
+        resolved="${candidates[0]}"
+        ;;
+      *)
+        die "found multiple mapping files for issue #$n (${candidates[*]}). Re-run with explicit tasks-file."
+        ;;
+    esac
+  else
+    is_valid_issue_tasks_file "$n" "$tasks_file" ||
+      die "explicit tasks-file must match tasks/issue-${n}-*.md (got: $tasks_file)"
+    resolved="${tasks_file#./}"
   fi
   if [ "${DRY_RUN:-0}" = "1" ]; then
-    if [ -e "$tasks_file" ]; then
-      log "DRY_RUN — would remove previous mapping file: $tasks_file"
+    if [ -e "$resolved" ]; then
+      log "DRY_RUN — would archive previous mapping file: $resolved"
     else
-      log "DRY_RUN — no previous mapping file to remove at: $tasks_file"
+      log "DRY_RUN — no previous mapping file to remove at: $resolved"
     fi
     return 0
   fi
-  if [ -e "$tasks_file" ]; then
-    rm -f -- "$tasks_file"
-    log "removed previous mapping file: $tasks_file"
-  else
-    log "no previous mapping file to remove at: $tasks_file"
+  if [ ! -e "$resolved" ]; then
+    die "mapping file not found: $resolved"
   fi
+  local backup_dir backup
+  backup_dir="tasks/.remap-backups/issue-$n"
+  mkdir -p "$backup_dir"
+  backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
+  mv -- "$resolved" "$backup"
+  log "archived previous mapping file: $resolved -> $backup"
 }
 
 cmd_unmapped() {
-  gh issue list --state open --search "(-label:\"$LABEL\") OR label:\"$MUST_REMAP_LABEL\"" \
+  gh issue list --state open --limit 1000 --search "(-label:\"$LABEL\") OR label:\"$MUST_REMAP_LABEL\"" \
     --json number,title,url --jq '.[] | "#\(.number)\t\(.title)\t\(.url)"'
 }
 

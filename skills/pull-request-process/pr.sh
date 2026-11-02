@@ -76,6 +76,8 @@
 set -euo pipefail
 
 BASE="${BASE:-main}"
+MAPPED_LABEL="${LABEL:-mapped}"
+MUST_REMAP_LABEL="${MUST_REMAP_LABEL:-must-remap}"
 log()  { printf '\033[1;34m[pr]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[pr] %s\033[0m\n' "$*" >&2; }
 die()  { printf '\033[1;31m[pr] %s\033[0m\n' "$*" >&2; exit 1; }
@@ -222,7 +224,7 @@ extract_parent_issue() {
   local body_file="$1"
   [ -n "$body_file" ] && [ -f "$body_file" ] || return 0
   local matches count
-  matches="$(grep -Eio '^[[:space:]]*parent issue:[[:space:]]*#[0-9]+[[:space:]]*$' "$body_file" || true)"
+  matches="$(grep -Eio '^[[:space:]]*parent issue:[[:space:]]*#[0-9]+[[:space:]]*$' -- "$body_file" || true)"
   count="$(printf '%s\n' "$matches" | sed '/^[[:space:]]*$/d' | wc -l | tr -d ' ')"
   if [ "$count" -gt 1 ]; then
     die "multiple 'Parent Issue: #<n>' lines found in $body_file — keep exactly one"
@@ -235,14 +237,21 @@ extract_parent_issue() {
 validate_parent_issue_labels() {
   local issue_n="${1:?issue number required}"
   local labels
-  labels="$(gh issue view "$issue_n" --json labels --jq '.labels[].name' 2>/dev/null || true)"
-  if ! printf '%s\n' "$labels" | grep -Fxq "mapped"; then
-    die "Parent Issue #$issue_n is missing 'mapped' label"
+  labels="$(gh issue view "$issue_n" --json labels --jq '.labels[].name')" ||
+    die "failed to read labels for Parent Issue #$issue_n"
+  if ! printf '%s\n' "$labels" | grep -Fxq "$MAPPED_LABEL"; then
+    die "Parent Issue #$issue_n is missing '$MAPPED_LABEL' label"
   fi
-  if printf '%s\n' "$labels" | grep -Fxq "must-remap"; then
-    die "Parent Issue #$issue_n is flagged 'must-remap' — remap it before opening this PR"
+  if printf '%s\n' "$labels" | grep -Fxq "$MUST_REMAP_LABEL"; then
+    die "Parent Issue #$issue_n is flagged '$MUST_REMAP_LABEL' — remap it before opening this PR"
   fi
-  log "Parent Issue #$issue_n label gate passed (mapped present, must-remap absent)"
+  log "Parent Issue #$issue_n label gate passed ($MAPPED_LABEL present, $MUST_REMAP_LABEL absent)"
+}
+
+body_references_issue_tasks() {
+  local body_file="$1"
+  [ -n "$body_file" ] && [ -f "$body_file" ] || return 1
+  grep -Eq 'tasks/issue-[0-9]+-[a-z0-9-]+\.md' -- "$body_file"
 }
 
 cmd_open() {
@@ -253,6 +262,9 @@ cmd_open() {
   if [ -n "$body" ]; then [ -f "$body" ] || die "body file not found: $body"; args+=(--body-file "$body"); else args+=(--body ""); fi
   local parent_issue
   parent_issue="$(extract_parent_issue "$body")"
+  if [ -z "$parent_issue" ] && body_references_issue_tasks "$body"; then
+    die "body references tasks/issue-<n>-*.md but is missing 'Parent Issue: #<n>' line"
+  fi
   if [ -n "$parent_issue" ]; then
     validate_parent_issue_labels "$parent_issue"
   fi
