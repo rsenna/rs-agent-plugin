@@ -121,6 +121,11 @@ find_issue_mapping_files() {
   find tasks -maxdepth 1 -type f -name "issue-${n}-*.md" | LC_ALL=C sort
 }
 
+assert_issue_number() {
+  local n="${1:?issue number required}"
+  printf '%s\n' "$n" | grep -Eq '^[0-9]+$' || die "issue number must be numeric (got: $n)"
+}
+
 cmd_comment() {
   local n="${1:?usage: issue.sh comment <n> <file>}"
   local f="${2:?usage: issue.sh comment <n> <file>}"
@@ -181,6 +186,7 @@ cmd_close() {
 
 cmd_label() {
   local n="${1:?usage: issue.sh label <n>}"
+  assert_issue_number "$n"
   local clear_remap="${2:-}"
   local lock_dir
   lock_dir=".git/map-issue-to-tasks/remap-${n}.lock.d"
@@ -202,6 +208,12 @@ cmd_label() {
   gh issue edit "$n" --add-label "$LABEL"
   if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
     if [ "$clear_remap" = "--clear-remap" ]; then
+      local -a active_mappings=()
+      while IFS= read -r f; do
+        active_mappings+=("$f")
+      done < <(find_issue_mapping_files "$n")
+      [ "${#active_mappings[@]}" -eq 1 ] ||
+        die "cannot clear '$MUST_REMAP_LABEL' for #$n without exactly one active tasks/issue-${n}-*.md mapping file"
       [ -d "$lock_dir" ] || die "cannot clear '$MUST_REMAP_LABEL' for #$n without an active remap lock (run reset-mapping first)"
       gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
       rm -rf -- "$lock_dir"
@@ -231,6 +243,7 @@ cmd_unlabel() {
 
 cmd_reset_mapping() {
   local n="${1:?usage: issue.sh reset-mapping <n> [tasks-file]}"
+  assert_issue_number "$n"
   local tasks_file="${2:-}"
   local resolved=""
   local has_existing_file="0"
