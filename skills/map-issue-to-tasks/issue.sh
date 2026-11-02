@@ -54,8 +54,6 @@ PR_BOT_DOPPLER_CONFIG="${PR_BOT_DOPPLER_CONFIG:-dev}"
 GH_TOKEN="$(doppler secrets get GHUB_AGENT_PATC --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
 [ -n "$GH_TOKEN" ] || die "could not fetch GHUB_AGENT_PATC from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG) — refusing to fall back to the ambient 'gh auth' identity. Check Doppler access, or override PR_BOT_DOPPLER_PROJECT/PR_BOT_DOPPLER_CONFIG."
 export GH_TOKEN
-BOT_NAME="$(doppler secrets get GHUB_AGENT_USERNAME --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
-[ -n "$BOT_NAME" ] || die "could not fetch GHUB_AGENT_USERNAME from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG)"
 
 cmd_create() {
   local repo="${1:?usage: issue.sh create <repo> <title> <file>}"
@@ -135,6 +133,9 @@ cmd_comment() {
     return 0
   fi
   if [ "${ISSUE_COMMENT_UPSERT_LAST:-0}" = "1" ]; then
+    local bot_name
+    bot_name="$(doppler secrets get GHUB_AGENT_USERNAME --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
+    [ -n "$bot_name" ] || die "could not fetch GHUB_AGENT_USERNAME from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG)"
     local marker body_file
     marker="${ISSUE_COMMENT_MARKER:-<!-- map-issue-to-tasks:enrichment -->}"
     body_file="$f"
@@ -144,7 +145,7 @@ cmd_comment() {
       printf '\n\n%s\n' "$marker" >> "$body_file"
     fi
     local last_body
-    last_body="$(gh issue view "$n" --json comments --jq ".comments | map(select(.author.login==\"$BOT_NAME\")) | last.body // \"\"")" ||
+    last_body="$(gh issue view "$n" --json comments --jq ".comments | map(select(.author.login==\"$bot_name\")) | last.body // \"\"")" ||
       die "failed to inspect prior comments for issue #$n"
     if [ -n "$last_body" ] && printf '%s\n' "$last_body" | grep -Fq "$marker"; then
       gh issue comment "$n" --edit-last --body-file "$body_file"
