@@ -1,0 +1,24 @@
+graphify-out/GRAPH_REPORT.md
+  s_8d5e75aad86bcc::t_e23e5a727ba40b 1
+  s_8d5e75aad86bcc::t_d63b7ab5846f4c 4,9,14,32,50,56-58,78,93-94,132-134,176-178,188-195,198-199,205,211,217
+graphify-out/graph.json
+  s_8d5e75aad86bcc::t_d4758fd5c88874 1
+tasks/issue-37-adapt-skill-install-and-publishing-to-openviking.md
+  s_8d5e75aad86bcc::t_7856a7a459a0b6 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "19dc8f87b3be4a2ecb04bbf1f2bccbf5303f0aef",
+  "prompts": {},
+  "sessions": {
+    "s_8d5e75aad86bcc": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "05438164-f69a-46ec-bfe5-49f80de90037",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
