@@ -7,7 +7,7 @@ https://github.com/rsenna/rs-agent-plugin/issues/37
 Dependency order: Task 1 unblocks the rest by confirming go/no-go and exact OpenViking import requirements. Tasks 2–4 implement packaging, provenance, and migration/docs. Task 5 retires superseded issue-33 planning artifacts only after the new path is documented.
 
 - [ ] **1 — Confirm OpenViking go/no-go and import contract** 🔒ask-first
-  - Acceptance: capture the outcome of rsenna/emacs-replicant#35 and the concrete ingest requirements this repo must satisfy (required metadata/files/commands). If #35 is not approved, stop this issue, record that Tasks 2–5 are intentionally blocked/not-to-run, and explicitly point back to rsenna/emacs-replicant#25 as the fallback track.
+  - Acceptance: capture the outcome of rsenna/emacs-replicant#35 and the concrete ingest requirements this repo must satisfy (required metadata/files/commands). If #35 is not approved, execute a terminal no-go path: mark Tasks 2–5 as cancelled/not-to-run in this task file and formally redirect/close #37 (not-planned) to rsenna/emacs-replicant#25 as the fallback track.
   - Verify: link the exact decision source and requirement list in a tracked note; run `find skills -name '*.sh' -print0 | xargs -0 shellcheck` and `graphify update .`.
   - Files: `docs/superpowers/specs/2026-11-02-openviking-adoption-contract.md` (new or equivalent), `tasks/issue-37-adapt-skill-install-and-publishing-to-openviking.md`
 
@@ -18,7 +18,7 @@ Dependency order: Task 1 unblocks the rest by confirming go/no-go and exact Open
 
 - [ ] **3 — Record third-party skill provenance and pinned source revision**
   - Acceptance: document upstream source and pinned revision for non-authored skills currently vendored here (`clawhub.obsidian-bases`, `clawhub.obsidian-cli`) so provenance survives migration; include each skill's license and redistribution permission status.
-  - Verify: provenance records include repo URL + revision/commit + license terms/clearance, are cross-checked against installed skill contents, and block packaging/publication when redistribution clearance is unknown or disallowed; run `find skills -name '*.sh' -print0 | xargs -0 shellcheck` and `graphify update .`.
+  - Verify: provenance records include repo URL + revision/commit + license terms/clearance, are cross-checked against installed skill contents, and prevent shipping any package artifact that includes a skill whose redistribution clearance is unknown or disallowed (either exclude that skill from package scope or block that release); run `find skills -name '*.sh' -print0 | xargs -0 shellcheck` and `graphify update .`.
   - Files: `README.md` and/or `docs/superpowers/specs/2026-11-02-openviking-adoption-contract.md` (or a dedicated provenance file if chosen)
 
 - [ ] **4 — Update install and migration documentation for OpenViking + Replicant handoff**
