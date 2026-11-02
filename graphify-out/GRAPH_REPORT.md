@@ -1,17 +1,17 @@
-# Graph Report - rs-agent-plugin  (2026-10-26)
+# Graph Report - rs-agent-plugin  (2026-11-02)
 
 ## Corpus Check
-- 41 files · ~43,749 words
+- 45 files · ~44,358 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 375 nodes · 451 edges · 39 communities (27 shown, 12 thin omitted)
+- 433 nodes · 505 edges · 42 communities (29 shown, 13 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1f10ef41`
+- Built from commit: `8a7a9ac8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,7 +29,7 @@
 - Graphify
 - Hindsight Homelab Agents
 - Pull Request Process
-- Cross-repo documentation/folder standard
+- project.yml
 - PatchMon API - lessons learned
 - Doppler CLI - local access + secret injection
 - Fix Mapped Issue
@@ -47,12 +47,15 @@
 - Issue #9 — repo-standard-design: make repos agent-agnostic by default (Claude, Copilot, others)
 - opn-api.sh
 - patchmon-api.sh
-- graphify as a standard dev-process artifact: `.gitignore` requirement design
+- opencode
 - graphify-merge-driver.sh
 - check-uncommitted-work.sh
 - test-check-uncommitted-work.sh
 - Check Uncommitted Work
 - Issue #30 — Add a check-uncommitted-work skill
+- Decision
+- cubic.yaml
+- Issue #37 — Adapt skill install and publishing to OpenViking
 
 ## God Nodes (most connected - your core abstractions)
 1. `pr.sh script` - 14 edges
@@ -72,7 +75,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (39 total, 12 thin omitted)
+## Communities (42 total, 13 thin omitted)
 
 ### Community 0 - "Obsidian CLI"
 Cohesion: 0.06
@@ -87,8 +90,8 @@ Cohesion: 0.08
 Nodes (23): Any Type Functions, Date Arithmetic, Date Functions & Fields, Duration Type, File Functions, Functions Reference, Global Functions, Link Functions (+15 more)
 
 ### Community 3 - "Agent Operations Guide"
-Cohesion: 0.09
-Nodes (17): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+9 more)
+Cohesion: 0.06
+Nodes (29): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+21 more)
 
 ### Community 4 - "pr.sh"
 Cohesion: 0.29
@@ -126,9 +129,9 @@ Nodes (10): 1. Preflight check (every invocation, not one-time setup), 2. Bank &
 Cohesion: 0.20
 Nodes (9): Agent identity, not the personal one, Commands (verified), Guardrails (never violate), Portability — read the project's specifics first, Pull Request Process, The process, TODO comments, Why the push is done this way (don't shortcut it) (+1 more)
 
-### Community 13 - "Cross-repo documentation/folder standard"
-Cohesion: 0.20
-Nodes (10): 1. `repo.toml` gets a `stage` field, 2. Each stage maps to a doc/folder tier, 3. Enforcement: on-demand `repo-standard` skill, Cross-repo documentation/folder standard, Decision, Guardrails for agent-agnostic scaffolding (binding canonical rule), Non-goals, Open follow-ups (not blocking this spec) (+2 more)
+### Community 13 - "project.yml"
+Cohesion: 0.08
+Nodes (25): activation_command, activation_command_timeout, added_modes, agent_interface, default_modes, encoding, excluded_apis, excluded_tools (+17 more)
 
 ### Community 14 - "PatchMon API - lessons learned"
 Cohesion: 0.25
@@ -170,9 +173,9 @@ Nodes (4): DIRTY, NEEDS_DECISION, SAFE, audit.sh script
 Cohesion: 0.40
 Nodes (4): Before wiring up anything automated, Getting access, PatchMon administration via REST API, The core model
 
-### Community 33 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
-Cohesion: 0.18
-Nodes (11): Audit behavior, Change to `repo-standard`, Context, Denylist vs allowlist, graphify as a standard dev-process artifact: `.gitignore` requirement design, Out of scope, Required-paths table, Rollout in this repo (+3 more)
+### Community 33 - "opencode"
+Cohesion: 0.08
+Nodes (23): OPENCODE_API_KEY, types, jobs, opencode, name, on, issue_comment, pull_request_review_comment (+15 more)
 
 ### Community 35 - "check-uncommitted-work.sh"
 Cohesion: 0.52
@@ -182,25 +185,33 @@ Nodes (6): branch_is_integrated(), fail(), is_known_noise(), report_path(), repo
 Cohesion: 0.67
 Nodes (5): assert_contains(), fail(), init_repo(), run_audit(), test-check-uncommitted-work.sh script
 
+### Community 39 - "Decision"
+Cohesion: 0.22
+Nodes (9): Context, Decision, graphify-out merge conflicts: a regenerate-not-merge driver, Known limitation: driver registration is local, not shippable, Out of scope, Rollout in this repo, Safety: never produce a worse outcome than before, Why a driver, not `-X ours`/`-X theirs` (+1 more)
+
+### Community 40 - "cubic.yaml"
+Cohesion: 0.40
+Nodes (4): files, reviews, ignore, version
+
 ## Knowledge Gaps
 - **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 228 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 271 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `repo-standard` connect `Starter content for `scaffold`` to `Agent Operations Guide`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **What connects `SAFE`, `NEEDS_DECISION`, `DIRTY` to the rest of the system?**
   _3 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Obsidian CLI` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Why does `Obsidian Bases Skill` connect `Obsidian Bases Skill` to `Functions Reference`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Should `Obsidian Bases Skill` be split into smaller, more focused modules?**
   _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
 - **Should `Functions Reference` be split into smaller, more focused modules?**
   _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
 - **Should `Agent Operations Guide` be split into smaller, more focused modules?**
-  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
