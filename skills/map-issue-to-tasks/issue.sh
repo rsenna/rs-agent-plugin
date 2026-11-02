@@ -200,7 +200,11 @@ cmd_label() {
   gh issue edit "$n" --add-label "$LABEL"
   if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
     if [ "$clear_remap" = "--clear-remap" ]; then
+      local lock_file
+      lock_file=".git/map-issue-to-tasks/remap-${n}.lock"
+      [ -f "$lock_file" ] || die "cannot clear '$MUST_REMAP_LABEL' for #$n without an active remap lock (run reset-mapping first)"
       gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
+      rm -f -- "$lock_file"
       log "labeled #$n with '$LABEL' and removed '$MUST_REMAP_LABEL'"
     else
       log "labeled #$n with '$LABEL' (left '$MUST_REMAP_LABEL' in place; pass --clear-remap after remap completion)"
@@ -261,12 +265,20 @@ cmd_reset_mapping() {
   if [ ! -e "$resolved" ]; then
     die "mapping file not found: $resolved"
   fi
+  local lock_dir lock_file
+  lock_dir=".git/map-issue-to-tasks"
+  lock_file="$lock_dir/remap-${n}.lock"
+  mkdir -p "$lock_dir"
+  if [ -f "$lock_file" ]; then
+    die "remap already in progress for issue #$n (lock exists: $lock_file)"
+  fi
+  printf 'pid=%s started=%s source=%s\n' "$$" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$resolved" > "$lock_file"
   local backup_dir backup
   backup_dir="tasks/.remap-backups/issue-$n"
   mkdir -p "$backup_dir"
   backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
   mv -- "$resolved" "$backup"
-  log "archived previous mapping file: $resolved -> $backup"
+  log "archived previous mapping file: $resolved -> $backup (lock: $lock_file)"
 }
 
 cmd_unmapped() {

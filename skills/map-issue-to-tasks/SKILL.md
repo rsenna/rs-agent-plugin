@@ -49,7 +49,9 @@ The enrichment template is at `templates/issue-enrichment.md`, relative to that 
      `<n>-<slug>` stem). Never overwrite an unrelated existing task file.
    - If remapping (`must-remap` present), remove the previous mapping file
      first via `issue.sh reset-mapping <n>` (or pass an explicit path), then
-     write the replacement mapping.
+     write the replacement mapping. `reset-mapping` opens a per-issue remap
+     lock; complete the flow with `issue.sh label <n> --clear-remap`, which
+     clears `must-remap` and releases that lock.
    - Enrichment → a **GitHub issue comment** via `issue.sh comment <n> <file>`.
      The original issue body is **left untouched**.
    - **Keep the tasks file lean.** It's read every time an agent picks up this
