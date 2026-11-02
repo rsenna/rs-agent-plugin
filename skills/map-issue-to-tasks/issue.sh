@@ -233,6 +233,7 @@ cmd_reset_mapping() {
   local n="${1:?usage: issue.sh reset-mapping <n> [tasks-file]}"
   local tasks_file="${2:-}"
   local resolved=""
+  local has_existing_file="0"
   if [ -z "$tasks_file" ]; then
     local -a candidates=()
     while IFS= read -r f; do
@@ -240,15 +241,11 @@ cmd_reset_mapping() {
     done < <(find_issue_mapping_files "$n")
     case "${#candidates[@]}" in
       0)
-        if [ "${DRY_RUN:-0}" = "1" ]; then
-          log "DRY_RUN — no previous mapping file to remove for issue #$n"
-        else
-          log "no previous mapping file to remove for issue #$n"
-        fi
-        return 0
+        resolved=""
         ;;
       1)
         resolved="${candidates[0]}"
+        has_existing_file="1"
         ;;
       *)
         die "found multiple mapping files for issue #$n (${candidates[*]}). Re-run with explicit tasks-file."
@@ -258,16 +255,17 @@ cmd_reset_mapping() {
     is_valid_issue_tasks_file "$n" "$tasks_file" ||
       die "explicit tasks-file must match tasks/issue-${n}-*.md (got: $tasks_file)"
     resolved="${tasks_file#./}"
+    has_existing_file="1"
   fi
   if [ "${DRY_RUN:-0}" = "1" ]; then
-    if [ -e "$resolved" ]; then
+    if [ "$has_existing_file" = "1" ] && [ -e "$resolved" ]; then
       log "DRY_RUN — would archive previous mapping file: $resolved"
     else
-      log "DRY_RUN — no previous mapping file to remove at: $resolved"
+      log "DRY_RUN — no previous mapping file to archive for issue #$n (would still establish remap lock)"
     fi
     return 0
   fi
-  if [ ! -e "$resolved" ]; then
+  if [ "$has_existing_file" = "1" ] && [ ! -e "$resolved" ]; then
     die "mapping file not found: $resolved"
   fi
   local lock_root lock_dir keep_lock
@@ -284,13 +282,19 @@ cmd_reset_mapping() {
   trap cleanup_remap_lock EXIT INT TERM
   printf 'pid=%s started=%s source=%s\n' "$$" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$resolved" > "$lock_dir/meta.txt"
   local backup_dir backup
-  backup_dir="tasks/.remap-backups/issue-$n"
-  mkdir -p "$backup_dir"
-  backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
-  mv -- "$resolved" "$backup"
+  if [ "$has_existing_file" = "1" ]; then
+    backup_dir="tasks/.remap-backups/issue-$n"
+    mkdir -p "$backup_dir"
+    backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
+    mv -- "$resolved" "$backup"
+  fi
   keep_lock="1"
   trap - EXIT INT TERM
-  log "archived previous mapping file: $resolved -> $backup (lock: $lock_dir)"
+  if [ "$has_existing_file" = "1" ]; then
+    log "archived previous mapping file: $resolved -> $backup (lock: $lock_dir)"
+  else
+    log "no prior mapping file found for issue #$n; established remap lock: $lock_dir"
+  fi
 }
 
 cmd_unmapped() {
