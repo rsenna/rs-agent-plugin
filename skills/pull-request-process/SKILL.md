@@ -86,6 +86,20 @@ This skill hardcodes nothing project-specific. Before shipping, read the project
 
 If the project has no documented gate, run its tests + formatter/linter and say so.
 
+## Parent Issue label gate (mapped-task PRs)
+
+For PRs implementing mapped issue tasks, include exactly one line in the PR body:
+
+`Parent Issue: #<n>`
+
+`pr.sh open` validates that parent issue before creating the PR:
+- must have label `mapped`
+- must **not** have label `must-remap`
+
+If the line is absent, PR creation is still allowed (no-parent PR flow).
+Incidental references like `#33` elsewhere in title/body are ignored by this
+gate and do not count as a parent declaration.
+
 ## The process
 
 1. **Branch.** `pr.sh start <branch>` — creates a fresh git worktree off
@@ -135,6 +149,7 @@ If the project has no documented gate, run its tests + formatter/linter and say 
    `gh pr create --base "$BASE_BRANCH"`,
    prints the URL, then **STOP.** Do not merge, do not mark ready — automated
    review bots and the maintainer review and merge.
+   - If this is a mapped-task PR, include `Parent Issue: #<n>` in `body.md`.
 6. **Review loop.** When comments arrive: `pr.sh threads <pr>` lists unresolved
    threads (with numeric comment IDs). `pr.sh reviews <pr>` lists PR-level
    review comments (a bot's "Overall Comments" on the review itself, not on a

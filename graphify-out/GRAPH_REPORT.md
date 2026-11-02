@@ -1,17 +1,17 @@
 # Graph Report - rs-agent-plugin  (2026-11-02)
 
 ## Corpus Check
-- 45 files · ~44,358 words
+- 45 files · ~45,068 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 5, .fish 3, .toml 1)
 
 ## Summary
-- 433 nodes · 505 edges · 42 communities (29 shown, 13 thin omitted)
+- 439 nodes · 522 edges · 42 communities (29 shown, 13 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8a7a9ac8`
+- Built from commit: `b3ab4cf8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -53,7 +53,7 @@
 - test-check-uncommitted-work.sh
 - Check Uncommitted Work
 - Issue #30 — Add a check-uncommitted-work skill
-- Decision
+- graphify as a standard dev-process artifact: `.gitignore` requirement design
 - cubic.yaml
 - Issue #37 — Adapt skill install and publishing to OpenViking
 
@@ -62,12 +62,12 @@
 2. `Obsidian Bases Skill` - 14 edges
 3. `Functions Reference` - 13 edges
 4. `OPNsense API — lessons learned` - 13 edges
-5. `Obsidian CLI` - 12 edges
-6. `log()` - 11 edges
-7. `create_required_path()` - 11 edges
-8. `issue.sh script` - 10 edges
+5. `issue.sh script` - 12 edges
+6. `log()` - 12 edges
+7. `Obsidian CLI` - 12 edges
+8. `create_required_path()` - 11 edges
 9. `Hindsight Homelab Agents` - 10 edges
-10. `Starter content for `scaffold`` - 10 edges
+10. `Pull Request Process` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -94,8 +94,8 @@ Cohesion: 0.06
 Nodes (29): Agent Operations Guide, Branch, Code Review Workflow, Documentation Expectations, Identity & Secrets, One-time setup: graphify merge driver, Quality Gate, Repo Notes (+21 more)
 
 ### Community 4 - "pr.sh"
-Cohesion: 0.29
-Nodes (19): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+11 more)
+Cohesion: 0.27
+Nodes (21): _bot_secret(), cmd_checks(), cmd_cleanup(), cmd_close(), cmd_comment(), cmd_comment_delete(), cmd_open(), cmd_push() (+13 more)
 
 ### Community 5 - "repo-standard.sh"
 Cohesion: 0.26
@@ -114,8 +114,8 @@ Cohesion: 0.15
 Nodes (12): Body outline, Context, Frontmatter (proposed), Guaranteeing this happens on every deployment (added after review), Hindsight homelab-agents skill: design proposal (implemented as `hindsight-homelab`), Open questions for review, Out of scope for this proposal, Proposal (+4 more)
 
 ### Community 9 - "issue.sh"
-Cohesion: 0.41
-Nodes (11): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_slug(), cmd_unmapped() (+3 more)
+Cohesion: 0.34
+Nodes (14): cmd_close(), cmd_comment(), cmd_create(), cmd_fetch(), cmd_json(), cmd_label(), cmd_reset_mapping(), cmd_slug() (+6 more)
 
 ### Community 10 - "Graphify"
 Cohesion: 0.18
@@ -126,8 +126,8 @@ Cohesion: 0.18
 Nodes (10): 1. Preflight check (every invocation, not one-time setup), 2. Bank & tag schema, 3. Three kinds of content, 4. Read-before-write, always, 5. Known CLI/API version gap, 6. Bank-split criterion, 7. Explicitly out of scope, 8. Auth & transport (+2 more)
 
 ### Community 12 - "Pull Request Process"
-Cohesion: 0.20
-Nodes (9): Agent identity, not the personal one, Commands (verified), Guardrails (never violate), Portability — read the project's specifics first, Pull Request Process, The process, TODO comments, Why the push is done this way (don't shortcut it) (+1 more)
+Cohesion: 0.18
+Nodes (10): Agent identity, not the personal one, Commands (verified), Guardrails (never violate), Parent Issue label gate (mapped-task PRs), Portability — read the project's specifics first, Pull Request Process, The process, TODO comments (+2 more)
 
 ### Community 13 - "project.yml"
 Cohesion: 0.08
@@ -185,7 +185,7 @@ Nodes (6): branch_is_integrated(), fail(), is_known_noise(), report_path(), repo
 Cohesion: 0.67
 Nodes (5): assert_contains(), fail(), init_repo(), run_audit(), test-check-uncommitted-work.sh script
 
-### Community 39 - "Decision"
+### Community 39 - "graphify as a standard dev-process artifact: `.gitignore` requirement design"
 Cohesion: 0.22
 Nodes (9): Context, Decision, graphify-out merge conflicts: a regenerate-not-merge driver, Known limitation: driver registration is local, not shippable, Out of scope, Rollout in this repo, Safety: never produce a worse outcome than before, Why a driver, not `-X ours`/`-X theirs` (+1 more)
 
@@ -195,7 +195,7 @@ Nodes (4): files, reviews, ignore, version
 
 ## Knowledge Gaps
 - **3 isolated node(s):** `SAFE`, `NEEDS_DECISION`, `DIRTY`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 271 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 272 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions

@@ -12,7 +12,9 @@
 #   push <branch>         requires REVIEWED=1 (run a requesting-code-review pass and fix what it
 #                         flags first); then explicit-refspec push + verify branch landed &
 #                         BASE didn't move
-#   open <title> [body]   gh pr create --base BASE (body = path to a markdown file), print URL, STOP
+#   open <title> [body]   gh pr create --base BASE (body = path to a markdown file), print URL, STOP.
+#                         If body includes "Parent Issue: #<n>", enforce labels on that issue:
+#                         mapped must exist, must-remap must not.
 #   threads <pr>          list UNRESOLVED review threads on a PR (work them one by one)
 #   reviews <pr>           list PR-LEVEL review comments (the "Overall Comments" a bot leaves on
 #                          the review itself, not on a line — these have no thread and can't be
@@ -216,12 +218,44 @@ cmd_push() {
   log "ok: origin/$br updated; origin/$BASE unchanged ($base_after)"
 }
 
+extract_parent_issue() {
+  local body_file="$1"
+  [ -n "$body_file" ] && [ -f "$body_file" ] || return 0
+  local matches count
+  matches="$(grep -Eio '^[[:space:]]*parent issue:[[:space:]]*#[0-9]+[[:space:]]*$' "$body_file" || true)"
+  count="$(printf '%s\n' "$matches" | sed '/^[[:space:]]*$/d' | wc -l | tr -d ' ')"
+  if [ "$count" -gt 1 ]; then
+    die "multiple 'Parent Issue: #<n>' lines found in $body_file — keep exactly one"
+  fi
+  if [ "$count" -eq 1 ]; then
+    printf '%s\n' "$matches" | sed -E 's/.*#([0-9]+).*/\1/'
+  fi
+}
+
+validate_parent_issue_labels() {
+  local issue_n="${1:?issue number required}"
+  local labels
+  labels="$(gh issue view "$issue_n" --json labels --jq '.labels[].name' 2>/dev/null || true)"
+  if ! printf '%s\n' "$labels" | grep -Fxq "mapped"; then
+    die "Parent Issue #$issue_n is missing 'mapped' label"
+  fi
+  if printf '%s\n' "$labels" | grep -Fxq "must-remap"; then
+    die "Parent Issue #$issue_n is flagged 'must-remap' — remap it before opening this PR"
+  fi
+  log "Parent Issue #$issue_n label gate passed (mapped present, must-remap absent)"
+}
+
 cmd_open() {
   local title="${1:?usage: pr.sh open <title> [body-file]}"; local body="${2:-}"
   local br; br="$(git rev-parse --abbrev-ref HEAD)"
   local args=(pr create --base "$BASE" --head "$br" --title "$title")
   [ "${DRAFT:-0}" = "1" ] && args+=(--draft)
   if [ -n "$body" ]; then [ -f "$body" ] || die "body file not found: $body"; args+=(--body-file "$body"); else args+=(--body ""); fi
+  local parent_issue
+  parent_issue="$(extract_parent_issue "$body")"
+  if [ -n "$parent_issue" ]; then
+    validate_parent_issue_labels "$parent_issue"
+  fi
   if [ "${DRY_RUN:-0}" = "1" ]; then log "DRY_RUN — would run: gh ${args[*]}"; return 0; fi
   log "gh ${args[*]}"
   local url; url="$(gh "${args[@]}")"

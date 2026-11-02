@@ -12,12 +12,15 @@
 #   slug <n>                      print "<n>-<slugified-title>" (used for tasks/issue-<n>-<slug>.md)
 #   comment <n> <file>            post <file> as a comment on #n   (DRY_RUN=1 prints instead of posting)
 #   close <n> <file>              post <file> as a comment on #n, then close it (DRY_RUN=1 prints, no close)
-#   label <n>                     apply the LABEL (default "mapped") to #n, creating it if missing
-#   unmapped                      list open issues that don't have LABEL yet (what's still unmapped)
+#   label <n>                     ensure remap-complete labels on #n: add LABEL ("mapped"), remove MUST_REMAP_LABEL ("must-remap")
+#   unlabel <n>                   remove LABEL from #n
+#   reset-mapping <n> [path]      remove prior mapping task file (default: tasks/issue-<n>-<slug>.md)
+#   unmapped                      list open issues still requiring mapping (missing LABEL OR flagged MUST_REMAP_LABEL)
 #
 # Env:
 #   DRY_RUN=1   never write to GitHub; print what would be posted.
 #   LABEL       label used to mark a mapped issue (default: mapped)
+#   MUST_REMAP_LABEL  label that forces remapping even when LABEL exists (default: must-remap)
 #   PR_BOT_DOPPLER_PROJECT / PR_BOT_DOPPLER_CONFIG  Doppler project/config holding
 #               GHUB_AGENT_PATC (default: homelab/dev) — every gh call this script
 #               makes uses that identity, never whatever personal `gh auth` account
@@ -27,6 +30,7 @@
 set -euo pipefail
 
 LABEL="${LABEL:-mapped}"
+MUST_REMAP_LABEL="${MUST_REMAP_LABEL:-must-remap}"
 
 log() { printf '\033[1;34m[issue]\033[0m %s\n' "$*"; }
 die() {
@@ -91,6 +95,12 @@ cmd_slug() {
   printf '%s-%s\n' "$n" "$slug"
 }
 
+issue_has_label() {
+  local n="${1:?issue number required}"
+  local label="${2:?label required}"
+  gh issue view "$n" --json labels --jq '.labels[].name' 2>/dev/null | grep -Fxq "$label"
+}
+
 cmd_comment() {
   local n="${1:?usage: issue.sh comment <n> <file>}"
   local f="${2:?usage: issue.sh comment <n> <file>}"
@@ -125,7 +135,7 @@ cmd_close() {
 cmd_label() {
   local n="${1:?usage: issue.sh label <n>}"
   if [ "${DRY_RUN:-0}" = "1" ]; then
-    log "DRY_RUN — would ensure label '$LABEL' exists and apply it to #$n"
+    log "DRY_RUN — would ensure label '$LABEL' exists, apply it to #$n, and remove '$MUST_REMAP_LABEL' if present"
     return 0
   fi
   # Idempotent: create-if-missing (--force updates color/description if it already
@@ -133,11 +143,50 @@ cmd_label() {
   # if the issue already has it.
   gh label create "$LABEL" --color "0E8A16" --description "Analysed and broken into tasks by map-issue-to-tasks" --force >/dev/null
   gh issue edit "$n" --add-label "$LABEL"
-  log "labeled #$n with '$LABEL'"
+  if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
+    gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
+    log "labeled #$n with '$LABEL' and removed '$MUST_REMAP_LABEL'"
+  else
+    log "labeled #$n with '$LABEL'"
+  fi
+}
+
+cmd_unlabel() {
+  local n="${1:?usage: issue.sh unlabel <n>}"
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+    log "DRY_RUN — would remove label '$LABEL' from #$n"
+    return 0
+  fi
+  gh issue edit "$n" --remove-label "$LABEL"
+  log "removed '$LABEL' from #$n"
+}
+
+cmd_reset_mapping() {
+  local n="${1:?usage: issue.sh reset-mapping <n> [tasks-file]}"
+  local tasks_file="${2:-}"
+  if [ -z "$tasks_file" ]; then
+    local stem
+    stem="$(cmd_slug "$n")"
+    tasks_file="tasks/issue-${stem}.md"
+  fi
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+    if [ -e "$tasks_file" ]; then
+      log "DRY_RUN — would remove previous mapping file: $tasks_file"
+    else
+      log "DRY_RUN — no previous mapping file to remove at: $tasks_file"
+    fi
+    return 0
+  fi
+  if [ -e "$tasks_file" ]; then
+    rm -f -- "$tasks_file"
+    log "removed previous mapping file: $tasks_file"
+  else
+    log "no previous mapping file to remove at: $tasks_file"
+  fi
 }
 
 cmd_unmapped() {
-  gh issue list --state open --search "-label:\"$LABEL\"" \
+  gh issue list --state open --search "(-label:\"$LABEL\") OR label:\"$MUST_REMAP_LABEL\"" \
     --json number,title,url --jq '.[] | "#\(.number)\t\(.title)\t\(.url)"'
 }
 
@@ -170,9 +219,17 @@ label)
   shift
   cmd_label "$@"
   ;;
+unlabel)
+  shift
+  cmd_unlabel "$@"
+  ;;
+reset-mapping)
+  shift
+  cmd_reset_mapping "$@"
+  ;;
 unmapped)
   shift
   cmd_unmapped "$@"
   ;;
-*) die "usage: issue.sh {create|fetch|json|slug|comment|close|label|unmapped} ..." ;;
+*) die "usage: issue.sh {create|fetch|json|slug|comment|close|label|unlabel|reset-mapping|unmapped} ..." ;;
 esac
