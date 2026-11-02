@@ -1,0 +1,19 @@
+tasks/issue-37-adapt-skill-install-and-publishing-to-openviking.md
+  s_8d5e75aad86bcc::t_f791588191ca58 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b8055f2cedc6070d6041955663d8cf92506db050",
+  "prompts": {},
+  "sessions": {
+    "s_8d5e75aad86bcc": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "05438164-f69a-46ec-bfe5-49f80de90037",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "owkwo-bot <agents@owkwo.org>"
+    }
+  }
+}
