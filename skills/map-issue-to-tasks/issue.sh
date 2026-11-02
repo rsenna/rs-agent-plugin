@@ -182,6 +182,8 @@ cmd_close() {
 cmd_label() {
   local n="${1:?usage: issue.sh label <n>}"
   local clear_remap="${2:-}"
+  local lock_dir
+  lock_dir=".git/map-issue-to-tasks/remap-${n}.lock.d"
   if [ -n "$clear_remap" ] && [ "$clear_remap" != "--clear-remap" ]; then
     die "usage: issue.sh label <n> [--clear-remap]"
   fi
@@ -200,8 +202,6 @@ cmd_label() {
   gh issue edit "$n" --add-label "$LABEL"
   if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
     if [ "$clear_remap" = "--clear-remap" ]; then
-      local lock_dir
-      lock_dir=".git/map-issue-to-tasks/remap-${n}.lock.d"
       [ -d "$lock_dir" ] || die "cannot clear '$MUST_REMAP_LABEL' for #$n without an active remap lock (run reset-mapping first)"
       gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
       rm -rf -- "$lock_dir"
@@ -209,6 +209,11 @@ cmd_label() {
     else
       log "labeled #$n with '$LABEL' (left '$MUST_REMAP_LABEL' in place; pass --clear-remap after remap completion)"
     fi
+    return 0
+  fi
+  if [ "$clear_remap" = "--clear-remap" ] && [ -d "$lock_dir" ]; then
+    rm -rf -- "$lock_dir"
+    log "labeled #$n with '$LABEL' and cleared stale remap lock (no '$MUST_REMAP_LABEL' present)"
     return 0
   fi
   log "labeled #$n with '$LABEL'"
@@ -276,7 +281,7 @@ cmd_reset_mapping() {
       rm -rf -- "$lock_dir"
     fi
   }
-  trap cleanup_remap_lock RETURN
+  trap cleanup_remap_lock EXIT INT TERM
   printf 'pid=%s started=%s source=%s\n' "$$" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$resolved" > "$lock_dir/meta.txt"
   local backup_dir backup
   backup_dir="tasks/.remap-backups/issue-$n"
@@ -284,7 +289,7 @@ cmd_reset_mapping() {
   backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
   mv -- "$resolved" "$backup"
   keep_lock="1"
-  trap - RETURN
+  trap - EXIT INT TERM
   log "archived previous mapping file: $resolved -> $backup (lock: $lock_dir)"
 }
 
