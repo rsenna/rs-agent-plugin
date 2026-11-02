@@ -12,7 +12,9 @@
 #   push <branch>         requires REVIEWED=1 (run a requesting-code-review pass and fix what it
 #                         flags first); then explicit-refspec push + verify branch landed &
 #                         BASE didn't move
-#   open <title> [body]   gh pr create --base BASE (body = path to a markdown file), print URL, STOP
+#   open <title> [body]   gh pr create --base BASE (body = path to a markdown file), print URL, STOP.
+#                         If body includes "Parent Issue: #<n>", enforce labels on that issue:
+#                         mapped must exist, must-remap must not.
 #   threads <pr>          list UNRESOLVED review threads on a PR (work them one by one)
 #   reviews <pr>           list PR-LEVEL review comments (the "Overall Comments" a bot leaves on
 #                          the review itself, not on a line — these have no thread and can't be
@@ -74,6 +76,8 @@
 set -euo pipefail
 
 BASE="${BASE:-main}"
+MAPPED_LABEL="${LABEL:-mapped}"
+MUST_REMAP_LABEL="${MUST_REMAP_LABEL:-must-remap}"
 log()  { printf '\033[1;34m[pr]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[pr] %s\033[0m\n' "$*" >&2; }
 die()  { printf '\033[1;31m[pr] %s\033[0m\n' "$*" >&2; exit 1; }
@@ -216,15 +220,79 @@ cmd_push() {
   log "ok: origin/$br updated; origin/$BASE unchanged ($base_after)"
 }
 
+extract_parent_issue() {
+  local body_file="$1"
+  [ -n "$body_file" ] && [ -f "$body_file" ] || return 0
+  local matches count
+  matches="$(grep -Eio '^[[:space:]]*parent issue:[[:space:]]*#[0-9]+[[:space:]]*$' -- "$body_file" || true)"
+  count="$(printf '%s\n' "$matches" | sed '/^[[:space:]]*$/d' | wc -l | tr -d ' ')"
+  if [ "$count" -gt 1 ]; then
+    die "multiple 'Parent Issue: #<n>' lines found in $body_file — keep exactly one"
+  fi
+  if [ "$count" -eq 1 ]; then
+    printf '%s\n' "$matches" | sed -E 's/.*#([0-9]+).*/\1/'
+  fi
+}
+
+validate_parent_issue_labels() {
+  local issue_n="${1:?issue number required}"
+  local reason
+  reason="$(parent_issue_labels_reason "$issue_n")" || die "$reason"
+  log "Parent Issue #$issue_n label gate passed ($MAPPED_LABEL present, $MUST_REMAP_LABEL absent)"
+}
+
+parent_issue_labels_reason() {
+  local issue_n="${1:?issue number required}"
+  local labels
+  labels="$(gh issue view "$issue_n" --json labels --jq '.labels[].name')" ||
+    { printf 'failed to read labels for Parent Issue #%s' "$issue_n"; return 1; }
+  if ! printf '%s\n' "$labels" | grep -Fxq "$MAPPED_LABEL"; then
+    printf "Parent Issue #%s is missing '%s' label" "$issue_n" "$MAPPED_LABEL"
+    return 1
+  fi
+  if printf '%s\n' "$labels" | grep -Fxq "$MUST_REMAP_LABEL"; then
+    printf "Parent Issue #%s is flagged '%s' — remap it before opening this PR" "$issue_n" "$MUST_REMAP_LABEL"
+    return 1
+  fi
+  return 0
+}
+
 cmd_open() {
   local title="${1:?usage: pr.sh open <title> [body-file]}"; local body="${2:-}"
   local br; br="$(git rev-parse --abbrev-ref HEAD)"
   local args=(pr create --base "$BASE" --head "$br" --title "$title")
   [ "${DRAFT:-0}" = "1" ] && args+=(--draft)
   if [ -n "$body" ]; then [ -f "$body" ] || die "body file not found: $body"; args+=(--body-file "$body"); else args+=(--body ""); fi
+  local parent_issue
+  parent_issue="$(extract_parent_issue "$body")"
+  local parent_none_count="0"
+  if [ -n "$body" ] && [ -f "$body" ]; then
+    parent_none_count="$(grep -Eic '^[[:space:]]*parent issue:[[:space:]]*none[[:space:]]*$' -- "$body" || true)"
+  fi
+  if [ "$parent_none_count" -gt 1 ]; then
+    die "multiple 'Parent Issue: none' lines found in $body — keep exactly one marker line"
+  fi
+  if [ -n "$parent_issue" ] && [ "$parent_none_count" -eq 1 ]; then
+    die "body contains both 'Parent Issue: #<n>' and 'Parent Issue: none' — keep exactly one"
+  fi
+  if [ -n "$body" ] && [ -f "$body" ] && [ -z "$parent_issue" ] && [ "$parent_none_count" -ne 1 ]; then
+    die "body file must include exactly one parent marker: 'Parent Issue: #<n>' or 'Parent Issue: none'"
+  fi
+  if [ -n "$parent_issue" ]; then
+    validate_parent_issue_labels "$parent_issue"
+  fi
   if [ "${DRY_RUN:-0}" = "1" ]; then log "DRY_RUN — would run: gh ${args[*]}"; return 0; fi
   log "gh ${args[*]}"
   local url; url="$(gh "${args[@]}")"
+  if [ -n "$parent_issue" ]; then
+    local reason
+    reason="$(parent_issue_labels_reason "$parent_issue")" || {
+      if ! gh pr close "$url" --comment "Attempted auto-close: parent issue label gate failed after create ($reason)." >/dev/null; then
+        die "parent issue labels changed during PR creation, and automatic PR close failed. Close PR manually: $url ($reason)"
+      fi
+      die "parent issue labels changed during PR creation; PR auto-closed: $reason"
+    }
+  fi
   log "PR opened: $url"
   warn "STOP: do not merge or mark ready — bots/maintainer review and merge."
 }

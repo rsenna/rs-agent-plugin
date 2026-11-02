@@ -17,8 +17,10 @@ The enrichment template is at `templates/issue-enrichment.md`, relative to that 
 ## Do this
 
 1. **Fetch.** `issue.sh fetch <n>` — read title, body, labels, and existing
-   comments. Note related/duplicate issues. If it's already labeled `mapped`,
-   say so and confirm before redoing the work.
+   comments. Note related/duplicate issues.
+   - If label `must-remap` is present, remapping is mandatory even if `mapped`
+     is already present.
+   - If `mapped` is present and `must-remap` is absent, confirm before remapping.
 2. **Explore the codebase** for the modules/files this touches. Use the
    project's own affordances (e.g. `what-about` has a `run-what-about` skill and
    a `tasks/` convention). Cite concrete file paths.
@@ -42,18 +44,23 @@ The enrichment template is at `templates/issue-enrichment.md`, relative to that 
    one onto every heading while you're editing the file — `- [x]` for tasks
    the file already marks done/merged, `- [ ]` for the rest — rather than
    adding new checkbox-only headings alongside old checkbox-less ones.
-5. **Write outputs (non-destructive):**
+5. **Write outputs (non-destructive, except explicit remap replacement):**
    - Tasks → **`tasks/issue-<n>-<slug>.md`** (`issue.sh slug <n>` gives the
      `<n>-<slug>` stem). Never overwrite an unrelated existing task file.
+   - If remapping (`must-remap` present), remove the previous mapping file
+     first via `issue.sh reset-mapping <n>` (or pass an explicit path), then
+     write the replacement mapping. `reset-mapping` opens a per-issue remap
+     lock; complete the flow with `issue.sh label <n> --clear-remap`, which
+     clears `must-remap` and releases that lock.
    - Enrichment → a **GitHub issue comment** via `issue.sh comment <n> <file>`.
      The original issue body is **left untouched**.
    - **Keep the tasks file lean.** It's read every time an agent picks up this
      issue, so prefer terse, scannable task entries over prose — a leaner file
      pays off repeatedly.
-6. **Label it.** `issue.sh label <n>` — tags the issue `mapped` (creating the
-   label on first use). This is what lets `issue.sh unmapped` distinguish
-   issues still needing this treatment from ones already scoped. Do this last,
-   after the enrichment comment has actually posted.
+6. **Label transition.** `issue.sh label <n>` — ensure the issue ends in
+   mapped state (`LABEL`) after mapping; for remaps, use
+   `issue.sh label <n> --clear-remap` to remove `MUST_REMAP_LABEL` only after
+   the replacement tasks file and enrichment comment are in place. Do this last.
 
 ## Review before posting
 
@@ -66,9 +73,14 @@ I=<this-skill's-own-directory>/issue.sh   # wherever your installer put this ski
 "$I" unmapped                          # which open issues still need mapping
 "$I" fetch 24                          # read the issue
 "$I" slug  24                          # -> 24-show-a-notification-when-a-profile-is-re-published
+DRY_RUN=1 "$I" reset-mapping 24        # for remaps: preview previous mapping-file removal
+         "$I" reset-mapping 24          # for remaps: archive/remove prior mapping from active tasks/
 DRY_RUN=1 "$I" comment 24 enrich.md    # preview the enrichment comment
 "$I" comment 24 enrich.md              # post it for real
-"$I" label 24                          # tag it mapped
+"$I" label 24 --clear-remap            # remap complete: tag mapped + clear must-remap
+
+# Retry-safe remap comment posting (avoid duplicates after partial failures):
+ISSUE_COMMENT_UPSERT_LAST=1 "$I" comment 24 enrich.md
 ```
 
 ## Filing a follow-up issue

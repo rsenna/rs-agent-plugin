@@ -24,6 +24,12 @@ From the project's `AGENTS.md`: the **base branch** and the
 
 ## Do this (per task, until the issue is done)
 
+0. **Preflight label gate (required).** Before executing tasks for issue `<n>`,
+   verify labels via `"$I" fetch <n>` (or `"$I" json <n>`): proceed only when
+   `LABEL` is present and `MUST_REMAP_LABEL` is absent (defaults: `mapped`,
+   `must-remap`; can be overridden via env). If either condition fails, treat the
+   issue as not ready for fixing and run `map-issue-to-tasks` first to (re)generate
+   mapping and restore the expected labels.
 1. **Pick the next task** from `tasks/issue-<n>-*.md`: the next unchecked box,
    respecting dependency order. If the file predates the checkbox convention
    (any heading with no leading `- [ ]`/`- [x]`), retrofit a checkbox onto

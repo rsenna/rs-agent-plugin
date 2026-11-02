@@ -12,12 +12,19 @@
 #   slug <n>                      print "<n>-<slugified-title>" (used for tasks/issue-<n>-<slug>.md)
 #   comment <n> <file>            post <file> as a comment on #n   (DRY_RUN=1 prints instead of posting)
 #   close <n> <file>              post <file> as a comment on #n, then close it (DRY_RUN=1 prints, no close)
-#   label <n>                     apply the LABEL (default "mapped") to #n, creating it if missing
-#   unmapped                      list open issues that don't have LABEL yet (what's still unmapped)
+#   label <n> [--clear-remap]     ensure mapped label on #n; with --clear-remap also remove MUST_REMAP_LABEL
+#   unlabel <n>                   remove LABEL from #n
+#   reset-mapping <n> [path]      archive prior mapping task file; default auto-detects tasks/issue-<n>-*.md
+#   unmapped                      list open issues still requiring mapping (missing LABEL OR flagged MUST_REMAP_LABEL)
 #
 # Env:
 #   DRY_RUN=1   never write to GitHub; print what would be posted.
+#   ISSUE_COMMENT_UPSERT_LAST=1  use gh --edit-last/--create-if-none in `comment`
+#               to avoid duplicate enrichment comments on remap retries.
+#   ISSUE_COMMENT_MARKER marker string used by upsert mode to identify the
+#               enrichment comment to edit (default: <!-- map-issue-to-tasks:enrichment -->).
 #   LABEL       label used to mark a mapped issue (default: mapped)
+#   MUST_REMAP_LABEL  label that forces remapping even when LABEL exists (default: must-remap)
 #   PR_BOT_DOPPLER_PROJECT / PR_BOT_DOPPLER_CONFIG  Doppler project/config holding
 #               GHUB_AGENT_PATC (default: homelab/dev) — every gh call this script
 #               makes uses that identity, never whatever personal `gh auth` account
@@ -27,6 +34,7 @@
 set -euo pipefail
 
 LABEL="${LABEL:-mapped}"
+MUST_REMAP_LABEL="${MUST_REMAP_LABEL:-must-remap}"
 
 log() { printf '\033[1;34m[issue]\033[0m %s\n' "$*"; }
 die() {
@@ -91,6 +99,38 @@ cmd_slug() {
   printf '%s-%s\n' "$n" "$slug"
 }
 
+issue_has_label() {
+  local n="${1:?issue number required}"
+  local label="${2:?label required}"
+  local labels
+  labels="$(gh issue view "$n" --json labels --jq '.labels[].name')" ||
+    die "failed to read labels for issue #$n"
+  printf '%s\n' "$labels" | grep -Fxq "$label"
+}
+
+git_common_dir() {
+  git rev-parse --git-common-dir 2>/dev/null ||
+    die "failed to resolve git common directory (required for shared remap locks)"
+}
+
+is_valid_issue_tasks_file() {
+  local n="${1:?issue number required}"
+  local p="${2:?path required}"
+  # Limit explicit deletions to this issue's own mapping file under tasks/.
+  printf '%s\n' "$p" | grep -Eq "^(\./)?tasks/issue-${n}-[a-z0-9._-]+\\.md$"
+}
+
+find_issue_mapping_files() {
+  local n="${1:?issue number required}"
+  [ -d tasks ] || return 0
+  find tasks -maxdepth 1 -type f -name "issue-${n}-*.md" | LC_ALL=C sort
+}
+
+assert_issue_number() {
+  local n="${1:?issue number required}"
+  printf '%s\n' "$n" | grep -Eq '^[0-9]+$' || die "issue number must be numeric (got: $n)"
+}
+
 cmd_comment() {
   local n="${1:?usage: issue.sh comment <n> <file>}"
   local f="${2:?usage: issue.sh comment <n> <file>}"
@@ -102,8 +142,38 @@ cmd_comment() {
     echo "-----"
     return 0
   fi
-  gh issue comment "$n" --body-file "$f"
-  log "commented on #$n"
+  if [ "${ISSUE_COMMENT_UPSERT_LAST:-0}" = "1" ]; then
+    local bot_name
+    bot_name="$(doppler secrets get GHUB_AGENT_USERNAME --plain --project "$PR_BOT_DOPPLER_PROJECT" --config "$PR_BOT_DOPPLER_CONFIG" 2>/dev/null || true)"
+    [ -n "$bot_name" ] || die "could not fetch GHUB_AGENT_USERNAME from Doppler ($PR_BOT_DOPPLER_PROJECT/$PR_BOT_DOPPLER_CONFIG)"
+    local marker append_marker
+    marker="${ISSUE_COMMENT_MARKER:-<!-- map-issue-to-tasks:enrichment -->}"
+    append_marker="0"
+    if ! grep -Fq "$marker" "$f"; then
+      append_marker="1"
+    fi
+    local last_body
+    last_body="$(gh issue view "$n" --json comments --jq ".comments | map(select(.author.login==\"$bot_name\")) | last.body // \"\"")" ||
+      die "failed to inspect prior comments for issue #$n"
+    if [ -n "$last_body" ] && printf '%s\n' "$last_body" | grep -Fq "$marker"; then
+      if [ "$append_marker" = "1" ]; then
+        { cat "$f"; printf '\n\n%s\n' "$marker"; } | gh issue comment "$n" --edit-last --body-file -
+      else
+        gh issue comment "$n" --edit-last --body-file "$f"
+      fi
+      log "updated existing enrichment comment on #$n"
+    else
+      if [ "$append_marker" = "1" ]; then
+        { cat "$f"; printf '\n\n%s\n' "$marker"; } | gh issue comment "$n" --body-file -
+      else
+        gh issue comment "$n" --body-file "$f"
+      fi
+      log "posted enrichment comment on #$n"
+    fi
+  else
+    gh issue comment "$n" --body-file "$f"
+    log "commented on #$n"
+  fi
 }
 
 cmd_close() {
@@ -124,8 +194,19 @@ cmd_close() {
 
 cmd_label() {
   local n="${1:?usage: issue.sh label <n>}"
+  assert_issue_number "$n"
+  local clear_remap="${2:-}"
+  local lock_dir
+  lock_dir="$(git_common_dir)/map-issue-to-tasks/remap-${n}.lock.d"
+  if [ -n "$clear_remap" ] && [ "$clear_remap" != "--clear-remap" ]; then
+    die "usage: issue.sh label <n> [--clear-remap]"
+  fi
   if [ "${DRY_RUN:-0}" = "1" ]; then
-    log "DRY_RUN — would ensure label '$LABEL' exists and apply it to #$n"
+    if [ "$clear_remap" = "--clear-remap" ]; then
+      log "DRY_RUN — would ensure label '$LABEL' exists, apply it to #$n, and remove '$MUST_REMAP_LABEL' if present"
+    else
+      log "DRY_RUN — would ensure label '$LABEL' exists and apply it to #$n"
+    fi
     return 0
   fi
   # Idempotent: create-if-missing (--force updates color/description if it already
@@ -133,11 +214,112 @@ cmd_label() {
   # if the issue already has it.
   gh label create "$LABEL" --color "0E8A16" --description "Analysed and broken into tasks by map-issue-to-tasks" --force >/dev/null
   gh issue edit "$n" --add-label "$LABEL"
+  if issue_has_label "$n" "$MUST_REMAP_LABEL"; then
+    if [ "$clear_remap" = "--clear-remap" ]; then
+      local -a active_mappings=()
+      while IFS= read -r f; do
+        active_mappings+=("$f")
+      done < <(find_issue_mapping_files "$n")
+      [ "${#active_mappings[@]}" -eq 1 ] ||
+        die "cannot clear '$MUST_REMAP_LABEL' for #$n without exactly one active tasks/issue-${n}-*.md mapping file"
+      [ -d "$lock_dir" ] || die "cannot clear '$MUST_REMAP_LABEL' for #$n without an active remap lock (run reset-mapping first)"
+      gh issue edit "$n" --remove-label "$MUST_REMAP_LABEL"
+      rm -rf -- "$lock_dir"
+      log "labeled #$n with '$LABEL' and removed '$MUST_REMAP_LABEL'"
+    else
+      log "labeled #$n with '$LABEL' (left '$MUST_REMAP_LABEL' in place; pass --clear-remap after remap completion)"
+    fi
+    return 0
+  fi
+  if [ "$clear_remap" = "--clear-remap" ] && [ -d "$lock_dir" ]; then
+    rm -rf -- "$lock_dir"
+    log "labeled #$n with '$LABEL' and cleared stale remap lock (no '$MUST_REMAP_LABEL' present)"
+    return 0
+  fi
   log "labeled #$n with '$LABEL'"
 }
 
+cmd_unlabel() {
+  local n="${1:?usage: issue.sh unlabel <n>}"
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+    log "DRY_RUN — would remove label '$LABEL' from #$n"
+    return 0
+  fi
+  gh issue edit "$n" --remove-label "$LABEL"
+  log "removed '$LABEL' from #$n"
+}
+
+cmd_reset_mapping() {
+  local n="${1:?usage: issue.sh reset-mapping <n> [tasks-file]}"
+  assert_issue_number "$n"
+  local tasks_file="${2:-}"
+  local resolved=""
+  local has_existing_file="0"
+  if [ -z "$tasks_file" ]; then
+    local -a candidates=()
+    while IFS= read -r f; do
+      candidates+=("$f")
+    done < <(find_issue_mapping_files "$n")
+    case "${#candidates[@]}" in
+      0)
+        resolved=""
+        ;;
+      1)
+        resolved="${candidates[0]}"
+        has_existing_file="1"
+        ;;
+      *)
+        die "found multiple mapping files for issue #$n (${candidates[*]}). Re-run with explicit tasks-file."
+        ;;
+    esac
+  else
+    is_valid_issue_tasks_file "$n" "$tasks_file" ||
+      die "explicit tasks-file must match tasks/issue-${n}-*.md (got: $tasks_file)"
+    resolved="${tasks_file#./}"
+    has_existing_file="1"
+  fi
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+    if [ "$has_existing_file" = "1" ] && [ -e "$resolved" ]; then
+      log "DRY_RUN — would archive previous mapping file: $resolved"
+    else
+      log "DRY_RUN — no previous mapping file to archive for issue #$n (would still establish remap lock)"
+    fi
+    return 0
+  fi
+  if [ "$has_existing_file" = "1" ] && [ ! -e "$resolved" ]; then
+    die "mapping file not found: $resolved"
+  fi
+  local lock_root lock_dir keep_lock
+  lock_root="$(git_common_dir)/map-issue-to-tasks"
+  lock_dir="$lock_root/remap-${n}.lock.d"
+  mkdir -p "$lock_root"
+  mkdir "$lock_dir" 2>/dev/null || die "remap already in progress for issue #$n (lock exists: $lock_dir)"
+  keep_lock="0"
+  cleanup_remap_lock() {
+    if [ "$keep_lock" != "1" ] && [ -d "$lock_dir" ]; then
+      rm -rf -- "$lock_dir"
+    fi
+  }
+  trap cleanup_remap_lock EXIT INT TERM
+  printf 'pid=%s started=%s source=%s\n' "$$" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$resolved" > "$lock_dir/meta.txt"
+  local backup_dir backup
+  if [ "$has_existing_file" = "1" ]; then
+    backup_dir="tasks/.remap-backups/issue-$n"
+    mkdir -p "$backup_dir"
+    backup="$backup_dir/$(basename "$resolved").$(date -u +%Y%m%dT%H%M%SZ).bak"
+    mv -- "$resolved" "$backup"
+  fi
+  keep_lock="1"
+  trap - EXIT INT TERM
+  if [ "$has_existing_file" = "1" ]; then
+    log "archived previous mapping file: $resolved -> $backup (lock: $lock_dir)"
+  else
+    log "no prior mapping file found for issue #$n; established remap lock: $lock_dir"
+  fi
+}
+
 cmd_unmapped() {
-  gh issue list --state open --search "-label:\"$LABEL\"" \
+  gh issue list --state open --limit 1000 --search "(-label:\"$LABEL\") OR label:\"$MUST_REMAP_LABEL\"" \
     --json number,title,url --jq '.[] | "#\(.number)\t\(.title)\t\(.url)"'
 }
 
@@ -170,9 +352,17 @@ label)
   shift
   cmd_label "$@"
   ;;
+unlabel)
+  shift
+  cmd_unlabel "$@"
+  ;;
+reset-mapping)
+  shift
+  cmd_reset_mapping "$@"
+  ;;
 unmapped)
   shift
   cmd_unmapped "$@"
   ;;
-*) die "usage: issue.sh {create|fetch|json|slug|comment|close|label|unmapped} ..." ;;
+*) die "usage: issue.sh {create|fetch|json|slug|comment|close|label|unlabel|reset-mapping|unmapped} ..." ;;
 esac
